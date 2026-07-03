@@ -12,8 +12,8 @@ export default function Panel() {
       <SectionHeader eyebrow="Model panel" title={`${PANEL_SIZE} measured model-effort rows`}>
         <p>
           The expanded publish pilot includes GLM 5.2 at high effort, Fable at low effort, plus low and medium rows for
-          GPT-5.5, Claude Opus 4.8, and Claude Sonnet 5. Gemini remains medium and Kimi remains default because those
-          are the rows DeepSWE publishes.
+          GPT-5.5, Claude Opus 4.8, and Claude Sonnet 5. Gemini 3.5 Flash remains medium and Kimi K2.7 remains default
+          because those are the rows DeepSWE publishes.
         </p>
       </SectionHeader>
 

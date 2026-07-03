@@ -7,7 +7,7 @@ export default function EffortSection() {
       <SectionHeader eyebrow="Measured effort variants" title="ShallowSWE effort rows">
         <p>
           Low and medium rows are available for GPT-5.5, Claude Opus 4.8, and Claude Sonnet 5. Single-effort rows are
-          shown for GLM 5.2 high, Fable 5 low, Gemini Flash medium, and Kimi K2.7 default.
+          shown for GLM 5.2 high, Fable 5 low, Gemini 3.5 Flash medium, and Kimi K2.7 default.
         </p>
       </SectionHeader>
 

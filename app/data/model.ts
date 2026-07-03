@@ -280,7 +280,7 @@ export const models: ModelDef[] = [
     id: "gemini-flash-medium",
     modelConfig: "google/gemini-3.5-flash[medium]",
     label: "Gemini 3.5 Flash",
-    short: "Gemini medium",
+    short: "Gemini 3.5 Flash medium",
     familyShort: "Gemini",
     vendor: "Google",
     size: "small",
