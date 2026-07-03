@@ -16,6 +16,7 @@ const VB_H = 410;
 const PLOT = { l: 64, r: 492, t: 44, b: 326 };
 const Y_TICKS = [0.03, 0.05, 0.1, 0.2, 0.3];
 const EFFORTS = ["default", ...EFFORT_ORDER] as const;
+const EFFORT_LABELS: Record<string, string> = { medium: "med", xhigh: "x-hi" };
 
 const LABEL_OFFSETS: Record<string, { dx: number; dy: number; anchor: "start" | "end" }> = {
   "sonnet-5-low": { dx: 12, dy: -7, anchor: "start" },
@@ -105,7 +106,7 @@ export default function EffortCurveChart() {
                 fontSize="9.5"
                 fill="var(--muted)"
               >
-                {effort === "xhigh" ? "x-hi" : effort}
+                {EFFORT_LABELS[effort] ?? effort}
               </text>
             </g>
           );
@@ -182,7 +183,7 @@ export default function EffortCurveChart() {
               <span className="font-mono text-[0.68rem] text-danger">{pctChange(low.cpsc, medium.cpsc)} CPSC</span>
             </div>
             <div className="mt-1 font-mono text-[0.68rem] leading-relaxed text-muted">
-              {fmtUsd(low.cpsc)} low to {fmtUsd(medium.cpsc)} medium · pass {low.passes}/{low.attempts} to{" "}
+              {fmtUsd(low.cpsc)} low to {fmtUsd(medium.cpsc)} med · pass {low.passes}/{low.attempts} to{" "}
               {medium.passes}/{medium.attempts} · tokens {fmtTokens(low.tokensPerSuccess)} to{" "}
               {fmtTokens(medium.tokensPerSuccess)}
             </div>
