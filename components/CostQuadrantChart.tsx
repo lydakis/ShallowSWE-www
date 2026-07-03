@@ -12,7 +12,7 @@ const Y_TICKS = [0.03, 0.1, 0.3];
 
 const LABEL: Record<string, { dx: number; dy: number; anchor: "start" | "end" }> = {
   "fable-5-low": { dx: 12, dy: -8, anchor: "start" },
-  "sonnet-5-low": { dx: 12, dy: -10, anchor: "start" },
+  "sonnet-5-low": { dx: 12, dy: 16, anchor: "start" },
   "sonnet-5-medium": { dx: 12, dy: 14, anchor: "start" },
   "kimi-k2-7-default": { dx: 12, dy: 22, anchor: "start" },
   "opus-4-8-low": { dx: 12, dy: -14, anchor: "start" },
@@ -20,6 +20,7 @@ const LABEL: Record<string, { dx: number; dy: number; anchor: "start" | "end" }>
   "gpt-5-5-low": { dx: 12, dy: 4, anchor: "start" },
   "gpt-5-5-medium": { dx: 12, dy: 18, anchor: "start" },
   "gemini-flash-medium": { dx: -12, dy: -6, anchor: "end" },
+  "glm-5-2-high": { dx: 12, dy: -14, anchor: "start" },
 };
 
 export default function CostQuadrantChart() {
@@ -39,7 +40,7 @@ export default function CostQuadrantChart() {
         viewBox={`0 0 ${VB_W} ${VB_H}`}
         className="w-full select-none"
         role="img"
-        aria-label="Scatter with one dot per model-effort row: cost per solved hard task on DeepSWE across, measured cost per ShallowSWE pilot success up and down. Closer to the top-left corner is cheaper at both kinds of work."
+        aria-label="Scatter with one dot per model-effort row. The horizontal axis is DeepSWE cost per solved hard task. The vertical axis is measured ShallowSWE pilot cost per successful completion."
       >
         <text x={(PLOT.l + PLOT.r) / 2} y={VB_H - 8} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" letterSpacing="0.08em" fill="var(--ink-2)">
           $ PER SOLVED HARD TASK · DEEPSWE · MATCHED EFFORT
@@ -48,10 +49,10 @@ export default function CostQuadrantChart() {
           $ PER PILOT SUCCESS · SHALLOWSWE · MEASURED
         </text>
         <text x={PLOT.l} y={PLOT.t - 8} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
-          ▲ cheaper shallow work
+          LOWER SHALLOWSWE CPSC
         </text>
         <text x={PLOT.r} y={VB_H - 24} textAnchor="end" fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
-          ◀ cheaper hard work
+          LOWER DEEPSWE $/SOLVED
         </text>
 
         <rect x={PLOT.l} y={PLOT.t} width={gx - PLOT.l} height={gy - PLOT.t} fill="var(--waterline)" opacity="0.05" />
@@ -88,7 +89,7 @@ export default function CostQuadrantChart() {
         })}
       </svg>
       <figcaption className="mt-2 px-1 font-mono text-[0.68rem] leading-relaxed text-muted">
-        one dot per model-effort row · x: DeepSWE cost per solved task · y: measured ShallowSWE pilot CPSC · top-left wins
+        one dot per model-effort row · x: DeepSWE cost per solved task · y: measured ShallowSWE pilot CPSC
       </figcaption>
     </figure>
   );

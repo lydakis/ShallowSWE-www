@@ -289,6 +289,19 @@ export const models: ModelDef[] = [
     hueLight: "#eda100",
     hueDark: "#c98500",
   },
+  {
+    id: "glm-5-2-high",
+    modelConfig: "z-ai/glm-5.2[high]",
+    label: "GLM 5.2",
+    short: "GLM 5.2 high",
+    familyShort: "GLM",
+    vendor: "Z.ai",
+    size: "mid",
+    priceKey: "z-ai/glm-5.2",
+    effort: "high",
+    hueLight: "#687f1f",
+    hueDark: "#9db742",
+  },
 ];
 
 export const panelModels = models;
@@ -517,6 +530,60 @@ const modelFamilies = models.reduce<Record<string, ModelDef[]>>((acc, model) => 
   acc[model.priceKey] = [...(acc[model.priceKey] ?? []), model];
   return acc;
 }, {});
+
+export interface ShallowEffortPoint {
+  modelId: string;
+  effort: string | null;
+  cpsc: number;
+  tokensPerSuccess: number;
+  passRate: number;
+  turns: number;
+  attempts: number;
+  passes: number;
+}
+
+export interface ShallowEffortCurve {
+  familyKey: string;
+  modelId: string;
+  label: string;
+  short: string;
+  points: ShallowEffortPoint[];
+}
+
+export const shallowEffortCurves: ShallowEffortCurve[] = Object.entries(modelFamilies)
+  .map(([familyKey, familyModels]) => {
+    const representative = familyModels[0];
+    const suiteById = Object.fromEntries(suiteAggregates().map((row) => [row.modelId, row]));
+    const pilotById = Object.fromEntries(pilotModelRows.map((row) => [row.modelId, row]));
+    const points = familyModels
+      .map((model) => {
+        const suite = suiteById[model.id];
+        const pilot = pilotById[model.id];
+        if (!suite || !pilot) return null;
+        return {
+          modelId: model.id,
+          effort: model.effort,
+          cpsc: suite.cpsc,
+          tokensPerSuccess: suite.tokensPerSuccess,
+          passRate: suite.passRate,
+          turns: suite.turns,
+          attempts: pilot.attempts,
+          passes: pilot.passes,
+        };
+      })
+      .filter((point): point is ShallowEffortPoint => point != null)
+      .sort((a, b) => effortRank(a.effort) - effortRank(b.effort));
+
+    return {
+      familyKey,
+      modelId: representative.id,
+      label: representative.label,
+      short: representative.familyShort,
+      points,
+    };
+  })
+  .filter((curve) => curve.points.length > 0)
+  .sort((a, b) => Math.min(...a.points.map((point) => point.cpsc)) - Math.min(...b.points.map((point) => point.cpsc)));
 
 export const deepsweEffortCurves: DeepsweEffortCurve[] = Object.entries(modelFamilies).map(([familyKey, familyModels]) => {
   const representative = familyModels[0];

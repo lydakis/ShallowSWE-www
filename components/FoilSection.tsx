@@ -5,10 +5,9 @@ import { DEEPSWE_SOURCE } from "@/app/data/model";
 export default function FoilSection() {
   return (
     <Section id="foil" className="border-t border-line">
-      <SectionHeader eyebrow="Deep end → shallow end" title="Good at the deep end ≠ cheap in the shallows">
+      <SectionHeader eyebrow="DeepSWE comparison" title="DeepSWE and ShallowSWE cost rows">
         <p>
-          DeepSWE&rsquo;s leaderboard prices hard work; ShallowSWE prices easy work. Same dollars-per-success unit —
-          plotted as a scatter, or as a rank translation between the two ends.
+          Effort-matched rows with DeepSWE dollars per solved task and ShallowSWE pilot cost per successful completion.
         </p>
       </SectionHeader>
 

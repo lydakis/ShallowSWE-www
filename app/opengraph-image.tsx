@@ -12,11 +12,11 @@ const line = "#1d2b33";
 
 // Depth-gauge motif: measured pilot CPSC, cheap floats / costly sinks.
 const gauge = [
-  { label: "Sonnet 5 low", v: "$0.032", y: 150 },
-  { label: "Sonnet 5 med", v: "$0.041", y: 215 },
-  { label: "Kimi default", v: "$0.056", y: 280 },
-  { label: "Opus 4.8 low", v: "$0.090", y: 345 },
-  { label: "Fable 5 low", v: "$0.120", y: 410 },
+  { label: "GLM 5.2 high", v: "$0.025", y: 145 },
+  { label: "Sonnet 5 low", v: "$0.031", y: 210 },
+  { label: "Sonnet 5 med", v: "$0.040", y: 275 },
+  { label: "Kimi default", v: "$0.050", y: 340 },
+  { label: "Opus 4.8 low", v: "$0.081", y: 405 },
 ];
 
 export default function OG() {

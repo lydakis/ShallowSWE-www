@@ -6,10 +6,10 @@ import { PRICE_SHEET_DATE, PILOT_TRIALS } from "@/app/data/model";
 export default function ChartSection() {
   return (
     <Section id="chart">
-      <SectionHeader eyebrow="Measured leaderboard" title={<>Cheapest per success, by declared basket</>}>
+      <SectionHeader eyebrow="Measured leaderboard" title={<>Pilot basket leaderboard</>}>
         <p>
-          Cost — or tokens — per successful completion across the pilot suite. Set the basket to your workload; the board
-          reprices.
+          Cost, tokens, pass rate, and turns per successful completion across the pilot suite. Set the basket weights to
+          reprice the leaderboard.
         </p>
       </SectionHeader>
 
@@ -25,7 +25,7 @@ export default function ChartSection() {
             <span className="mr-2 font-mono text-[0.7rem] text-muted transition-transform group-open:rotate-90 inline-block">
               ▶
             </span>
-            <span className="min-w-0">Task-level breakdown: where cheap stops being cheap</span>
+            <span className="min-w-0">Task-level breakdown by category</span>
           </span>
           <span className="eyebrow max-w-full break-words text-[0.62rem] sm:shrink-0 sm:text-[0.72rem]">
             Fix · Operate · Transform · diagnostic

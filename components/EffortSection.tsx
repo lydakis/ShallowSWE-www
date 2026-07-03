@@ -1,15 +1,13 @@
 import { Section, SectionHeader } from "./Section";
 import EffortCurveChart from "./EffortCurveChart";
-import { DEEPSWE_SOURCE, DEEPSWE_COMPARISON_GENERATED_AT } from "@/app/data/model";
 
 export default function EffortSection() {
   return (
     <Section id="effort" className="border-t border-line">
-      <SectionHeader eyebrow="Effort curves · DeepSWE v1.1" title="Effort is a dial you pay for">
+      <SectionHeader eyebrow="Measured effort variants" title="ShallowSWE effort rows">
         <p>
-          On hard SWE work, DeepSWE ran each model family across reasoning-effort levels. Pass rate climbs with effort;
-          cost climbs faster. The ShallowSWE pilot fixes each model at a single effort (ringed) — it doesn&rsquo;t sweep
-          effort on shallow tasks.
+          Low and medium rows are available for GPT-5.5, Claude Opus 4.8, and Claude Sonnet 5. Single-effort rows are
+          shown for GLM 5.2 high, Fable 5 low, Gemini Flash medium, and Kimi K2.7 default.
         </p>
       </SectionHeader>
 
@@ -18,8 +16,7 @@ export default function EffortSection() {
       </div>
 
       <p className="mt-4 font-mono text-[0.7rem] leading-relaxed text-muted">
-        source: {DEEPSWE_SOURCE.name}, {DEEPSWE_COMPARISON_GENERATED_AT} · pass@1 and mean cost per run are DeepSWE&rsquo;s
-        published values · no ShallowSWE effort sweep is claimed
+        measured ShallowSWE pilot rows only · effort variants are separate model-effort rows
       </p>
     </Section>
   );

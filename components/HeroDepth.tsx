@@ -9,10 +9,10 @@ const VB_H = 456;
 const TOP = 50; // waterline y
 const BOTTOM = 420;
 const LINE_X = 128; // the sounding line
-const DOM_LO = 0.001;
-const DOM_HI = 1;
+const DOM_LO = 0.02;
+const DOM_HI = 0.35;
 
-const gauge = [0.001, 0.01, 0.1, 1];
+const gauge = [0.03, 0.05, 0.1, 0.2, 0.3];
 
 export default function HeroDepth() {
   const hue = useHue();
@@ -30,7 +30,7 @@ export default function HeroDepth() {
 
   return (
     <figure className="relative">
-      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full" role="img" aria-label="Depth gauge: each model at its measured pilot cost per successful completion. Cheaper models float near the surface; costlier models sink.">
+      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full" role="img" aria-label="Depth gauge: each model at its measured pilot cost per successful completion. Lower values are plotted closer to the surface.">
         <defs>
           <linearGradient id="deep" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="var(--waterline)" stopOpacity="0.10" />
@@ -57,7 +57,7 @@ export default function HeroDepth() {
         {/* waterline */}
         <line x1="58" y1={TOP} x2={VB_W - 8} y2={TOP} stroke="var(--waterline)" strokeWidth="2" strokeLinecap="round" />
         <text x="58" y={TOP - 9} fontFamily="var(--font-mono)" fontSize="9.5" letterSpacing="0.14em" fill="var(--waterline)">
-          SURFACE · CHEAPEST
+          SURFACE · LOWEST CPSC
         </text>
 
         {/* sounding line */}
@@ -84,7 +84,7 @@ export default function HeroDepth() {
         })}
       </svg>
       <figcaption className="mt-3 px-1 font-mono text-[0.7rem] leading-relaxed text-muted">
-        Measured pilot cost per successful completion, equal category basket. Log depth.
+        Measured pilot cost per successful completion · log scale · July 3, 2026 snapshot.
       </figcaption>
       <style>{`
         .settle { animation: settle 0.9s cubic-bezier(0.22,1,0.36,1) both; }
