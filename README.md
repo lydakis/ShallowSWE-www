@@ -34,6 +34,8 @@ To refresh the site, regenerate the artifacts in `../ShallowSWE/results/<snapsho
 - `components/HeroDepth.tsx` — equal-category pilot CPSC depth gauge.
 - `components/crossover/*` — measured task map with cost/tokens toggle.
 - `components/CostQuadrantChart.tsx` — DeepSWE hard-work CPSC vs measured ShallowSWE pilot CPSC.
+- `components/RankTranslation.tsx` — DeepSWE dollar rank to ShallowSWE dollar rank.
+- `components/EffortCurveChart.tsx` — DeepSWE effort curves with measured ShallowSWE efforts ringed.
 
 ## Not affiliated
 

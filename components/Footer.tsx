@@ -22,8 +22,9 @@ export default function Footer() {
             <div className="eyebrow mb-3">Explore</div>
             <ul className="space-y-2 text-sm">
               {[
-                ["#chart", "Crossover map"],
+                ["#chart", "Measured leaderboard"],
                 ["#foil", "Deep end vs shallow end"],
+                ["#effort", "Effort curves"],
                 ["#measured", "Measured pilot"],
                 ["#suite", "Task suite"],
                 ["#method", "Method"],

@@ -5,9 +5,9 @@ import { useHue } from "@/lib/hues";
 import { logScale } from "@/lib/scale";
 
 const VB_W = 480;
-const VB_H = 384;
+const VB_H = 456;
 const TOP = 50; // waterline y
-const BOTTOM = 348;
+const BOTTOM = 420;
 const LINE_X = 128; // the sounding line
 const DOM_LO = 0.001;
 const DOM_HI = 1;
@@ -22,14 +22,11 @@ export default function HeroDepth() {
     .map((a) => ({ ...a, yv: y(a.cpsc), m: modelById[a.modelId] }))
     .sort((p, q) => p.yv - q.yv);
 
-  // declutter labels: enforce a minimum vertical gap
-  const GAP = 30;
-  const labelY: number[] = [];
-  rows.forEach((r, i) => {
-    let ly = r.yv;
-    if (i > 0) ly = Math.max(ly, labelY[i - 1] + GAP);
-    labelY.push(ly);
-  });
+  const LABEL_TOP = 116;
+  const LABEL_BOTTOM = 360;
+  const labelY = rows.map((_, i) =>
+    rows.length === 1 ? LABEL_TOP : LABEL_TOP + (i * (LABEL_BOTTOM - LABEL_TOP)) / (rows.length - 1),
+  );
 
   return (
     <figure className="relative">
@@ -76,11 +73,11 @@ export default function HeroDepth() {
               <circle cx={LINE_X} cy={r.yv} r="6.5" fill="var(--chart-surface)" />
               <circle cx={LINE_X} cy={r.yv} r="5" fill={c} />
               {/* label block */}
-              <text x={LINE_X + 30} y={labelY[i] - 2} fontFamily="var(--font-display)" fontSize="14" fontWeight="600" fill="var(--ink)">
+              <text x={LINE_X + 30} y={labelY[i] + 4} fontFamily="var(--font-display)" fontSize="12" fontWeight="600" fill="var(--ink)">
                 {r.m.short}
-              </text>
-              <text x={LINE_X + 30} y={labelY[i] + 13} fontFamily="var(--font-mono)" fontSize="11" className="tnum" fill="var(--muted)">
-                {fmtUsd(r.cpsc)} · {r.m.vendor}
+                <tspan dx="6" fontFamily="var(--font-mono)" fontSize="9.5" fontWeight="400" className="tnum" fill="var(--muted)">
+                  {fmtUsd(r.cpsc)}
+                </tspan>
               </text>
             </g>
           );

@@ -11,17 +11,23 @@ const X_TICKS = [5, 10, 20];
 const Y_TICKS = [0.03, 0.1, 0.3];
 
 const LABEL: Record<string, { dx: number; dy: number; anchor: "start" | "end" }> = {
-  "sonnet-5-low": { dx: 12, dy: -6, anchor: "start" },
-  "kimi-k2-7-default": { dx: 12, dy: 18, anchor: "start" },
-  "opus-4-8-low": { dx: 12, dy: 5, anchor: "start" },
-  "gpt-5-5-low": { dx: -12, dy: 4, anchor: "end" },
-  "gemini-flash-medium": { dx: -12, dy: 4, anchor: "end" },
+  "fable-5-low": { dx: 12, dy: -8, anchor: "start" },
+  "sonnet-5-low": { dx: 12, dy: -10, anchor: "start" },
+  "sonnet-5-medium": { dx: 12, dy: 14, anchor: "start" },
+  "kimi-k2-7-default": { dx: 12, dy: 22, anchor: "start" },
+  "opus-4-8-low": { dx: 12, dy: -14, anchor: "start" },
+  "opus-4-8-medium": { dx: 12, dy: 16, anchor: "start" },
+  "gpt-5-5-low": { dx: 12, dy: 4, anchor: "start" },
+  "gpt-5-5-medium": { dx: 12, dy: 18, anchor: "start" },
+  "gemini-flash-medium": { dx: -12, dy: -6, anchor: "end" },
 };
 
 export default function CostQuadrantChart() {
   const hue = useHue();
   const easyById = Object.fromEntries(suiteAggregates().map((a) => [a.modelId, a.cpsc]));
-  const points = panelModels.map((m) => ({ m, hard: deepsweCostPerSolved(m.id)!, shallow: easyById[m.id] }));
+  const points = panelModels
+    .map((m) => ({ m, hard: deepsweCostPerSolved(m.id), shallow: easyById[m.id] }))
+    .filter((p): p is { m: (typeof panelModels)[number]; hard: number; shallow: number } => p.hard != null);
   const x = logScale(4, 25, PLOT.l, PLOT.r);
   const y = logScale(0.02, 0.7, PLOT.t, PLOT.b);
   const gx = x(Math.sqrt(Math.min(...points.map((p) => p.hard)) * Math.max(...points.map((p) => p.hard))));
@@ -67,22 +73,15 @@ export default function CostQuadrantChart() {
           </g>
         ))}
 
-        <text x={PLOT.l + 6} y={gy - 9} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--ink-2)">
-          cheap at both ends
-        </text>
-
         {points.map(({ m, hard, shallow }) => {
           const c = hue(m.id);
-          const lb = LABEL[m.id];
+          const lb = LABEL[m.id] ?? { dx: hard > 12 ? -12 : 12, dy: 4, anchor: hard > 12 ? "end" : "start" };
           return (
             <g key={m.id}>
               <circle cx={x(hard)} cy={y(shallow)} r="7" fill="var(--chart-surface)" />
               <circle cx={x(hard)} cy={y(shallow)} r="5" fill={c} />
-              <text x={x(hard) + lb.dx} y={y(shallow) + lb.dy - 5} textAnchor={lb.anchor} fontFamily="var(--font-display)" fontSize="12" fontWeight="600" fill="var(--ink)">
+              <text x={x(hard) + lb.dx} y={y(shallow) + lb.dy} textAnchor={lb.anchor} fontFamily="var(--font-display)" fontSize="11.5" fontWeight="600" fill="var(--ink)">
                 {m.short}
-              </text>
-              <text x={x(hard) + lb.dx} y={y(shallow) + lb.dy + 8} textAnchor={lb.anchor} fontFamily="var(--font-mono)" fontSize="9.5" className="tnum" fill="var(--muted)">
-                {fmtUsd(hard)} hard · {fmtUsd(shallow)} pilot
               </text>
             </g>
           );

@@ -36,7 +36,7 @@ export default function Hero() {
             </h1>
 
             <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-ink-2">
-              Most real LLM work is routine — small fixes, data reshaping, and
+              Most real LLM work is routine: small fixes, data reshaping, and
               a few agentic steps. This pilot measures those tasks directly:
               dollars, tokens, turns, and pass rate for every attempt.
             </p>
@@ -50,7 +50,7 @@ export default function Hero() {
                 className="group inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-medium shadow-sm transition-transform hover:-translate-y-0.5"
                 style={{ color: "var(--plane)" }}
               >
-                See the crossover
+                See the leaderboard
                 <span className="transition-transform group-hover:translate-y-0.5">↓</span>
               </a>
               <a

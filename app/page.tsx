@@ -2,6 +2,7 @@ import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import ChartSection from "@/components/ChartSection";
 import FoilSection from "@/components/FoilSection";
+import EffortSection from "@/components/EffortSection";
 import MeasuredSection from "@/components/MeasuredSection";
 import Suite from "@/components/Suite";
 import Method from "@/components/Method";
@@ -16,6 +17,7 @@ export default function Home() {
         <Hero />
         <ChartSection />
         <FoilSection />
+        <EffortSection />
         <MeasuredSection />
         <Suite />
         <Method />

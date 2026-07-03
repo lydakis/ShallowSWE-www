@@ -11,8 +11,9 @@ export default function Panel() {
     <Section id="panel" className="border-t border-line">
       <SectionHeader eyebrow="Model panel" title={`${PANEL_SIZE} measured model-effort rows`}>
         <p>
-          The first publish pilot uses the lowest DeepSWE-published effort row for each selected model. Gemini remains
-          medium and Kimi remains default because those are the rows DeepSWE publishes.
+          The expanded publish pilot includes Fable at low effort plus low and medium rows for GPT-5.5, Claude Opus
+          4.8, and Claude Sonnet 5. Gemini remains medium and Kimi remains default because those are the rows DeepSWE
+          publishes.
         </p>
       </SectionHeader>
 

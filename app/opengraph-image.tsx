@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "ShallowSWE — the score isn't accuracy. The score is cost.";
+export const alt = "ShallowSWE - the score isn't accuracy. The score is cost.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -12,11 +12,11 @@ const line = "#1d2b33";
 
 // Depth-gauge motif: measured pilot CPSC, cheap floats / costly sinks.
 const gauge = [
-  { label: "Sonnet 5 low", v: "$0.031", y: 150 },
-  { label: "Kimi default", v: "$0.037", y: 220 },
-  { label: "Opus 4.8 low", v: "$0.076", y: 305 },
-  { label: "GPT-5.5 low", v: "$0.145", y: 390 },
-  { label: "Gemini medium", v: "$0.221", y: 470 },
+  { label: "Sonnet 5 low", v: "$0.032", y: 150 },
+  { label: "Sonnet 5 med", v: "$0.041", y: 215 },
+  { label: "Kimi default", v: "$0.056", y: 280 },
+  { label: "Opus 4.8 low", v: "$0.090", y: 345 },
+  { label: "Fable 5 low", v: "$0.120", y: 410 },
 ];
 
 export default function OG() {
@@ -61,7 +61,7 @@ export default function OG() {
             <div style={{ display: "flex", width: 430, height: 3, background: cyan, marginTop: 10, borderRadius: 2 }} />
           </div>
           <div style={{ fontSize: 24, color: muted, marginTop: 30, lineHeight: 1.45 }}>
-            A benchmark for the easy parts. Cost per successful completion — same rigor, opposite end of the pool.
+            A benchmark for the easy parts. Cost per successful completion, same rigor, opposite end of the pool.
           </div>
         </div>
 
