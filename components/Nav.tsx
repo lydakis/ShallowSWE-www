@@ -5,11 +5,8 @@ import ThemeToggle from "./ThemeToggle";
 const links = [
   { href: "#chart", label: "Leaderboard" },
   { href: "#foil", label: "Deep vs shallow" },
-  { href: "#effort", label: "Turns" },
-  { href: "#measured", label: "Measured" },
   { href: "#suite", label: "Suite" },
   { href: "#method", label: "Method" },
-  { href: "#panel", label: "Panel" },
 ];
 
 export default function Nav() {

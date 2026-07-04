@@ -9,7 +9,7 @@ import { linScale, logScale } from "@/lib/scale";
 const VB_W = 560;
 const VB_H = 410;
 const PLOT = { l: 60, r: 470, t: 34, b: 336 };
-const Y_TICKS = [0.03, 0.05, 0.1, 0.2, 0.3];
+const CANDIDATE_Y_TICKS = [0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1];
 
 const priceKeyOf = Object.fromEntries(models.map((m) => [m.id, m.priceKey]));
 
@@ -26,12 +26,16 @@ export default function EffortCurveChart() {
   }));
 
   const turns = pts.map((p) => p.turns);
+  const costs = pts.map((p) => p.cpsc).filter((v) => Number.isFinite(v) && v > 0);
   const xMin = Math.max(0, Math.floor(Math.min(...turns)) - 1);
   const xMax = Math.ceil(Math.max(...turns)) + 2;
+  const yMin = Math.max(0.005, Math.min(...costs) * 0.75);
+  const yMax = Math.max(0.05, Math.max(...costs) * 1.3);
   const x = linScale(xMin, xMax, PLOT.l, PLOT.r);
-  const y = logScale(0.02, 0.4, PLOT.t, PLOT.b);
+  const y = logScale(yMin, yMax, PLOT.t, PLOT.b);
 
   const xTicks = [5, 10, 15, 20, 25, 30].filter((t) => t >= xMin && t <= xMax);
+  const yTicks = CANDIDATE_Y_TICKS.filter((t) => t >= yMin && t <= yMax);
 
   // connect a model family's effort variants so families read as one unit
   const families = new Map<string, typeof pts>();
@@ -67,7 +71,11 @@ export default function EffortCurveChart() {
   })`;
 
   return (
-    <figure>
+    <figure className="panel overflow-hidden">
+      <figcaption className="flex items-baseline justify-between border-b border-line px-4 py-2.5">
+        <span className="font-display text-[0.95rem] text-ink">Turns against cost</span>
+        <span className="font-mono text-[0.66rem] text-muted">Log CPSC by model effort</span>
+      </figcaption>
       <div className="relative">
         <svg
           viewBox={`0 0 ${VB_W} ${VB_H}`}
@@ -93,7 +101,7 @@ export default function EffortCurveChart() {
               </text>
             </g>
           ))}
-          {Y_TICKS.map((t) => (
+          {yTicks.map((t) => (
             <g key={`y${t}`}>
               <line x1={PLOT.l} y1={y(t)} x2={PLOT.r} y2={y(t)} stroke="var(--line)" strokeWidth="1" />
               <text x={PLOT.l - 7} y={y(t) + 3.5} textAnchor="end" fontFamily="var(--font-mono)" fontSize="9.5" className="tnum" fill="var(--muted)">
@@ -185,10 +193,10 @@ export default function EffortCurveChart() {
           </div>
         )}
       </div>
-      <figcaption className="mt-2 px-1 font-mono text-[0.68rem] leading-relaxed text-muted">
+      <div className="border-t border-line px-4 py-2 font-mono text-[0.68rem] leading-relaxed text-muted">
         one dot per model-effort row · x: mean agent turns · y: cost per success · lines connect a model&rsquo;s effort
         variants
-      </figcaption>
+      </div>
     </figure>
   );
 }

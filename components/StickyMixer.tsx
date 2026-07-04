@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { categories } from "@/app/data/model";
 import { useWeights } from "@/lib/weights";
 
-const shortLabel: Record<string, string> = { fix: "Fix", operate: "Op", transform: "Tr" };
+const shortLabel: Record<string, string> = { fix: "Fix", operate: "Op", transform: "Tr", invoke: "In" };
 
 /**
  * A slim floating basket control that appears once the real mixer has scrolled
@@ -40,7 +40,7 @@ export default function StickyMixer() {
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-4 z-30 flex justify-center px-3 transition-all duration-300 ${
+      className={`fixed inset-x-0 bottom-4 z-30 hidden justify-center px-3 transition-all duration-300 sm:flex ${
         shown ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
       }`}
       aria-hidden={!shown}

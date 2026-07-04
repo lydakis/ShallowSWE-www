@@ -8,6 +8,7 @@ import {
   cellsFor,
   metricValue,
   fmtMetric,
+  fmtMaybeMetric,
   modelById,
 } from "@/app/data/model";
 import { logScale } from "@/lib/scale";
@@ -32,14 +33,16 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
     const pts = cells.map((c, i) => ({
       cell: c,
       x: pointX(i, cells.length),
-      y: y(metricValue(c, metric)),
       v: metricValue(c, metric),
+      y: metricValue(c, metric) == null ? null : y(metricValue(c, metric)!),
     }));
     return { id: m.id, color: hue(m.id), pts };
   });
 
   // label the extremes at the category's deepest measured task.
-  const byEnd = [...series].sort((a, b) => a.pts.at(-1)!.v - b.pts.at(-1)!.v);
+  const byEnd = [...series]
+    .filter((s) => s.pts.at(-1)?.v != null)
+    .sort((a, b) => a.pts.at(-1)!.v! - b.pts.at(-1)!.v!);
   const labelIds = new Set([byEnd[0].id, byEnd[byEnd.length - 1].id]);
 
   const active = (id: string) => highlight === null || highlight === id;
@@ -80,23 +83,27 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
           ))}
 
           {/* series lines */}
-          {series.map((s) => (
-            <polyline
-              key={s.id}
-              points={s.pts.map((p) => `${p.x},${p.y}`).join(" ")}
-              fill="none"
-              stroke={s.color}
-              strokeWidth={highlight === s.id ? 3 : 2}
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              opacity={active(s.id) ? 1 : 0.14}
-              style={{ transition: "opacity 0.2s" }}
-            />
-          ))}
+          {series.map((s) => {
+            const plotted = s.pts.filter((p): p is typeof p & { y: number } => p.y != null);
+            if (plotted.length === 0) return null;
+            return (
+              <polyline
+                key={s.id}
+                points={plotted.map((p) => `${p.x},${p.y}`).join(" ")}
+                fill="none"
+                stroke={s.color}
+                strokeWidth={highlight === s.id ? 3 : 2}
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                opacity={active(s.id) ? 1 : 0.14}
+                style={{ transition: "opacity 0.2s" }}
+              />
+            );
+          })}
 
           {/* markers */}
           {series.map((s) =>
-            s.pts.map((p, i) => (
+            s.pts.filter((p): p is typeof p & { y: number } => p.y != null).map((p, i) => (
               <g key={s.id + i} opacity={active(s.id) ? 1 : 0.14} style={{ transition: "opacity 0.2s" }}>
                 <circle cx={p.x} cy={p.y} r={hover === i ? 5 : 4} fill="var(--chart-surface)" />
                 <circle cx={p.x} cy={p.y} r={hover === i ? 3.4 : 2.6} fill={s.color} />
@@ -106,12 +113,12 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
 
           {/* endpoint labels for extremes */}
           {series
-            .filter((s) => labelIds.has(s.id) && active(s.id))
+            .filter((s) => labelIds.has(s.id) && active(s.id) && s.pts.at(-1)?.y != null)
             .map((s) => (
               <text
                 key={s.id}
                 x={PLOT.right + 5}
-                y={s.pts.at(-1)!.y + 3}
+                y={s.pts.at(-1)!.y! + 3}
                 fontFamily="var(--font-mono)"
                 fontSize="9"
                 className="tnum"
@@ -155,12 +162,14 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
             </div>
             <div className="space-y-1">
               {[...series]
-                .sort((a, b) => a.pts[hover].v - b.pts[hover].v)
+                .sort((a, b) => (a.pts[hover].v ?? Number.POSITIVE_INFINITY) - (b.pts[hover].v ?? Number.POSITIVE_INFINITY))
                 .map((s) => (
                   <div key={s.id} className="flex items-center gap-2 whitespace-nowrap text-[0.72rem]">
                     <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: s.color }} />
                     <span className={`${active(s.id) ? "text-ink" : "text-muted"}`}>{modelById[s.id].short}</span>
-                    <span className="ml-auto pl-2 font-mono tnum text-ink-2">{fmtMetric(s.pts[hover].v, metric)}</span>
+                    <span className="ml-auto pl-2 font-mono tnum text-ink-2">
+                      {fmtMaybeMetric(s.pts[hover].v, metric)}
+                    </span>
                   </div>
                 ))}
             </div>

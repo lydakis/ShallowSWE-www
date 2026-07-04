@@ -1,10 +1,10 @@
 import { Section, SectionHeader } from "./Section";
-import { PRICE_SHEET_DATE, ROLLOUTS } from "@/app/data/model";
+import { PRICE_SHEET_DATE, ROLLOUT_POLICY } from "@/app/data/model";
 
 const principles = [
   ["Programmatic verifiers only", "no LLM judges anywhere in the scoring path"],
   ["One scaffold, held constant", "mini-swe-agent, zero per-model tuning"],
-  [`${ROLLOUTS} rollouts per task`, "full Pier trajectories stored locally and rollup JSON published"],
+  [ROLLOUT_POLICY, "full Pier trajectories stored locally and rollup JSON published"],
   ["Tokens are canonical", "dollars derived from a dated, versioned price sheet"],
   ["No wall-clock time", "not reproducible across providers and hosts"],
   ["Infra failures excluded", "retried until scored; exclusion counts published"],

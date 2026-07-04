@@ -5,8 +5,8 @@ import runManifestJson from "@/public/data/run-manifest.json";
 import deepsweComparisonJson from "@/public/data/deepswe-comparison.json";
 
 export type SizeClass = "small" | "mid" | "large";
-export type CategoryId = "fix" | "operate" | "transform";
-export type TierId = "t2" | "t3";
+export type CategoryId = "fix" | "operate" | "transform" | "invoke";
+export type TierId = "t2" | "t3" | "t4";
 export type Metric = "cpsc" | "tps";
 
 interface AggregateRow {
@@ -17,7 +17,7 @@ interface AggregateRow {
   passes: number;
   pass_rate: number;
   mean_tokens_per_attempt: number;
-  tokens_per_success: number;
+  tokens_per_success: number | null;
   mean_input_tokens_per_attempt: number;
   mean_output_tokens_per_attempt: number;
   mean_cache_read_tokens_per_attempt: number;
@@ -47,7 +47,8 @@ interface RunManifest {
   name: string;
   generated_at: string;
   tasks: string[];
-  rollouts_per_task_model_config: number;
+  rollouts_per_task_model_config: number | string;
+  rollout_policy?: string;
 }
 
 export interface ModelPrice {
@@ -101,6 +102,7 @@ export interface Cell {
   attempts: number;
   passes: number;
   passRate: number;
+  tokensPerAttempt: number;
   inputTokens: number;
   outputTokens: number;
   cacheRead: number;
@@ -108,8 +110,8 @@ export interface Cell {
   reasoningTokens: number;
   turns: number;
   costPerAttempt: number;
-  cpsc: number;
-  tokensPerSuccess: number;
+  cpsc: number | null;
+  tokensPerSuccess: number | null;
 }
 
 export interface Aggregate {
@@ -154,6 +156,7 @@ export const PILOT_NAME = runManifest.name;
 export const PILOT_GENERATED_AT = runManifest.generated_at;
 export const SUITE_TASKS = runManifest.tasks.length;
 export const ROLLOUTS = runManifest.rollouts_per_task_model_config;
+export const ROLLOUT_POLICY = runManifest.rollout_policy ?? `${ROLLOUTS} rollouts per task-model row`;
 export const PANEL_SIZE = aggregateByModel.length;
 export const PILOT_TRIALS = aggregateByModel.reduce((sum, row) => sum + row.attempts, 0);
 export const SNAPSHOT_STATUS = "Measured run";
@@ -327,11 +330,18 @@ export const categories: CategoryDef[] = [
     gloss: "Multi-source data join",
     detail: "Join invoices, payments, refunds, and customers into payouts and rejects.",
   },
+  {
+    id: "invoke",
+    label: "Invoke",
+    gloss: "Local API reconciliation",
+    detail: "Reconcile a manifest against deterministic ticket API state with retries and duplicates.",
+  },
 ];
 
 export const tiers: TierDef[] = [
   { id: "t2", label: "T2", gloss: "Routine" },
   { id: "t3", label: "T3", gloss: "Mildly gnarly" },
+  { id: "t4", label: "T4", gloss: "Shelf edge" },
 ];
 
 export const tasks: TaskDef[] = [
@@ -363,17 +373,24 @@ export const tasks: TaskDef[] = [
     tier: "t3",
     shape: "multi-source-join-with-rejects",
   },
+  {
+    id: "ticket-state-reconcile",
+    label: "Ticket state reconcile",
+    category: "invoke",
+    tier: "t4",
+    shape: "reconcile-states",
+  },
 ];
 
 export const taskById = Object.fromEntries(tasks.map((task) => [task.id, task]));
-export const EQUAL_WEIGHTS: CategoryWeights = { fix: 34, operate: 33, transform: 33 };
+export const EQUAL_WEIGHTS: CategoryWeights = { fix: 25, operate: 25, transform: 25, invoke: 25 };
 
 export const measuredCells: Cell[] = aggregateByTaskModel.map((row) => {
   const model = modelByConfig[row.model_config];
   const task = taskById[row.task_id!];
   if (!model) throw new Error(`Unknown model_config ${row.model_config}`);
   if (!task) throw new Error(`Unknown task_id ${row.task_id}`);
-  if (row.mean_cost_per_attempt == null || row.cpsc == null) {
+  if (row.mean_cost_per_attempt == null) {
     throw new Error(`Unpriced task row ${row.task_id} / ${row.model_config}`);
   }
   return {
@@ -385,6 +402,7 @@ export const measuredCells: Cell[] = aggregateByTaskModel.map((row) => {
     attempts: row.attempts,
     passes: row.passes,
     passRate: row.pass_rate,
+    tokensPerAttempt: row.mean_tokens_per_attempt,
     inputTokens: row.mean_input_tokens_per_attempt,
     outputTokens: row.mean_output_tokens_per_attempt,
     cacheRead: row.mean_cache_read_tokens_per_attempt,
@@ -401,6 +419,7 @@ export const pilotModelRows: (Aggregate & {
   attempts: number;
   passes: number;
   costPerAttempt: number;
+  tokensPerAttempt: number;
   inputTokens: number;
   outputTokens: number;
   cacheRead: number;
@@ -408,7 +427,7 @@ export const pilotModelRows: (Aggregate & {
 })[] = aggregateByModel.map((row) => {
   const model = modelByConfig[row.model_config];
   if (!model) throw new Error(`Unknown model_config ${row.model_config}`);
-  if (row.mean_cost_per_attempt == null || row.cpsc == null) {
+  if (row.mean_cost_per_attempt == null || row.cpsc == null || row.tokens_per_success == null) {
     throw new Error(`Unpriced model row ${row.model_config}`);
   }
   return {
@@ -418,6 +437,7 @@ export const pilotModelRows: (Aggregate & {
     passes: row.passes,
     passRate: row.pass_rate,
     costPerAttempt: row.mean_cost_per_attempt,
+    tokensPerAttempt: row.mean_tokens_per_attempt,
     cpsc: row.cpsc,
     tokensPerSuccess: row.tokens_per_success,
     turns: row.mean_turns,
@@ -438,29 +458,35 @@ export function taskLabelsFor(category: CategoryId): string[] {
   return tasks.filter((task) => task.category === category).map((task) => `${task.label} · ${task.tier.toUpperCase()}`);
 }
 
-export function metricValue(cell: Cell, metric: Metric): number {
+export function metricValue(cell: Cell, metric: Metric): number | null {
   return metric === "cpsc" ? cell.cpsc : cell.tokensPerSuccess;
 }
 
 export function measuredValues(metric: Metric): number[] {
-  return measuredCells.map((cell) => metricValue(cell, metric)).filter((value) => value > 0);
+  return measuredCells.map((cell) => metricValue(cell, metric)).filter((value): value is number => value != null && value > 0);
 }
 
 export function weightedAggregates(weights: CategoryWeights): Aggregate[] {
   const activeCategories = categories.filter((category) => measuredCells.some((cell) => cell.category === category.id));
   const total = activeCategories.reduce((sum, category) => sum + weights[category.id], 0) || 1;
   return models.map((model) => {
-    const aggregate = { cpsc: 0, tokensPerSuccess: 0, passRate: 0, turns: 0 };
+    const aggregate = { costPerAttempt: 0, tokensPerAttempt: 0, passRate: 0, turns: 0 };
     for (const category of activeCategories) {
       const cells = cellsFor(category.id, model.id);
       const weight = weights[category.id] / total;
-      aggregate.cpsc += (weight * cells.reduce((sum, cell) => sum + cell.cpsc, 0)) / cells.length;
-      aggregate.tokensPerSuccess +=
-        (weight * cells.reduce((sum, cell) => sum + cell.tokensPerSuccess, 0)) / cells.length;
+      aggregate.costPerAttempt += (weight * cells.reduce((sum, cell) => sum + cell.costPerAttempt, 0)) / cells.length;
+      aggregate.tokensPerAttempt += (weight * cells.reduce((sum, cell) => sum + cell.tokensPerAttempt, 0)) / cells.length;
       aggregate.passRate += (weight * cells.reduce((sum, cell) => sum + cell.passRate, 0)) / cells.length;
       aggregate.turns += (weight * cells.reduce((sum, cell) => sum + cell.turns, 0)) / cells.length;
     }
-    return { modelId: model.id, modelConfig: model.modelConfig, ...aggregate };
+    return {
+      modelId: model.id,
+      modelConfig: model.modelConfig,
+      cpsc: aggregate.costPerAttempt / aggregate.passRate,
+      tokensPerSuccess: aggregate.tokensPerAttempt / aggregate.passRate,
+      passRate: aggregate.passRate,
+      turns: aggregate.turns,
+    };
   });
 }
 
@@ -661,6 +687,16 @@ export function fmtTokens(value: number): string {
   return `${Math.round(value)}`;
 }
 
+export function fmtEffort(effort: string | null): string {
+  if (effort == null) return "default";
+  if (effort === "medium") return "med";
+  return effort;
+}
+
 export function fmtMetric(value: number, metric: Metric): string {
   return metric === "cpsc" ? fmtUsd(value) : fmtTokens(value);
+}
+
+export function fmtMaybeMetric(value: number | null, metric: Metric): string {
+  return value == null ? "n/a" : fmtMetric(value, metric);
 }

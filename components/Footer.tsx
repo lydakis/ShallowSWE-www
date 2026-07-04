@@ -24,11 +24,8 @@ export default function Footer() {
               {[
                 ["#chart", "Measured leaderboard"],
                 ["#foil", "Deep end vs shallow end"],
-                ["#effort", "Turns vs cost"],
-                ["#measured", "Measured run"],
                 ["#suite", "Task suite"],
                 ["#method", "Method"],
-                ["#panel", "Model panel"],
               ].map(([href, label]) => (
                 <li key={href}>
                   <a href={href} className="text-ink-2 transition-colors hover:text-brand">

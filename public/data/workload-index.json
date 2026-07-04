@@ -1,8 +1,14 @@
 {
-  "schema_version": "shallowswe.workload_index.v0.1",
+  "schema_version": "shallowswe.workload_index.v0.3",
   "weighting": {
     "scheme": "equal_category_equal_tier_observed_task",
     "normalization": "renormalized_over_observed_tasks",
+    "included_tiers": [
+      "t1",
+      "t2",
+      "t3",
+      "t4"
+    ],
     "categories": [
       {
         "category": "fix",
@@ -24,23 +30,27 @@
     "tiers": [
       {
         "tier": "t1",
-        "weight_within_category": 0.3333333333333333
+        "weight_within_category": 0.25
       },
       {
         "tier": "t2",
-        "weight_within_category": 0.3333333333333333
+        "weight_within_category": 0.25
       },
       {
         "tier": "t3",
-        "weight_within_category": 0.3333333333333333
+        "weight_within_category": 0.25
+      },
+      {
+        "tier": "t4",
+        "weight_within_category": 0.25
       }
     ],
     "target_tasks_per_category_tier": 3,
-    "declared_coverage_weight": 0.1111111111111111
+    "declared_coverage_weight": 0.10416666666666666
   },
   "recompute_contract": {
     "task_weight_formula": "category_weight * tier_weight_within_category * task_weight_within_category_tier, normalized over selected tasks",
-    "basket_metric_formula": "sum(normalized_task_weight * task_metric); return null for the official basket when any selected task has no numeric metric",
+    "basket_metric_formula": "weighted_mean_cost_per_attempt / weighted_pass_rate for CPSC; weighted_mean_tokens_per_attempt / weighted_pass_rate for tokens",
     "primary_metrics": [
       "cpsc",
       "tokens_per_success",
@@ -53,48 +63,60 @@
       "category": "fix",
       "tier": "t2",
       "category_weight": 0.25,
-      "tier_weight_within_category": 0.3333333333333333,
+      "tier_weight_within_category": 0.25,
       "observed_tasks_in_category_tier": 1,
       "target_tasks_in_category_tier": 3,
-      "raw_observed_weight": 0.08333333333333333,
-      "declared_weight": 0.027777777777777776,
-      "default_weight": 0.25
+      "raw_observed_weight": 0.0625,
+      "declared_weight": 0.020833333333333332,
+      "default_weight": 0.2
     },
     {
       "task_id": "payout-reconcile",
       "category": "transform",
       "tier": "t3",
       "category_weight": 0.25,
-      "tier_weight_within_category": 0.3333333333333333,
+      "tier_weight_within_category": 0.25,
       "observed_tasks_in_category_tier": 1,
       "target_tasks_in_category_tier": 3,
-      "raw_observed_weight": 0.08333333333333333,
-      "declared_weight": 0.027777777777777776,
-      "default_weight": 0.25
+      "raw_observed_weight": 0.0625,
+      "declared_weight": 0.020833333333333332,
+      "default_weight": 0.2
     },
     {
       "task_id": "report-json-format",
       "category": "operate",
       "tier": "t2",
       "category_weight": 0.25,
-      "tier_weight_within_category": 0.3333333333333333,
+      "tier_weight_within_category": 0.25,
       "observed_tasks_in_category_tier": 1,
       "target_tasks_in_category_tier": 3,
-      "raw_observed_weight": 0.08333333333333333,
-      "declared_weight": 0.027777777777777776,
-      "default_weight": 0.25
+      "raw_observed_weight": 0.0625,
+      "declared_weight": 0.020833333333333332,
+      "default_weight": 0.2
     },
     {
       "task_id": "config-flag-ignored",
       "category": "operate",
       "tier": "t3",
       "category_weight": 0.25,
-      "tier_weight_within_category": 0.3333333333333333,
+      "tier_weight_within_category": 0.25,
       "observed_tasks_in_category_tier": 1,
       "target_tasks_in_category_tier": 3,
-      "raw_observed_weight": 0.08333333333333333,
-      "declared_weight": 0.027777777777777776,
-      "default_weight": 0.25
+      "raw_observed_weight": 0.0625,
+      "declared_weight": 0.020833333333333332,
+      "default_weight": 0.2
+    },
+    {
+      "task_id": "ticket-state-reconcile",
+      "category": "invoke",
+      "tier": "t4",
+      "category_weight": 0.25,
+      "tier_weight_within_category": 0.25,
+      "observed_tasks_in_category_tier": 1,
+      "target_tasks_in_category_tier": 3,
+      "raw_observed_weight": 0.0625,
+      "declared_weight": 0.020833333333333332,
+      "default_weight": 0.2
     }
   ],
   "cells": [
@@ -124,8 +146,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.125123,
       "mean_cost_delta_vs_gateway_per_attempt": -1.850371707708594e-17,
       "cost_delta_vs_gateway_ratio": -1.4788421854563863e-16,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-fable-5[low]",
@@ -153,8 +175,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.14699016666666667,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-fable-5[low]",
@@ -182,8 +204,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.08720166666666668,
       "mean_cost_delta_vs_gateway_per_attempt": -1.850371707708594e-17,
       "cost_delta_vs_gateway_ratio": -2.121945346276173e-16,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-fable-5[low]",
@@ -211,8 +233,37 @@
       "mean_gateway_reported_cost_per_attempt": 0.08704866666666666,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
+    },
+    {
+      "model_config": "anthropic/claude-fable-5[low]",
+      "model": "anthropic/claude-fable-5",
+      "reasoning_effort": "low",
+      "category": "invoke",
+      "tier": "t4",
+      "task_id": "ticket-state-reconcile",
+      "total_trials": 5,
+      "attempts": 5,
+      "excluded_attempts": 0,
+      "passes": 4,
+      "pass_rate": 0.8,
+      "mean_tokens_per_attempt": 55013.4,
+      "tokens_per_success": 68766.75,
+      "mean_input_tokens_per_attempt": 51144.6,
+      "mean_output_tokens_per_attempt": 3868.8,
+      "mean_cache_read_tokens_per_attempt": 40385.8,
+      "mean_cache_write_tokens_per_attempt": 10744.8,
+      "mean_reasoning_tokens_per_attempt": 378.2,
+      "mean_turns": 7.0,
+      "mean_cost_per_attempt": 0.36827580000000004,
+      "cpsc": 0.46034475,
+      "gateway_reported_attempts": 5,
+      "mean_gateway_reported_cost_per_attempt": 0.36827580000000004,
+      "mean_cost_delta_vs_gateway_per_attempt": 0.0,
+      "cost_delta_vs_gateway_ratio": 0.0,
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-opus-4.8[low]",
@@ -240,8 +291,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.0832985,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-opus-4.8[low]",
@@ -269,8 +320,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.08880316666666666,
       "mean_cost_delta_vs_gateway_per_attempt": 1.850371707708594e-17,
       "cost_delta_vs_gateway_ratio": 2.0836776177748104e-16,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-opus-4.8[low]",
@@ -298,8 +349,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.057580333333333324,
       "mean_cost_delta_vs_gateway_per_attempt": 9.25185853854297e-18,
       "cost_delta_vs_gateway_ratio": 1.6067740499145494e-16,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-opus-4.8[low]",
@@ -327,8 +378,37 @@
       "mean_gateway_reported_cost_per_attempt": 0.04969291666666667,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
+    },
+    {
+      "model_config": "anthropic/claude-opus-4.8[low]",
+      "model": "anthropic/claude-opus-4.8",
+      "reasoning_effort": "low",
+      "category": "invoke",
+      "tier": "t4",
+      "task_id": "ticket-state-reconcile",
+      "total_trials": 6,
+      "attempts": 5,
+      "excluded_attempts": 1,
+      "passes": 3,
+      "pass_rate": 0.6,
+      "mean_tokens_per_attempt": 78242.4,
+      "tokens_per_success": 130404.0,
+      "mean_input_tokens_per_attempt": 74017.4,
+      "mean_output_tokens_per_attempt": 4225.0,
+      "mean_cache_read_tokens_per_attempt": 62264.4,
+      "mean_cache_write_tokens_per_attempt": 11735.0,
+      "mean_reasoning_tokens_per_attempt": 318.0,
+      "mean_turns": 9.0,
+      "mean_cost_per_attempt": 0.21019095000000002,
+      "cpsc": 0.35031825000000005,
+      "gateway_reported_attempts": 5,
+      "mean_gateway_reported_cost_per_attempt": 0.21019095000000002,
+      "mean_cost_delta_vs_gateway_per_attempt": 0.0,
+      "cost_delta_vs_gateway_ratio": 0.0,
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-opus-4.8[medium]",
@@ -356,8 +436,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.13302416666666667,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-opus-4.8[medium]",
@@ -385,8 +465,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.131059,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-opus-4.8[medium]",
@@ -414,8 +494,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.09561599999999999,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-opus-4.8[medium]",
@@ -443,8 +523,37 @@
       "mean_gateway_reported_cost_per_attempt": 0.12397124999999999,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
+    },
+    {
+      "model_config": "anthropic/claude-opus-4.8[medium]",
+      "model": "anthropic/claude-opus-4.8",
+      "reasoning_effort": "medium",
+      "category": "invoke",
+      "tier": "t4",
+      "task_id": "ticket-state-reconcile",
+      "total_trials": 5,
+      "attempts": 5,
+      "excluded_attempts": 0,
+      "passes": 5,
+      "pass_rate": 1.0,
+      "mean_tokens_per_attempt": 120274.2,
+      "tokens_per_success": 120274.2,
+      "mean_input_tokens_per_attempt": 112047.0,
+      "mean_output_tokens_per_attempt": 8227.2,
+      "mean_cache_read_tokens_per_attempt": 96263.0,
+      "mean_cache_write_tokens_per_attempt": 15762.8,
+      "mean_reasoning_tokens_per_attempt": 688.6,
+      "mean_turns": 10.4,
+      "mean_cost_per_attempt": 0.352435,
+      "cpsc": 0.352435,
+      "gateway_reported_attempts": 5,
+      "mean_gateway_reported_cost_per_attempt": 0.352435,
+      "mean_cost_delta_vs_gateway_per_attempt": 0.0,
+      "cost_delta_vs_gateway_ratio": 0.0,
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-sonnet-5[low]",
@@ -472,8 +581,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.0349994,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-sonnet-5[low]",
@@ -501,8 +610,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.030533433333333332,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-sonnet-5[low]",
@@ -530,8 +639,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.03253999999999999,
       "mean_cost_delta_vs_gateway_per_attempt": 9.25185853854297e-18,
       "cost_delta_vs_gateway_ratio": 2.843226348661024e-16,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-sonnet-5[low]",
@@ -559,8 +668,37 @@
       "mean_gateway_reported_cost_per_attempt": 0.0268303,
       "mean_cost_delta_vs_gateway_per_attempt": -4.625929269271485e-18,
       "cost_delta_vs_gateway_ratio": -1.7241436992025753e-16,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
+    },
+    {
+      "model_config": "anthropic/claude-sonnet-5[low]",
+      "model": "anthropic/claude-sonnet-5",
+      "reasoning_effort": "low",
+      "category": "invoke",
+      "tier": "t4",
+      "task_id": "ticket-state-reconcile",
+      "total_trials": 5,
+      "attempts": 5,
+      "excluded_attempts": 0,
+      "passes": 2,
+      "pass_rate": 0.4,
+      "mean_tokens_per_attempt": 69014.0,
+      "tokens_per_success": 172535.0,
+      "mean_input_tokens_per_attempt": 63597.0,
+      "mean_output_tokens_per_attempt": 5417.0,
+      "mean_cache_read_tokens_per_attempt": 52465.0,
+      "mean_cache_write_tokens_per_attempt": 11117.2,
+      "mean_reasoning_tokens_per_attempt": 297.0,
+      "mean_turns": 7.4,
+      "mean_cost_per_attempt": 0.0924856,
+      "cpsc": 0.231214,
+      "gateway_reported_attempts": 5,
+      "mean_gateway_reported_cost_per_attempt": 0.0924856,
+      "mean_cost_delta_vs_gateway_per_attempt": 0.0,
+      "cost_delta_vs_gateway_ratio": 0.0,
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-sonnet-5[medium]",
@@ -588,8 +726,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.0395801,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-sonnet-5[medium]",
@@ -617,8 +755,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.044693333333333335,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-sonnet-5[medium]",
@@ -646,8 +784,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.038238699999999994,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "anthropic/claude-sonnet-5[medium]",
@@ -675,8 +813,37 @@
       "mean_gateway_reported_cost_per_attempt": 0.03651396666666667,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
+    },
+    {
+      "model_config": "anthropic/claude-sonnet-5[medium]",
+      "model": "anthropic/claude-sonnet-5",
+      "reasoning_effort": "medium",
+      "category": "invoke",
+      "tier": "t4",
+      "task_id": "ticket-state-reconcile",
+      "total_trials": 5,
+      "attempts": 5,
+      "excluded_attempts": 0,
+      "passes": 4,
+      "pass_rate": 0.8,
+      "mean_tokens_per_attempt": 126192.0,
+      "tokens_per_success": 157740.0,
+      "mean_input_tokens_per_attempt": 117703.2,
+      "mean_output_tokens_per_attempt": 8488.8,
+      "mean_cache_read_tokens_per_attempt": 101856.8,
+      "mean_cache_write_tokens_per_attempt": 15826.4,
+      "mean_reasoning_tokens_per_attempt": 925.2,
+      "mean_turns": 9.2,
+      "mean_cost_per_attempt": 0.14486536,
+      "cpsc": 0.18108169999999998,
+      "gateway_reported_attempts": 5,
+      "mean_gateway_reported_cost_per_attempt": 0.14486536,
+      "mean_cost_delta_vs_gateway_per_attempt": -2.2204460492503132e-17,
+      "cost_delta_vs_gateway_ratio": -1.5327653548441898e-16,
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "google/gemini-3.5-flash[medium]",
@@ -704,8 +871,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.12025845000000002,
       "mean_cost_delta_vs_gateway_per_attempt": -1.850371707708594e-17,
       "cost_delta_vs_gateway_ratio": -1.5386625286693733e-16,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "google/gemini-3.5-flash[medium]",
@@ -733,8 +900,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.37754205,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "google/gemini-3.5-flash[medium]",
@@ -762,8 +929,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.10840735,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "google/gemini-3.5-flash[medium]",
@@ -791,8 +958,37 @@
       "mean_gateway_reported_cost_per_attempt": 0.20277980000000004,
       "mean_cost_delta_vs_gateway_per_attempt": -3.700743415417188e-17,
       "cost_delta_vs_gateway_ratio": -1.825005950009413e-16,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
+    },
+    {
+      "model_config": "google/gemini-3.5-flash[medium]",
+      "model": "google/gemini-3.5-flash",
+      "reasoning_effort": "medium",
+      "category": "invoke",
+      "tier": "t4",
+      "task_id": "ticket-state-reconcile",
+      "total_trials": 15,
+      "attempts": 15,
+      "excluded_attempts": 0,
+      "passes": 5,
+      "pass_rate": 0.3333333333333333,
+      "mean_tokens_per_attempt": 419642.2,
+      "tokens_per_success": 1258926.6,
+      "mean_input_tokens_per_attempt": 389927.4666666667,
+      "mean_output_tokens_per_attempt": 29714.733333333334,
+      "mean_cache_read_tokens_per_attempt": 250411.86666666667,
+      "mean_cache_write_tokens_per_attempt": 0.0,
+      "mean_reasoning_tokens_per_attempt": 23924.133333333335,
+      "mean_turns": 22.066666666666666,
+      "mean_cost_per_attempt": 0.5142677800000001,
+      "cpsc": 1.5428033400000003,
+      "gateway_reported_attempts": 15,
+      "mean_gateway_reported_cost_per_attempt": 0.5142677800000001,
+      "mean_cost_delta_vs_gateway_per_attempt": 0.0,
+      "cost_delta_vs_gateway_ratio": 0.0,
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "moonshotai/kimi-k2.7-code",
@@ -820,8 +1016,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.0259182,
       "mean_cost_delta_vs_gateway_per_attempt": -0.0034058533333333335,
       "cost_delta_vs_gateway_ratio": -0.1314077880922801,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "moonshotai/kimi-k2.7-code",
@@ -849,8 +1045,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.04481768999999999,
       "mean_cost_delta_vs_gateway_per_attempt": -0.006181983333333326,
       "cost_delta_vs_gateway_ratio": -0.1379362330663032,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "moonshotai/kimi-k2.7-code",
@@ -878,8 +1074,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.03559471000000001,
       "mean_cost_delta_vs_gateway_per_attempt": -0.005066690000000008,
       "cost_delta_vs_gateway_ratio": -0.14234390447344583,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "moonshotai/kimi-k2.7-code",
@@ -907,8 +1103,37 @@
       "mean_gateway_reported_cost_per_attempt": 0.03626483666666667,
       "mean_cost_delta_vs_gateway_per_attempt": -0.0041748166666666685,
       "cost_delta_vs_gateway_ratio": -0.11512023906353369,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
+    },
+    {
+      "model_config": "moonshotai/kimi-k2.7-code",
+      "model": "moonshotai/kimi-k2.7-code",
+      "reasoning_effort": null,
+      "category": "invoke",
+      "tier": "t4",
+      "task_id": "ticket-state-reconcile",
+      "total_trials": 15,
+      "attempts": 15,
+      "excluded_attempts": 0,
+      "passes": 10,
+      "pass_rate": 0.6666666666666666,
+      "mean_tokens_per_attempt": 305576.6666666667,
+      "tokens_per_success": 458365.00000000006,
+      "mean_input_tokens_per_attempt": 286072.8,
+      "mean_output_tokens_per_attempt": 19503.866666666665,
+      "mean_cache_read_tokens_per_attempt": 226713.6,
+      "mean_cache_write_tokens_per_attempt": 0.0,
+      "mean_reasoning_tokens_per_attempt": 14616.333333333334,
+      "mean_turns": 18.4,
+      "mean_cost_per_attempt": 0.14619638133333332,
+      "cpsc": 0.219294572,
+      "gateway_reported_attempts": 15,
+      "mean_gateway_reported_cost_per_attempt": 0.16508714,
+      "mean_cost_delta_vs_gateway_per_attempt": -0.018890758666666674,
+      "cost_delta_vs_gateway_ratio": -0.11442901407503137,
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "openai/gpt-5.5[low]",
@@ -936,8 +1161,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.13802433333333333,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "openai/gpt-5.5[low]",
@@ -965,8 +1190,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.17132033333333332,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "openai/gpt-5.5[low]",
@@ -994,8 +1219,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.14081533333333332,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "openai/gpt-5.5[low]",
@@ -1023,8 +1248,37 @@
       "mean_gateway_reported_cost_per_attempt": 0.13014866666666666,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
+    },
+    {
+      "model_config": "openai/gpt-5.5[low]",
+      "model": "openai/gpt-5.5",
+      "reasoning_effort": "low",
+      "category": "invoke",
+      "tier": "t4",
+      "task_id": "ticket-state-reconcile",
+      "total_trials": 7,
+      "attempts": 5,
+      "excluded_attempts": 2,
+      "passes": 5,
+      "pass_rate": 1.0,
+      "mean_tokens_per_attempt": 83677.8,
+      "tokens_per_success": 83677.8,
+      "mean_input_tokens_per_attempt": 79077.4,
+      "mean_output_tokens_per_attempt": 4600.4,
+      "mean_cache_read_tokens_per_attempt": 52838.4,
+      "mean_cache_write_tokens_per_attempt": 0.0,
+      "mean_reasoning_tokens_per_attempt": 677.0,
+      "mean_turns": 10.0,
+      "mean_cost_per_attempt": 0.2956262,
+      "cpsc": 0.2956262,
+      "gateway_reported_attempts": 5,
+      "mean_gateway_reported_cost_per_attempt": 0.2956262,
+      "mean_cost_delta_vs_gateway_per_attempt": 0.0,
+      "cost_delta_vs_gateway_ratio": 0.0,
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "openai/gpt-5.5[medium]",
@@ -1052,8 +1306,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.18879,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "openai/gpt-5.5[medium]",
@@ -1081,8 +1335,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.22622066666666665,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "openai/gpt-5.5[medium]",
@@ -1110,8 +1364,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.203184,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "openai/gpt-5.5[medium]",
@@ -1139,8 +1393,37 @@
       "mean_gateway_reported_cost_per_attempt": 0.18095399999999998,
       "mean_cost_delta_vs_gateway_per_attempt": 0.0,
       "cost_delta_vs_gateway_ratio": 0.0,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
+    },
+    {
+      "model_config": "openai/gpt-5.5[medium]",
+      "model": "openai/gpt-5.5",
+      "reasoning_effort": "medium",
+      "category": "invoke",
+      "tier": "t4",
+      "task_id": "ticket-state-reconcile",
+      "total_trials": 5,
+      "attempts": 5,
+      "excluded_attempts": 0,
+      "passes": 5,
+      "pass_rate": 1.0,
+      "mean_tokens_per_attempt": 160848.6,
+      "tokens_per_success": 160848.6,
+      "mean_input_tokens_per_attempt": 152906.2,
+      "mean_output_tokens_per_attempt": 7942.4,
+      "mean_cache_read_tokens_per_attempt": 123084.8,
+      "mean_cache_write_tokens_per_attempt": 0.0,
+      "mean_reasoning_tokens_per_attempt": 2866.8,
+      "mean_turns": 13.6,
+      "mean_cost_per_attempt": 0.4489214,
+      "cpsc": 0.4489214,
+      "gateway_reported_attempts": 5,
+      "mean_gateway_reported_cost_per_attempt": 0.4489214,
+      "mean_cost_delta_vs_gateway_per_attempt": 0.0,
+      "cost_delta_vs_gateway_ratio": 0.0,
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "z-ai/glm-5.2[high]",
@@ -1168,8 +1451,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.01649652712,
       "mean_cost_delta_vs_gateway_per_attempt": -0.0005057771199999972,
       "cost_delta_vs_gateway_ratio": -0.03065961194867525,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "z-ai/glm-5.2[high]",
@@ -1197,8 +1480,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.05110406388,
       "mean_cost_delta_vs_gateway_per_attempt": -0.0016274738800000077,
       "cost_delta_vs_gateway_ratio": -0.03184627124413354,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "z-ai/glm-5.2[high]",
@@ -1226,8 +1509,8 @@
       "mean_gateway_reported_cost_per_attempt": 0.011234962666666667,
       "mean_cost_delta_vs_gateway_per_attempt": -0.00028793266666666634,
       "cost_delta_vs_gateway_ratio": -0.025628270890560412,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     },
     {
       "model_config": "z-ai/glm-5.2[high]",
@@ -1255,8 +1538,37 @@
       "mean_gateway_reported_cost_per_attempt": 0.02446842237333333,
       "mean_cost_delta_vs_gateway_per_attempt": -0.000945892373333331,
       "cost_delta_vs_gateway_ratio": -0.03865767718495012,
-      "default_weight": 0.25,
-      "declared_weight": 0.027777777777777776
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
+    },
+    {
+      "model_config": "z-ai/glm-5.2[high]",
+      "model": "z-ai/glm-5.2",
+      "reasoning_effort": "high",
+      "category": "invoke",
+      "tier": "t4",
+      "task_id": "ticket-state-reconcile",
+      "total_trials": 15,
+      "attempts": 15,
+      "excluded_attempts": 0,
+      "passes": 6,
+      "pass_rate": 0.4,
+      "mean_tokens_per_attempt": 84172.8,
+      "tokens_per_success": 210432.0,
+      "mean_input_tokens_per_attempt": 71127.33333333333,
+      "mean_output_tokens_per_attempt": 13045.466666666667,
+      "mean_cache_read_tokens_per_attempt": 57843.2,
+      "mean_cache_write_tokens_per_attempt": 0.0,
+      "mean_reasoning_tokens_per_attempt": 10260.133333333333,
+      "mean_turns": 9.533333333333333,
+      "mean_cost_per_attempt": 0.06190242,
+      "cpsc": 0.15475604999999998,
+      "gateway_reported_attempts": 15,
+      "mean_gateway_reported_cost_per_attempt": 0.063634913328,
+      "mean_cost_delta_vs_gateway_per_attempt": -0.0017324933279999992,
+      "cost_delta_vs_gateway_ratio": -0.027225515639033405,
+      "default_weight": 0.2,
+      "declared_weight": 0.020833333333333332
     }
   ],
   "models": [
@@ -1264,18 +1576,22 @@
       "model_config": "anthropic/claude-fable-5[low]",
       "model": "anthropic/claude-fable-5",
       "reasoning_effort": "low",
-      "cells": 4,
+      "cells": 5,
       "covered_weight": 1.0,
       "missing_weight": 0.0,
       "priced_success_weight": 1.0,
       "token_success_weight": 1.0,
       "unresolved_weight": 0.0,
-      "weighted_pass_rate": 1.0,
-      "weighted_mean_turns": 4.833333333333333,
-      "basket_cpsc": 0.11159087499999999,
-      "partial_basket_cpsc": 0.11159087499999999,
-      "basket_tokens_per_success": 16050.416666666666,
-      "partial_basket_tokens_per_success": 16050.416666666666,
+      "weighted_pass_rate": 0.9600000000000001,
+      "weighted_mean_turns": 5.266666666666667,
+      "weighted_mean_cost_per_attempt": 0.16292786,
+      "partial_weighted_mean_cost_per_attempt": 0.16292786,
+      "weighted_mean_tokens_per_attempt": 23843.013333333332,
+      "partial_weighted_mean_tokens_per_attempt": 23843.013333333332,
+      "basket_cpsc": 0.16971652083333333,
+      "partial_basket_cpsc": 0.16971652083333333,
+      "basket_tokens_per_success": 24836.47222222222,
+      "partial_basket_tokens_per_success": 24836.47222222222,
       "rank_by_basket_cpsc": 6,
       "rank_by_basket_tokens_per_success": 1
     },
@@ -1283,18 +1599,22 @@
       "model_config": "anthropic/claude-opus-4.8[low]",
       "model": "anthropic/claude-opus-4.8",
       "reasoning_effort": "low",
-      "cells": 4,
+      "cells": 5,
       "covered_weight": 1.0,
       "missing_weight": 0.0,
       "priced_success_weight": 1.0,
       "token_success_weight": 1.0,
       "unresolved_weight": 0.0,
-      "weighted_pass_rate": 0.9166666666666666,
-      "weighted_mean_turns": 7.0,
-      "basket_cpsc": 0.080944125,
-      "partial_basket_cpsc": 0.080944125,
-      "basket_tokens_per_success": 29304.416666666664,
-      "partial_basket_tokens_per_success": 29304.416666666664,
+      "weighted_pass_rate": 0.8533333333333334,
+      "weighted_mean_turns": 7.400000000000001,
+      "weighted_mean_cost_per_attempt": 0.09791317333333334,
+      "partial_weighted_mean_cost_per_attempt": 0.09791317333333334,
+      "weighted_mean_tokens_per_attempt": 36467.08,
+      "partial_weighted_mean_tokens_per_attempt": 36467.08,
+      "basket_cpsc": 0.114742,
+      "partial_basket_cpsc": 0.114742,
+      "basket_tokens_per_success": 42734.859375,
+      "partial_basket_tokens_per_success": 42734.859375,
       "rank_by_basket_cpsc": 5,
       "rank_by_basket_tokens_per_success": 2
     },
@@ -1302,37 +1622,45 @@
       "model_config": "anthropic/claude-opus-4.8[medium]",
       "model": "anthropic/claude-opus-4.8",
       "reasoning_effort": "medium",
-      "cells": 4,
+      "cells": 5,
       "covered_weight": 1.0,
       "missing_weight": 0.0,
       "priced_success_weight": 1.0,
       "token_success_weight": 1.0,
       "unresolved_weight": 0.0,
-      "weighted_pass_rate": 0.9166666666666666,
-      "weighted_mean_turns": 8.25,
-      "basket_cpsc": 0.13729997916666667,
-      "partial_basket_cpsc": 0.13729997916666667,
-      "basket_tokens_per_success": 45685.25,
-      "partial_basket_tokens_per_success": 45685.25,
-      "rank_by_basket_cpsc": 7,
+      "weighted_pass_rate": 0.9333333333333333,
+      "weighted_mean_turns": 8.68,
+      "weighted_mean_cost_per_attempt": 0.16722108333333335,
+      "partial_weighted_mean_cost_per_attempt": 0.16722108333333335,
+      "weighted_mean_tokens_per_attempt": 57478.64,
+      "partial_weighted_mean_tokens_per_attempt": 57478.64,
+      "basket_cpsc": 0.17916544642857143,
+      "partial_basket_cpsc": 0.17916544642857143,
+      "basket_tokens_per_success": 61584.25714285714,
+      "partial_basket_tokens_per_success": 61584.25714285714,
+      "rank_by_basket_cpsc": 8,
       "rank_by_basket_tokens_per_success": 7
     },
     {
       "model_config": "anthropic/claude-sonnet-5[low]",
       "model": "anthropic/claude-sonnet-5",
       "reasoning_effort": "low",
-      "cells": 4,
+      "cells": 5,
       "covered_weight": 1.0,
       "missing_weight": 0.0,
       "priced_success_weight": 1.0,
       "token_success_weight": 1.0,
       "unresolved_weight": 0.0,
-      "weighted_pass_rate": 1.0,
-      "weighted_mean_turns": 8.166666666666668,
-      "basket_cpsc": 0.031225783333333333,
-      "partial_basket_cpsc": 0.031225783333333333,
-      "basket_tokens_per_success": 32968.58333333333,
-      "partial_basket_tokens_per_success": 32968.58333333333,
+      "weighted_pass_rate": 0.8800000000000001,
+      "weighted_mean_turns": 8.013333333333334,
+      "weighted_mean_cost_per_attempt": 0.043477746666666664,
+      "partial_weighted_mean_cost_per_attempt": 0.043477746666666664,
+      "weighted_mean_tokens_per_attempt": 40177.66666666667,
+      "partial_weighted_mean_tokens_per_attempt": 40177.66666666667,
+      "basket_cpsc": 0.04940653030303029,
+      "partial_basket_cpsc": 0.04940653030303029,
+      "basket_tokens_per_success": 45656.43939393939,
+      "partial_basket_tokens_per_success": 45656.43939393939,
       "rank_by_basket_cpsc": 2,
       "rank_by_basket_tokens_per_success": 3
     },
@@ -1340,37 +1668,45 @@
       "model_config": "anthropic/claude-sonnet-5[medium]",
       "model": "anthropic/claude-sonnet-5",
       "reasoning_effort": "medium",
-      "cells": 4,
+      "cells": 5,
       "covered_weight": 1.0,
       "missing_weight": 0.0,
       "priced_success_weight": 1.0,
       "token_success_weight": 1.0,
       "unresolved_weight": 0.0,
-      "weighted_pass_rate": 1.0,
-      "weighted_mean_turns": 8.916666666666668,
-      "basket_cpsc": 0.039756525,
-      "partial_basket_cpsc": 0.039756525,
-      "basket_tokens_per_success": 39805.666666666664,
-      "partial_basket_tokens_per_success": 39805.666666666664,
+      "weighted_pass_rate": 0.9600000000000001,
+      "weighted_mean_turns": 8.973333333333334,
+      "weighted_mean_cost_per_attempt": 0.060778292000000005,
+      "partial_weighted_mean_cost_per_attempt": 0.060778292000000005,
+      "weighted_mean_tokens_per_attempt": 57082.933333333334,
+      "partial_weighted_mean_tokens_per_attempt": 57082.933333333334,
+      "basket_cpsc": 0.06331072083333333,
+      "partial_basket_cpsc": 0.06331072083333333,
+      "basket_tokens_per_success": 59461.38888888888,
+      "partial_basket_tokens_per_success": 59461.38888888888,
       "rank_by_basket_cpsc": 3,
-      "rank_by_basket_tokens_per_success": 5
+      "rank_by_basket_tokens_per_success": 6
     },
     {
       "model_config": "google/gemini-3.5-flash[medium]",
       "model": "google/gemini-3.5-flash",
       "reasoning_effort": "medium",
-      "cells": 4,
+      "cells": 5,
       "covered_weight": 1.0,
       "missing_weight": 0.0,
       "priced_success_weight": 1.0,
       "token_success_weight": 1.0,
       "unresolved_weight": 0.0,
-      "weighted_pass_rate": 0.9166666666666666,
-      "weighted_mean_turns": 21.666666666666664,
-      "basket_cpsc": 0.24943966875,
-      "partial_basket_cpsc": 0.24943966875,
-      "basket_tokens_per_success": 212720.62499999997,
-      "partial_basket_tokens_per_success": 212720.62499999997,
+      "weighted_pass_rate": 0.8,
+      "weighted_mean_turns": 21.746666666666666,
+      "weighted_mean_cost_per_attempt": 0.26465108600000004,
+      "partial_weighted_mean_cost_per_attempt": 0.26465108600000004,
+      "weighted_mean_tokens_per_attempt": 223458.1066666667,
+      "partial_weighted_mean_tokens_per_attempt": 223458.1066666667,
+      "basket_cpsc": 0.33081385750000003,
+      "partial_basket_cpsc": 0.33081385750000003,
+      "basket_tokens_per_success": 279322.63333333336,
+      "partial_basket_tokens_per_success": 279322.63333333336,
       "rank_by_basket_cpsc": 10,
       "rank_by_basket_tokens_per_success": 10
     },
@@ -1378,18 +1714,22 @@
       "model_config": "moonshotai/kimi-k2.7-code",
       "model": "moonshotai/kimi-k2.7-code",
       "reasoning_effort": null,
-      "cells": 4,
+      "cells": 5,
       "covered_weight": 1.0,
       "missing_weight": 0.0,
       "priced_success_weight": 1.0,
       "token_success_weight": 1.0,
       "unresolved_weight": 0.0,
-      "weighted_pass_rate": 0.8333333333333333,
-      "weighted_mean_turns": 12.916666666666668,
-      "basket_cpsc": 0.05025937666666666,
-      "partial_basket_cpsc": 0.05025937666666666,
-      "basket_tokens_per_success": 88501.33333333333,
-      "partial_basket_tokens_per_success": 88501.33333333333,
+      "weighted_pass_rate": 0.8,
+      "weighted_mean_turns": 14.013333333333334,
+      "weighted_mean_cost_per_attempt": 0.05399249493333333,
+      "partial_weighted_mean_cost_per_attempt": 0.05399249493333333,
+      "weighted_mean_tokens_per_attempt": 106686.80000000002,
+      "partial_weighted_mean_tokens_per_attempt": 106686.80000000002,
+      "basket_cpsc": 0.06749061866666665,
+      "partial_basket_cpsc": 0.06749061866666665,
+      "basket_tokens_per_success": 133358.5,
+      "partial_basket_tokens_per_success": 133358.5,
       "rank_by_basket_cpsc": 4,
       "rank_by_basket_tokens_per_success": 9
     },
@@ -1397,37 +1737,45 @@
       "model_config": "openai/gpt-5.5[low]",
       "model": "openai/gpt-5.5",
       "reasoning_effort": "low",
-      "cells": 4,
+      "cells": 5,
       "covered_weight": 1.0,
       "missing_weight": 0.0,
       "priced_success_weight": 1.0,
       "token_success_weight": 1.0,
       "unresolved_weight": 0.0,
       "weighted_pass_rate": 1.0,
-      "weighted_mean_turns": 8.916666666666668,
-      "basket_cpsc": 0.14507716666666667,
-      "partial_basket_cpsc": 0.14507716666666667,
-      "basket_tokens_per_success": 39179.75,
-      "partial_basket_tokens_per_success": 39179.75,
-      "rank_by_basket_cpsc": 8,
+      "weighted_mean_turns": 9.133333333333333,
+      "weighted_mean_cost_per_attempt": 0.17518697333333333,
+      "partial_weighted_mean_cost_per_attempt": 0.17518697333333333,
+      "weighted_mean_tokens_per_attempt": 48079.36,
+      "partial_weighted_mean_tokens_per_attempt": 48079.36,
+      "basket_cpsc": 0.17518697333333333,
+      "partial_basket_cpsc": 0.17518697333333333,
+      "basket_tokens_per_success": 48079.36,
+      "partial_basket_tokens_per_success": 48079.36,
+      "rank_by_basket_cpsc": 7,
       "rank_by_basket_tokens_per_success": 4
     },
     {
       "model_config": "openai/gpt-5.5[medium]",
       "model": "openai/gpt-5.5",
       "reasoning_effort": "medium",
-      "cells": 4,
+      "cells": 5,
       "covered_weight": 1.0,
       "missing_weight": 0.0,
       "priced_success_weight": 1.0,
       "token_success_weight": 1.0,
       "unresolved_weight": 0.0,
       "weighted_pass_rate": 1.0,
-      "weighted_mean_turns": 10.75,
-      "basket_cpsc": 0.19978716666666665,
-      "partial_basket_cpsc": 0.19978716666666665,
-      "basket_tokens_per_success": 62557.33333333333,
-      "partial_basket_tokens_per_success": 62557.33333333333,
+      "weighted_mean_turns": 11.320000000000002,
+      "weighted_mean_cost_per_attempt": 0.24961401333333333,
+      "partial_weighted_mean_cost_per_attempt": 0.24961401333333333,
+      "weighted_mean_tokens_per_attempt": 82215.58666666667,
+      "partial_weighted_mean_tokens_per_attempt": 82215.58666666667,
+      "basket_cpsc": 0.24961401333333333,
+      "partial_basket_cpsc": 0.24961401333333333,
+      "basket_tokens_per_success": 82215.58666666667,
+      "partial_basket_tokens_per_success": 82215.58666666667,
       "rank_by_basket_cpsc": 9,
       "rank_by_basket_tokens_per_success": 8
     },
@@ -1435,20 +1783,24 @@
       "model_config": "z-ai/glm-5.2[high]",
       "model": "z-ai/glm-5.2",
       "reasoning_effort": "high",
-      "cells": 4,
+      "cells": 5,
       "covered_weight": 1.0,
       "missing_weight": 0.0,
       "priced_success_weight": 1.0,
       "token_success_weight": 1.0,
       "unresolved_weight": 0.0,
-      "weighted_pass_rate": 1.0,
-      "weighted_mean_turns": 10.083333333333334,
-      "basket_cpsc": 0.024984225,
-      "partial_basket_cpsc": 0.024984225,
-      "basket_tokens_per_success": 43297.66666666667,
-      "partial_basket_tokens_per_success": 43297.66666666667,
+      "weighted_pass_rate": 0.8800000000000001,
+      "weighted_mean_turns": 9.973333333333333,
+      "weighted_mean_cost_per_attempt": 0.032367864,
+      "partial_weighted_mean_cost_per_attempt": 0.032367864,
+      "weighted_mean_tokens_per_attempt": 51472.69333333333,
+      "partial_weighted_mean_tokens_per_attempt": 51472.69333333333,
+      "basket_cpsc": 0.036781663636363635,
+      "partial_basket_cpsc": 0.036781663636363635,
+      "basket_tokens_per_success": 58491.69696969695,
+      "partial_basket_tokens_per_success": 58491.69696969695,
       "rank_by_basket_cpsc": 1,
-      "rank_by_basket_tokens_per_success": 6
+      "rank_by_basket_tokens_per_success": 5
     }
   ]
 }

@@ -11,16 +11,19 @@ const TOP = 50; // waterline y
 const BOTTOM = 420;
 const LINE_X = 128; // the sounding line
 const DOM_LO = 0.02;
-const DOM_HI = 0.35;
 
-const gauge = [0.03, 0.05, 0.1, 0.2, 0.3];
+const GAUGE_CANDIDATES = [0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1];
 
 export default function HeroDepth() {
   const hue = useHue();
   const { weights } = useWeights();
-  const y = logScale(DOM_LO, DOM_HI, TOP, BOTTOM);
+  const aggregates = weightedAggregates(weights);
+  const maxCpsc = Math.max(...aggregates.map((a) => a.cpsc).filter((v) => Number.isFinite(v)));
+  const domainHi = Math.max(0.35, maxCpsc * 1.18);
+  const y = logScale(DOM_LO, domainHi, TOP, BOTTOM);
+  const gauge = GAUGE_CANDIDATES.filter((g) => g > DOM_LO && g < domainHi);
 
-  const rows = weightedAggregates(weights)
+  const rows = aggregates
     .map((a) => ({ ...a, yv: y(a.cpsc), m: modelById[a.modelId] }))
     .sort((p, q) => p.yv - q.yv);
 

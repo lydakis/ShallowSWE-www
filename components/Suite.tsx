@@ -4,8 +4,8 @@ import { categories, tasks, SUITE_TASKS } from "@/app/data/model";
 export default function Suite() {
   return (
     <Section id="suite" className="border-t border-line">
-      <SectionHeader eyebrow="The tasks" title="Four tasks">
-        <p>{SUITE_TASKS} original Pier-compatible tasks, not copied from public benchmarks.</p>
+      <SectionHeader eyebrow="The tasks" title="Task set">
+        <p>{SUITE_TASKS} original Pier-compatible tasks, all in the same weighted basket.</p>
       </SectionHeader>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -28,7 +28,7 @@ export default function Suite() {
       </div>
 
       <p className="mt-4 font-mono text-[0.7rem] text-muted">
-        T2 routine · T3 mildly gnarly · scored by programmatic verifiers inside Pier
+        T2 routine · T3 mildly gnarly · T4 shelf edge · scored by programmatic verifiers inside Pier
       </p>
     </Section>
   );

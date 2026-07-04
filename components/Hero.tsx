@@ -17,7 +17,7 @@ export default function Hero() {
 
             <p className="mt-6 max-w-xl text-[1.15rem] leading-relaxed text-ink-2">
               This ranking looks wrong on purpose. The tasks are ordinary — the work models actually get handed — and
-              every model here finishes them. What separates them is cost.
+              failed attempts stay in the denominator. What separates them is cost per success.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">

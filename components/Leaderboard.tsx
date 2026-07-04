@@ -6,6 +6,7 @@ import {
   EQUAL_WEIGHTS,
   CategoryWeights,
   categories,
+  fmtEffort,
   modelById,
   fmtUsd,
   fmtTokens,
@@ -23,9 +24,10 @@ const cols: { key: Key; label: string; fmt: (v: number) => string; goodLow: bool
 
 const presets: { label: string; w: CategoryWeights }[] = [
   { label: "Equal", w: EQUAL_WEIGHTS },
-  { label: "Fix-heavy", w: { fix: 60, operate: 20, transform: 20 } },
-  { label: "Operate-heavy", w: { fix: 15, operate: 65, transform: 20 } },
-  { label: "Transform-heavy", w: { fix: 15, operate: 20, transform: 65 } },
+  { label: "Fix-heavy", w: { fix: 55, operate: 15, transform: 15, invoke: 15 } },
+  { label: "Operate-heavy", w: { fix: 15, operate: 55, transform: 15, invoke: 15 } },
+  { label: "Transform-heavy", w: { fix: 15, operate: 15, transform: 55, invoke: 15 } },
+  { label: "Invoke-heavy", w: { fix: 15, operate: 15, transform: 15, invoke: 55 } },
 ];
 
 function sameWeights(a: CategoryWeights, b: CategoryWeights): boolean {
@@ -123,7 +125,7 @@ export default function Leaderboard() {
                     <span className="mr-2 font-mono text-xs text-muted tnum">{i + 1}</span>
                     <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-full align-middle" style={{ background: hue(r.modelId) }} />
                     <span className="text-ink">{m.label}</span>
-                    <span className="ml-1.5 font-mono text-[0.7rem] text-muted">{m.effort ?? "default"}</span>
+                    <span className="ml-1.5 font-mono text-[0.7rem] text-muted">{fmtEffort(m.effort)}</span>
                     <span className="ml-1.5 font-mono text-[0.7rem] text-muted">{m.vendor}</span>
                   </th>
                   {cols.map((c) => (
