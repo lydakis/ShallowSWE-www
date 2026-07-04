@@ -25,6 +25,12 @@ const LABEL: Record<string, { dx: number; dy: number; anchor: "start" | "end" }>
   "glm-5-2-high": { dx: 12, dy: -14, anchor: "start" },
 };
 
+function median(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
 export default function CostQuadrantChart() {
   const hue = useHue();
   const { weights } = useWeights();
@@ -37,6 +43,10 @@ export default function CostQuadrantChart() {
 
   const x = logScale(4, 25, PLOT.l, PLOT.r);
   const y = logScale(0.02, 0.7, PLOT.t, PLOT.b);
+  const hardMedian = median(points.map((p) => p.hard));
+  const shallowMedian = median(points.map((p) => p.shallow));
+  const hardCutX = x(hardMedian);
+  const shallowCutY = y(shallowMedian);
 
   // connect a model family's effort variants
   const families = new Map<string, typeof points>();
@@ -72,8 +82,48 @@ export default function CostQuadrantChart() {
           <text x={PLOT.l} y={PLOT.t - 8} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
             LOWER SHALLOWSWE CPSC
           </text>
-          <text x={PLOT.r} y={VB_H - 24} textAnchor="end" fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
+          <text x={PLOT.l} y={VB_H - 24} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
             LOWER DEEPSWE $/SOLVED
+          </text>
+
+          {/* dynamic median split: upper-left is lower cost on both benchmarks */}
+          <rect
+            x={PLOT.l}
+            y={PLOT.t}
+            width={hardCutX - PLOT.l}
+            height={shallowCutY - PLOT.t}
+            fill="var(--waterline)"
+            fillOpacity="0.07"
+          />
+          <line
+            x1={hardCutX}
+            y1={PLOT.t}
+            x2={hardCutX}
+            y2={PLOT.b}
+            stroke="var(--waterline)"
+            strokeWidth="1"
+            strokeOpacity="0.28"
+            strokeDasharray="4 5"
+          />
+          <line
+            x1={PLOT.l}
+            y1={shallowCutY}
+            x2={PLOT.r}
+            y2={shallowCutY}
+            stroke="var(--waterline)"
+            strokeWidth="1"
+            strokeOpacity="0.28"
+            strokeDasharray="4 5"
+          />
+          <text
+            x={PLOT.l + 10}
+            y={PLOT.t + 16}
+            fontFamily="var(--font-mono)"
+            fontSize="8.5"
+            letterSpacing="0.08em"
+            fill="var(--waterline)"
+          >
+            LOWER BOTH
           </text>
 
           {X_TICKS.map((t) => (
