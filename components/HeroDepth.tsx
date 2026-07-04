@@ -1,7 +1,8 @@
 "use client";
 
-import { suiteAggregates, modelById, fmtUsd } from "@/app/data/model";
+import { weightedAggregates, modelById, fmtUsd } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { useWeights } from "@/lib/weights";
 import { logScale } from "@/lib/scale";
 
 const VB_W = 480;
@@ -16,9 +17,10 @@ const gauge = [0.03, 0.05, 0.1, 0.2, 0.3];
 
 export default function HeroDepth() {
   const hue = useHue();
+  const { weights } = useWeights();
   const y = logScale(DOM_LO, DOM_HI, TOP, BOTTOM);
 
-  const rows = suiteAggregates()
+  const rows = weightedAggregates(weights)
     .map((a) => ({ ...a, yv: y(a.cpsc), m: modelById[a.modelId] }))
     .sort((p, q) => p.yv - q.yv);
 

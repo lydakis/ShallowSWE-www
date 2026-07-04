@@ -1,199 +1,193 @@
 "use client";
 
-import {
-  EFFORT_ORDER,
-  fmtTokens,
-  fmtUsd,
-  modelById,
-  shallowEffortCurves,
-  type ShallowEffortCurve,
-} from "@/app/data/model";
+import { useState } from "react";
+import { weightedAggregates, modelById, models, fmtUsd } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
-import { logScale } from "@/lib/scale";
+import { useWeights } from "@/lib/weights";
+import { linScale, logScale } from "@/lib/scale";
 
 const VB_W = 560;
 const VB_H = 410;
-const PLOT = { l: 64, r: 492, t: 44, b: 326 };
+const PLOT = { l: 60, r: 470, t: 34, b: 336 };
 const Y_TICKS = [0.03, 0.05, 0.1, 0.2, 0.3];
-const EFFORTS = ["default", ...EFFORT_ORDER] as const;
-const EFFORT_LABELS: Record<string, string> = { medium: "med", xhigh: "x-hi" };
 
-const LABEL_OFFSETS: Record<string, { dx: number; dy: number; anchor: "start" | "end" }> = {
-  "sonnet-5-low": { dx: 12, dy: -7, anchor: "start" },
-  "sonnet-5-medium": { dx: 12, dy: -7, anchor: "start" },
-  "kimi-k2-7-default": { dx: 12, dy: 3, anchor: "start" },
-  "opus-4-8-low": { dx: 12, dy: -8, anchor: "start" },
-  "opus-4-8-medium": { dx: 12, dy: 10, anchor: "start" },
-  "fable-5-low": { dx: -12, dy: 3, anchor: "end" },
-  "gpt-5-5-low": { dx: 12, dy: 8, anchor: "start" },
-  "gpt-5-5-medium": { dx: 12, dy: 9, anchor: "start" },
-  "gemini-flash-medium": { dx: -12, dy: 4, anchor: "end" },
-  "glm-5-2-high": { dx: 12, dy: 4, anchor: "start" },
-};
-
-function effortKey(effort: string | null): (typeof EFFORTS)[number] {
-  const key = effort ?? "default";
-  return EFFORTS.includes(key as (typeof EFFORTS)[number]) ? (key as (typeof EFFORTS)[number]) : "default";
-}
-
-function effortX(effort: string | null): number {
-  const i = EFFORTS.indexOf(effortKey(effort));
-  return PLOT.l + (i / (EFFORTS.length - 1)) * (PLOT.r - PLOT.l);
-}
-
-function pairedCurves(): ShallowEffortCurve[] {
-  return shallowEffortCurves.filter((curve) => curve.points.length > 1);
-}
-
-function pctChange(from: number, to: number): string {
-  const pct = ((to - from) / from) * 100;
-  return `${pct >= 0 ? "+" : ""}${pct.toFixed(0)}%`;
-}
+const priceKeyOf = Object.fromEntries(models.map((m) => [m.id, m.priceKey]));
 
 export default function EffortCurveChart() {
   const hue = useHue();
-  const y = logScale(0.02, 0.35, PLOT.t, PLOT.b);
-  const pairRows = pairedCurves().map((curve) => {
-    const [low, medium] = curve.points;
-    return { curve, low, medium };
+  const { weights } = useWeights();
+  const [hover, setHover] = useState<string | null>(null);
+
+  const pts = weightedAggregates(weights).map((a) => ({
+    id: a.modelId,
+    m: modelById[a.modelId],
+    turns: a.turns,
+    cpsc: a.cpsc,
+  }));
+
+  const turns = pts.map((p) => p.turns);
+  const xMin = Math.max(0, Math.floor(Math.min(...turns)) - 1);
+  const xMax = Math.ceil(Math.max(...turns)) + 2;
+  const x = linScale(xMin, xMax, PLOT.l, PLOT.r);
+  const y = logScale(0.02, 0.4, PLOT.t, PLOT.b);
+
+  const xTicks = [5, 10, 15, 20, 25, 30].filter((t) => t >= xMin && t <= xMax);
+
+  // connect a model family's effort variants so families read as one unit
+  const families = new Map<string, typeof pts>();
+  for (const p of pts) {
+    const k = priceKeyOf[p.id];
+    families.set(k, [...(families.get(k) ?? []), p]);
+  }
+  const connectors = [...families.values()]
+    .filter((g) => g.length > 1)
+    .map((g) => [...g].sort((a, b) => a.turns - b.turns));
+
+  // label placement: right of dot, or left near the right edge; greedy vertical
+  // declutter per side so labels don't stack.
+  const placed = pts.map((p) => {
+    const px = x(p.turns);
+    const right = px < PLOT.l + 0.62 * (PLOT.r - PLOT.l);
+    return { ...p, px, py: y(p.cpsc), right };
   });
+  for (const side of [true, false]) {
+    const group = placed.filter((p) => p.right === side).sort((a, b) => a.py - b.py);
+    let prev = -Infinity;
+    for (const p of group) {
+      p.py = Math.max(p.py, prev + 13);
+      prev = p.py;
+    }
+  }
+
+  const hp = pts.find((p) => p.id === hover) ?? null;
+  const tipX = hp ? (x(hp.turns) / VB_W) * 100 : 0;
+  const tipY = hp ? (y(hp.cpsc) / VB_H) * 100 : 0;
+  const tipTransform = `translate(${tipX > 78 ? "-92%" : tipX < 18 ? "-8%" : "-50%"}, ${
+    tipY < 30 ? "14px" : "calc(-100% - 14px)"
+  })`;
 
   return (
     <figure>
-      <svg
-        viewBox={`0 0 ${VB_W} ${VB_H}`}
-        className="w-full select-none"
-        role="img"
-        aria-label="ShallowSWE measured effort chart. Lines connect measured effort variants for the same model family. The vertical axis is cost per successful completion."
-      >
-        <text
-          x={(PLOT.l + PLOT.r) / 2}
-          y={VB_H - 14}
-          textAnchor="middle"
-          fontFamily="var(--font-mono)"
-          fontSize="9.5"
-          letterSpacing="0.08em"
-          fill="var(--ink-2)"
+      <div className="relative">
+        <svg
+          viewBox={`0 0 ${VB_W} ${VB_H}`}
+          className="w-full select-none"
+          role="img"
+          aria-label="Scatter of cost per successful completion against agent turns, one dot per model-effort row. A model's effort variants are connected."
         >
-          REASONING EFFORT USED IN SHALLOWSWE RUN
-        </text>
-        <text
-          x={16}
-          y={(PLOT.t + PLOT.b) / 2}
-          textAnchor="middle"
-          fontFamily="var(--font-mono)"
-          fontSize="9.5"
-          letterSpacing="0.08em"
-          fill="var(--ink-2)"
-          transform={`rotate(-90 16 ${(PLOT.t + PLOT.b) / 2})`}
-        >
-          MEASURED CPSC · LOG
-        </text>
-        <text x={PLOT.l} y={PLOT.t - 9} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
-          LOWER CPSC
-        </text>
+          <text x={(PLOT.l + PLOT.r) / 2} y={VB_H - 12} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" letterSpacing="0.08em" fill="var(--ink-2)">
+            AGENT TURNS TO FINISH
+          </text>
+          <text x={16} y={(PLOT.t + PLOT.b) / 2} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" letterSpacing="0.08em" fill="var(--ink-2)" transform={`rotate(-90 16 ${(PLOT.t + PLOT.b) / 2})`}>
+            COST PER SUCCESS · LOG
+          </text>
+          <text x={PLOT.l} y={PLOT.t - 9} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
+            ▲ cheaper · ◀ fewer turns
+          </text>
 
-        {EFFORTS.map((effort) => {
-          const x = effortX(effort === "default" ? null : effort);
-          return (
-            <g key={effort}>
-              <line x1={x} y1={PLOT.t} x2={x} y2={PLOT.b} stroke="var(--line)" strokeWidth="1" />
-              <text
-                x={x}
-                y={PLOT.b + 17}
-                textAnchor="middle"
-                fontFamily="var(--font-mono)"
-                fontSize="9.5"
-                fill="var(--muted)"
-              >
-                {EFFORT_LABELS[effort] ?? effort}
+          {xTicks.map((t) => (
+            <g key={`x${t}`}>
+              <line x1={x(t)} y1={PLOT.t} x2={x(t)} y2={PLOT.b} stroke="var(--line)" strokeWidth="1" />
+              <text x={x(t)} y={PLOT.b + 17} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" className="tnum" fill="var(--muted)">
+                {t}
               </text>
             </g>
-          );
-        })}
-
-        {Y_TICKS.map((tick) => (
-          <g key={tick}>
-            <line x1={PLOT.l} y1={y(tick)} x2={PLOT.r} y2={y(tick)} stroke="var(--line)" strokeWidth="1" />
-            <text
-              x={PLOT.l - 7}
-              y={y(tick) + 3.5}
-              textAnchor="end"
-              fontFamily="var(--font-mono)"
-              fontSize="9.5"
-              className="tnum"
-              fill="var(--muted)"
-            >
-              {fmtUsd(tick)}
-            </text>
-          </g>
-        ))}
-
-        {shallowEffortCurves.map((curve) => {
-          const c = hue(curve.modelId);
-          const points = curve.points.map((point) => ({
-            ...point,
-            x: effortX(point.effort),
-            y: y(point.cpsc),
-          }));
-          return (
-            <g key={curve.familyKey}>
-              {points.length > 1 && (
-                <polyline
-                  points={points.map((point) => `${point.x},${point.y}`).join(" ")}
-                  fill="none"
-                  stroke={c}
-                  strokeWidth="2.1"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeOpacity="0.82"
-                />
-              )}
-              {points.map((point) => {
-                const m = modelById[point.modelId];
-                const offset = LABEL_OFFSETS[point.modelId] ?? { dx: 12, dy: 4, anchor: "start" as const };
-                return (
-                  <g key={point.modelId}>
-                    <circle cx={point.x} cy={point.y} r="7" fill="var(--chart-surface)" />
-                    <circle cx={point.x} cy={point.y} r="5" fill={c} />
-                    <text
-                      x={point.x + offset.dx}
-                      y={point.y + offset.dy}
-                      textAnchor={offset.anchor}
-                      fontFamily="var(--font-display)"
-                      fontSize="11.5"
-                      fontWeight="600"
-                      fill="var(--ink)"
-                    >
-                      {m.short}
-                    </text>
-                  </g>
-                );
-              })}
+          ))}
+          {Y_TICKS.map((t) => (
+            <g key={`y${t}`}>
+              <line x1={PLOT.l} y1={y(t)} x2={PLOT.r} y2={y(t)} stroke="var(--line)" strokeWidth="1" />
+              <text x={PLOT.l - 7} y={y(t) + 3.5} textAnchor="end" fontFamily="var(--font-mono)" fontSize="9.5" className="tnum" fill="var(--muted)">
+                {fmtUsd(t)}
+              </text>
             </g>
-          );
-        })}
-      </svg>
+          ))}
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-3">
-        {pairRows.map(({ curve, low, medium }) => (
-          <div key={curve.familyKey} className="rounded-lg border border-line bg-surface-2 px-3 py-2">
-            <div className="flex items-center justify-between gap-3">
-              <span className="font-display text-sm text-ink">{curve.short}</span>
-              <span className="font-mono text-[0.68rem] text-danger">{pctChange(low.cpsc, medium.cpsc)} CPSC</span>
+          {/* family connectors (low → medium effort) */}
+          {connectors.map((g) => (
+            <polyline
+              key={priceKeyOf[g[0].id]}
+              points={g.map((p) => `${x(p.turns)},${y(p.cpsc)}`).join(" ")}
+              fill="none"
+              stroke={hue(g[0].id)}
+              strokeWidth="1.5"
+              strokeOpacity="0.45"
+              strokeLinecap="round"
+            />
+          ))}
+
+          {/* leaders from dot to decluttered label */}
+          {placed.map((p) => (
+            <line
+              key={`ldr${p.id}`}
+              x1={x(p.turns) + (p.right ? 6 : -6)}
+              y1={y(p.cpsc)}
+              x2={p.px + (p.right ? 10 : -10)}
+              y2={p.py}
+              stroke={hue(p.id)}
+              strokeWidth="1"
+              strokeOpacity="0.35"
+            />
+          ))}
+          {pts.map((p) => (
+            <g key={p.id} opacity={hover && hover !== p.id ? 0.35 : 1} style={{ transition: "opacity 0.15s" }}>
+              <circle cx={x(p.turns)} cy={y(p.cpsc)} r={hover === p.id ? 8 : 6.5} fill="var(--chart-surface)" />
+              <circle cx={x(p.turns)} cy={y(p.cpsc)} r={hover === p.id ? 5.5 : 4.5} fill={hue(p.id)} />
+            </g>
+          ))}
+          {placed.map((p) => (
+            <text
+              key={`lbl${p.id}`}
+              x={p.px + (p.right ? 13 : -13)}
+              y={p.py + 3.5}
+              textAnchor={p.right ? "start" : "end"}
+              fontFamily="var(--font-display)"
+              fontSize="11"
+              fontWeight="600"
+              fill="var(--ink)"
+              opacity={hover && hover !== p.id ? 0.35 : 1}
+            >
+              {p.m.short}
+            </text>
+          ))}
+
+          {/* hover hit targets (bigger than the dots) */}
+          {pts.map((p) => (
+            <circle
+              key={`hit${p.id}`}
+              cx={x(p.turns)}
+              cy={y(p.cpsc)}
+              r="13"
+              fill="transparent"
+              onMouseEnter={() => setHover(p.id)}
+              onMouseLeave={() => setHover(null)}
+              onClick={() => setHover((h) => (h === p.id ? null : p.id))}
+            />
+          ))}
+        </svg>
+
+        {hp && (
+          <div
+            className="pointer-events-none absolute z-10 whitespace-nowrap rounded-lg border border-line bg-surface/95 px-2.5 py-1.5 backdrop-blur"
+            style={{
+              left: `${tipX}%`,
+              top: `${tipY}%`,
+              transform: tipTransform,
+              boxShadow: "var(--shadow)",
+            }}
+          >
+            <div className="flex items-center gap-1.5 text-[0.78rem] font-medium text-ink">
+              <span className="h-2 w-2 rounded-full" style={{ background: hue(hp.id) }} />
+              {hp.m.short}
             </div>
-            <div className="mt-1 font-mono text-[0.68rem] leading-relaxed text-muted">
-              {fmtUsd(low.cpsc)} low to {fmtUsd(medium.cpsc)} med · pass {low.passes}/{low.attempts} to{" "}
-              {medium.passes}/{medium.attempts} · tokens {fmtTokens(low.tokensPerSuccess)} to{" "}
-              {fmtTokens(medium.tokensPerSuccess)}
+            <div className="mt-0.5 font-mono text-[0.68rem] tnum text-ink-2">
+              {hp.turns.toFixed(1)} turns · {fmtUsd(hp.cpsc)} / success
             </div>
           </div>
-        ))}
+        )}
       </div>
-
-      <figcaption className="mt-3 px-1 font-mono text-[0.68rem] leading-relaxed text-muted">
-        ShallowSWE-only · lines connect measured effort variants for the same model family · unconnected dots are single
-        measured rows in this run
+      <figcaption className="mt-2 px-1 font-mono text-[0.68rem] leading-relaxed text-muted">
+        one dot per model-effort row · x: mean agent turns · y: cost per success · lines connect a model&rsquo;s effort
+        variants
       </figcaption>
     </figure>
   );

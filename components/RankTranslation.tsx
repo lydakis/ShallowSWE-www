@@ -2,6 +2,7 @@
 
 import { rankTranslation, modelById, fmtUsd } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { useWeights } from "@/lib/weights";
 
 const VB_W = 560;
 const COL_L = 176;
@@ -14,7 +15,8 @@ const y = (rank: number) => TOP + (rank - 1) * STEP;
 
 export default function RankTranslation() {
   const hue = useHue();
-  const rows = rankTranslation();
+  const { weights } = useWeights();
+  const rows = rankTranslation(weights);
   const vbH = TOP + Math.max(rows.length - 1, 0) * STEP + BOTTOM_PAD;
 
   return (

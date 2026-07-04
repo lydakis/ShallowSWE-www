@@ -208,8 +208,8 @@ export const models: ModelDef[] = [
     size: "mid",
     priceKey: "anthropic/claude-sonnet-5",
     effort: "medium",
-    hueLight: "#1f9f9a",
-    hueDark: "#29beb8",
+    hueLight: "#2a78d6",
+    hueDark: "#3987e5",
   },
   {
     id: "kimi-k2-7-default",
@@ -247,8 +247,8 @@ export const models: ModelDef[] = [
     size: "large",
     priceKey: "anthropic/claude-opus-4.8",
     effort: "medium",
-    hueLight: "#bd3f6a",
-    hueDark: "#d85c86",
+    hueLight: "#e34948",
+    hueDark: "#e66767",
   },
   {
     id: "gpt-5-5-low",
@@ -273,8 +273,8 @@ export const models: ModelDef[] = [
     size: "large",
     priceKey: "openai/gpt-5.5",
     effort: "medium",
-    hueLight: "#b87924",
-    hueDark: "#d69130",
+    hueLight: "#eb6834",
+    hueDark: "#d95926",
   },
   {
     id: "gemini-flash-medium",
@@ -630,8 +630,8 @@ export interface RankRow {
  * DeepSWE cost per solved hard task (effort-matched) vs the measured ShallowSWE
  * pilot basket CPSC. Rank 1 = cheapest.
  */
-export function rankTranslation(): RankRow[] {
-  const shallow = suiteAggregates();
+export function rankTranslation(weights: CategoryWeights = EQUAL_WEIGHTS): RankRow[] {
+  const shallow = weightedAggregates(weights);
   const shallowValueOf = Object.fromEntries(shallow.map((a) => [a.modelId, a.cpsc]));
   const shallowRankOf = Object.fromEntries(
     [...shallow].sort((a, b) => a.cpsc - b.cpsc).map((a, i) => [a.modelId, i + 1]),

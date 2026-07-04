@@ -24,7 +24,7 @@ export default function Footer() {
               {[
                 ["#chart", "Measured leaderboard"],
                 ["#foil", "Deep end vs shallow end"],
-                ["#effort", "Effort curves"],
+                ["#effort", "Turns vs cost"],
                 ["#measured", "Measured run"],
                 ["#suite", "Task suite"],
                 ["#method", "Method"],

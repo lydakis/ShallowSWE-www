@@ -8,11 +8,14 @@ import Suite from "@/components/Suite";
 import Method from "@/components/Method";
 import Panel from "@/components/Panel";
 import Footer from "@/components/Footer";
+import StickyMixer from "@/components/StickyMixer";
+import { WeightsProvider } from "@/lib/weights";
 
 export default function Home() {
   return (
-    <>
+    <WeightsProvider>
       <Nav />
+      <StickyMixer />
       <main>
         <Hero />
         <ChartSection />
@@ -24,6 +27,6 @@ export default function Home() {
         <Panel />
       </main>
       <Footer />
-    </>
+    </WeightsProvider>
   );
 }

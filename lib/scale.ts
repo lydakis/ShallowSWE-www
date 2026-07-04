@@ -14,6 +14,12 @@ export function logScale(domainMin: number, domainMax: number, rangeMin: number,
   return scale;
 }
 
+export function linScale(domainMin: number, domainMax: number, rangeMin: number, rangeMax: number) {
+  const span = domainMax - domainMin || 1;
+  return (v: number) =>
+    Math.round((rangeMin + ((v - domainMin) / span) * (rangeMax - rangeMin)) * 1000) / 1000;
+}
+
 /** "Nice" decade + 1-2-5 ticks covering [min, max]. */
 export function logTicks(min: number, max: number): number[] {
   const ticks: number[] = [];

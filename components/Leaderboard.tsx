@@ -11,6 +11,7 @@ import {
   fmtTokens,
 } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { useWeights } from "@/lib/weights";
 
 type Key = "cpsc" | "tokensPerSuccess" | "passRate" | "turns";
 const cols: { key: Key; label: string; fmt: (v: number) => string; goodLow: boolean }[] = [
@@ -33,7 +34,7 @@ function sameWeights(a: CategoryWeights, b: CategoryWeights): boolean {
 
 export default function Leaderboard() {
   const [sort, setSort] = useState<Key>("cpsc");
-  const [weights, setWeights] = useState<CategoryWeights>(EQUAL_WEIGHTS);
+  const { weights, setWeights } = useWeights();
   const hue = useHue();
 
   const total = categories.reduce((s, c) => s + weights[c.id], 0) || 1;
@@ -45,7 +46,7 @@ export default function Leaderboard() {
   return (
     <div>
       {/* the declared basket: category-weighted CPSC over the run */}
-      <div className="mb-4 rounded-xl border border-line bg-surface p-4">
+      <div id="basket-mixer" className="mb-4 scroll-mt-20 rounded-xl border border-line bg-surface p-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <span className="text-sm text-ink-2">Your workload isn&rsquo;t ours — set the mix, the ranking is yours.</span>
           <div className="flex flex-wrap gap-1.5">
