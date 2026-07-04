@@ -23,7 +23,7 @@ export default function RankTranslation() {
         viewBox={`0 0 ${VB_W} ${vbH}`}
         className="w-full select-none"
         role="img"
-        aria-label="Slopegraph connecting each model-effort row's dollar rank on DeepSWE hard tasks to its rank on the ShallowSWE pilot."
+        aria-label="Slopegraph connecting each model-effort row's dollar rank on DeepSWE hard tasks to its rank on the ShallowSWE run."
       >
         {/* column headers */}
         <text x={COL_L} y={30} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="10.5" letterSpacing="0.06em" fill="var(--ink)">
@@ -36,7 +36,7 @@ export default function RankTranslation() {
           SHALLOW END
         </text>
         <text x={COL_R} y={45} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
-          $ / pilot success · ShallowSWE
+          $ / success · ShallowSWE
         </text>
 
         {/* rank guide numbers down the middle */}
@@ -102,7 +102,7 @@ export default function RankTranslation() {
         })}
       </svg>
       <figcaption className="mt-2 px-1 font-mono text-[0.68rem] leading-relaxed text-muted">
-        rank 1 = lowest dollars per success · left: DeepSWE effort-matched $/solved · right: measured ShallowSWE pilot
+        rank 1 = lowest dollars per success · left: DeepSWE effort-matched $/solved · right: measured ShallowSWE
         CPSC
       </figcaption>
     </figure>

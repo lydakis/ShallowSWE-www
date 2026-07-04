@@ -156,7 +156,7 @@ export const SUITE_TASKS = runManifest.tasks.length;
 export const ROLLOUTS = runManifest.rollouts_per_task_model_config;
 export const PANEL_SIZE = aggregateByModel.length;
 export const PILOT_TRIALS = aggregateByModel.reduce((sum, row) => sum + row.attempts, 0);
-export const SNAPSHOT_STATUS = "Measured pilot";
+export const SNAPSHOT_STATUS = "Measured run";
 export const DEEPSWE_COMPARISON_GENERATED_AT = deepsweComparison.deepswe_generated_at;
 
 export const prices: Record<string, ModelPrice> = Object.fromEntries(

@@ -20,10 +20,8 @@ const cols: { key: Key; label: string; fmt: (v: number) => string; goodLow: bool
   { key: "turns", label: "Avg turns", fmt: (v) => v.toFixed(1), goodLow: true },
 ];
 
-const sizeBadge: Record<string, string> = { small: "S", mid: "M", large: "L" };
-
 const presets: { label: string; w: CategoryWeights }[] = [
-  { label: "Equal pilot", w: EQUAL_WEIGHTS },
+  { label: "Equal", w: EQUAL_WEIGHTS },
   { label: "Fix-heavy", w: { fix: 60, operate: 20, transform: 20 } },
   { label: "Operate-heavy", w: { fix: 15, operate: 65, transform: 20 } },
   { label: "Transform-heavy", w: { fix: 15, operate: 20, transform: 65 } },
@@ -46,13 +44,10 @@ export default function Leaderboard() {
 
   return (
     <div>
-      {/* the declared basket: pilot CPSC prices a bundle of routine work */}
+      {/* the declared basket: category-weighted CPSC over the run */}
       <div className="mb-4 rounded-xl border border-line bg-surface p-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <span className="text-sm text-ink-2">
-            Pilot cost prices a <b className="font-semibold text-ink">declared basket</b>{" "}of routine work. Set the mix
-            to your workload — the board reprices.
-          </span>
+          <span className="text-sm text-ink-2">Weight the basket to your workload.</span>
           <div className="flex flex-wrap gap-1.5">
             {presets.map((p) => (
               <button
@@ -97,9 +92,6 @@ export default function Leaderboard() {
           <thead>
             <tr className="border-b border-line">
               <th className="px-3 py-2.5 text-left font-medium text-ink-2">Model</th>
-              <th className="px-3 py-2.5 text-left font-medium text-muted">
-                <span className="sr-only">Size</span>
-              </th>
               {cols.map((c) => (
                 <th key={c.key} className="px-3 py-2.5 text-right">
                   <button
@@ -133,11 +125,6 @@ export default function Leaderboard() {
                     <span className="ml-1.5 font-mono text-[0.7rem] text-muted">{m.effort ?? "default"}</span>
                     <span className="ml-1.5 font-mono text-[0.7rem] text-muted">{m.vendor}</span>
                   </th>
-                  <td className="px-3 py-2.5">
-                    <span className="grid h-5 w-5 place-items-center rounded border border-line font-mono text-[0.65rem] text-muted">
-                      {sizeBadge[m.size]}
-                    </span>
-                  </td>
                   {cols.map((c) => (
                     <td
                       key={c.key}

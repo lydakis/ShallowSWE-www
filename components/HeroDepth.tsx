@@ -30,7 +30,7 @@ export default function HeroDepth() {
 
   return (
     <figure className="relative">
-      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full" role="img" aria-label="Depth gauge: each model at its measured pilot cost per successful completion. Lower values are plotted closer to the surface.">
+      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full" role="img" aria-label="Depth gauge: each model at its measured cost per successful completion. Lower values are plotted closer to the surface.">
         <defs>
           <linearGradient id="deep" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="var(--waterline)" stopOpacity="0.10" />
@@ -84,7 +84,7 @@ export default function HeroDepth() {
         })}
       </svg>
       <figcaption className="mt-3 px-1 font-mono text-[0.7rem] leading-relaxed text-muted">
-        Measured pilot cost per successful completion · log scale · July 3, 2026 snapshot.
+        Cost per successful completion · log scale
       </figcaption>
       <style>{`
         .settle { animation: settle 0.9s cubic-bezier(0.22,1,0.36,1) both; }

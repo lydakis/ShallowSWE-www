@@ -1,47 +1,26 @@
 import HeroDepth from "./HeroDepth";
-import { PANEL_SIZE, PILOT_TRIALS, ROLLOUTS, SUITE_TASKS, PRICE_SHEET_DATE } from "@/app/data/model";
-
-const stats = [
-  { v: String(SUITE_TASKS), l: "pilot tasks" },
-  { v: String(PANEL_SIZE), l: "model-effort rows" },
-  { v: String(ROLLOUTS), l: "rollouts per task" },
-  { v: String(PILOT_TRIALS), l: "measured trials" },
-  { v: "CPSC", l: "the score is cost" },
-];
 
 export default function Hero() {
   return (
     <section id="top" className="relative overflow-hidden border-b border-line">
-      <div className="mx-auto max-w-6xl px-4 pb-0 pt-12 sm:px-6 sm:pt-16">
+      <div className="mx-auto max-w-6xl px-4 pb-14 pt-12 sm:px-6 sm:pb-16 sm:pt-16">
         <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           {/* Thesis */}
           <div>
-            <div className="mb-6 flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 font-mono text-[0.68rem] tracking-wide text-ink-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-waterline" />
-                MEASURED PILOT
-              </span>
-              <span className="font-mono text-[0.68rem] tracking-wide text-muted">
-                snapshot {PRICE_SHEET_DATE}
-              </span>
-            </div>
-
-            <h1 className="font-display text-[2.65rem] leading-[0.98] tracking-tight text-ink sm:text-6xl">
-              The score isn&rsquo;t accuracy.
-              <br />
+            <h1 className="font-display text-[2.65rem] leading-[1.03] tracking-tight text-ink sm:text-6xl">
+              Every model here can already do{" "}
               <span className="relative inline-block">
-                The score is cost.
+                these tasks.
                 <span className="waterline absolute -bottom-2 left-0 right-0" aria-hidden />
               </span>
             </h1>
 
             <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-ink-2">
-              Most real LLM work is routine: small fixes, data reshaping, and
-              a few agentic steps. This pilot measures those tasks directly:
-              dollars, tokens, turns, and pass rate for every attempt.
+              The score isn&rsquo;t accuracy — it&rsquo;s what each one spends to finish: dollars, tokens, turns per
+              success.
             </p>
             <p className="mt-3 max-w-xl text-[1.05rem] leading-relaxed text-muted">
-              Same rigor as DeepSWE. The opposite end of the pool.
+              An independent benchmark. The opposite end of the pool from DeepSWE.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -70,24 +49,6 @@ export default function Hero() {
             </div>
             <HeroDepth />
           </div>
-        </div>
-
-        {/* waterline + stats */}
-        <div className="mt-12 sm:mt-16">
-          <div className="waterline" aria-hidden />
-          <dl className="grid grid-cols-2 divide-line border-line sm:grid-cols-3 md:grid-cols-5">
-            {stats.map((s, i) => (
-              <div
-                key={s.l}
-                className={`border-b border-line px-1 py-5 ${i % 2 === 0 ? "border-r sm:border-r" : ""} ${
-                  i === 2 ? "sm:border-r" : ""
-                } md:border-r md:last:border-r-0`}
-              >
-                <dt className="font-display text-2xl text-ink tnum sm:text-[1.7rem]">{s.v}</dt>
-                <dd className="mt-1 text-xs text-muted">{s.l}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 # ShallowSWE — site
 
-Results site for [ShallowSWE](../ShallowSWE), a benchmark for the easy parts of software work.
+Results site for [ShallowSWE](../ShallowSWE), a cost benchmark for routine software work.
 The score is **cost per successful completion (CPSC)**, not accuracy.
 
 Next.js App Router · React 19 · Tailwind v4 · hand-built SVG charts. Fully static.

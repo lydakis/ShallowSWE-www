@@ -10,7 +10,7 @@ const cyan = "#2cc0ec";
 const bg = "#0b1216";
 const line = "#1d2b33";
 
-// Depth-gauge motif: measured pilot CPSC, cheap floats / costly sinks.
+// Depth-gauge motif: measured CPSC, cheap floats / costly sinks.
 const gauge = [
   { label: "GLM 5.2 high", v: "$0.025", y: 145 },
   { label: "Sonnet 5 low", v: "$0.031", y: 210 },
@@ -61,7 +61,7 @@ export default function OG() {
             <div style={{ display: "flex", width: 430, height: 3, background: cyan, marginTop: 10, borderRadius: 2 }} />
           </div>
           <div style={{ fontSize: 24, color: muted, marginTop: 30, lineHeight: 1.45 }}>
-            A benchmark for the easy parts. Cost per successful completion, same rigor, opposite end of the pool.
+            Cost per successful completion for routine software work.
           </div>
         </div>
 

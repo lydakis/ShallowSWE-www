@@ -13,8 +13,8 @@ export default function Footer() {
               <span className="font-display text-lg">ShallowSWE</span>
             </div>
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-ink-2">
-              A benchmark for the easy parts. Same rigor as DeepSWE, the opposite end of the pool — cost per successful
-              completion, not accuracy.
+              An independent benchmark for routine software work — cost per successful completion, not accuracy. The
+              opposite end of the pool from DeepSWE.
             </p>
           </div>
 
@@ -25,7 +25,7 @@ export default function Footer() {
                 ["#chart", "Measured leaderboard"],
                 ["#foil", "Deep end vs shallow end"],
                 ["#effort", "Effort curves"],
-                ["#measured", "Measured pilot"],
+                ["#measured", "Measured run"],
                 ["#suite", "Task suite"],
                 ["#method", "Method"],
                 ["#panel", "Model panel"],
@@ -70,7 +70,7 @@ export default function Footer() {
         <div className="mt-10 border-t border-line pt-6 text-xs leading-relaxed text-muted">
           <p>
             ShallowSWE is an independent benchmark inspired by DeepSWE&rsquo;s rigor. It is not affiliated with DeepSWE,
-            Datacurve, Harbor, or Pier. All displayed ShallowSWE values are from the July 3, 2026 measured pilot run.
+            Datacurve, Harbor, or Pier. All displayed ShallowSWE values are from the July 3, 2026 measured run.
           </p>
           <p className="mt-2 font-mono">© {new Date().getFullYear()} ShallowSWE · the shallow end of the pool</p>
         </div>

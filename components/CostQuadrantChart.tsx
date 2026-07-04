@@ -40,13 +40,13 @@ export default function CostQuadrantChart() {
         viewBox={`0 0 ${VB_W} ${VB_H}`}
         className="w-full select-none"
         role="img"
-        aria-label="Scatter with one dot per model-effort row. The horizontal axis is DeepSWE cost per solved hard task. The vertical axis is measured ShallowSWE pilot cost per successful completion."
+        aria-label="Scatter with one dot per model-effort row. The horizontal axis is DeepSWE cost per solved hard task. The vertical axis is measured ShallowSWE cost per successful completion."
       >
         <text x={(PLOT.l + PLOT.r) / 2} y={VB_H - 8} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" letterSpacing="0.08em" fill="var(--ink-2)">
           $ PER SOLVED HARD TASK · DEEPSWE · MATCHED EFFORT
         </text>
         <text x={14} y={(PLOT.t + PLOT.b) / 2} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" letterSpacing="0.08em" fill="var(--ink-2)" transform={`rotate(-90 14 ${(PLOT.t + PLOT.b) / 2})`}>
-          $ PER PILOT SUCCESS · SHALLOWSWE · MEASURED
+          $ PER SUCCESS · SHALLOWSWE · MEASURED
         </text>
         <text x={PLOT.l} y={PLOT.t - 8} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
           LOWER SHALLOWSWE CPSC
@@ -89,7 +89,7 @@ export default function CostQuadrantChart() {
         })}
       </svg>
       <figcaption className="mt-2 px-1 font-mono text-[0.68rem] leading-relaxed text-muted">
-        one dot per model-effort row · x: DeepSWE cost per solved task · y: measured ShallowSWE pilot CPSC
+        one dot per model-effort row · x: DeepSWE cost per solved task · y: measured ShallowSWE CPSC
       </figcaption>
     </figure>
   );

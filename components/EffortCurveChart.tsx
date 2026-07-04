@@ -193,7 +193,7 @@ export default function EffortCurveChart() {
 
       <figcaption className="mt-3 px-1 font-mono text-[0.68rem] leading-relaxed text-muted">
         ShallowSWE-only · lines connect measured effort variants for the same model family · unconnected dots are single
-        measured rows in this pilot
+        measured rows in this run
       </figcaption>
     </figure>
   );

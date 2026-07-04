@@ -4,11 +4,8 @@ import { categories, tasks, SUITE_TASKS } from "@/app/data/model";
 export default function Suite() {
   return (
     <Section id="suite" className="border-t border-line">
-      <SectionHeader eyebrow="The pilot tasks" title="Four realistic shallow tasks">
-        <p>
-          {SUITE_TASKS} original Pier-compatible tasks. They are not copied from public benchmarks; public sources are
-          used only for task-shape inspiration.
-        </p>
+      <SectionHeader eyebrow="The tasks" title="Four tasks">
+        <p>{SUITE_TASKS} original Pier-compatible tasks, not copied from public benchmarks.</p>
       </SectionHeader>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

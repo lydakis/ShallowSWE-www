@@ -2,8 +2,6 @@ import { Section, SectionHeader } from "./Section";
 import ModelDot from "./ModelDot";
 import { PANEL_SIZE, models, prices, PRICE_SHEET_DATE, PRICE_GATEWAY } from "@/app/data/model";
 
-const sizeLabel: Record<string, string> = { small: "Small", mid: "Mid", large: "Large" };
-
 export default function Panel() {
   const rows = [...models].sort((a, b) => prices[a.priceKey].outputPer1M - prices[b.priceKey].outputPer1M);
 
@@ -11,7 +9,7 @@ export default function Panel() {
     <Section id="panel" className="border-t border-line">
       <SectionHeader eyebrow="Model panel" title={`${PANEL_SIZE} measured model-effort rows`}>
         <p>
-          The expanded publish pilot includes GLM 5.2 at high effort, Fable at low effort, plus low and medium rows for
+          The published run includes GLM 5.2 at high effort, Fable at low effort, plus low and medium rows for
           GPT-5.5, Claude Opus 4.8, and Claude Sonnet 5. Gemini 3.5 Flash remains medium and Kimi K2.7 remains default
           because those are the rows DeepSWE publishes.
         </p>
@@ -24,7 +22,6 @@ export default function Panel() {
             <tr className="border-b border-line text-left">
               <th className="px-3 py-2.5 font-medium text-ink-2">Model</th>
               <th className="px-3 py-2.5 font-medium text-ink-2">Vendor</th>
-              <th className="px-3 py-2.5 font-medium text-ink-2">Class</th>
               <th className="px-3 py-2.5 font-medium text-ink-2">Effort</th>
               <th className="px-3 py-2.5 text-right font-medium text-ink-2">$/1M in</th>
               <th className="px-3 py-2.5 text-right font-medium text-ink-2">$/1M cached</th>
@@ -43,11 +40,6 @@ export default function Panel() {
                     <span className="ml-2 font-mono text-[0.68rem] text-muted">{m.priceKey}</span>
                   </th>
                   <td className="px-3 py-2.5 text-ink-2">{m.vendor}</td>
-                  <td className="px-3 py-2.5">
-                    <span className="rounded border border-line px-1.5 py-0.5 font-mono text-[0.68rem] text-muted">
-                      {sizeLabel[m.size]}
-                    </span>
-                  </td>
                   <td className="px-3 py-2.5 font-mono text-[0.72rem] text-muted">{m.effort ?? "default"}</td>
                   <td className="px-3 py-2.5 text-right font-mono tnum text-ink-2">${p.inputPer1M.toFixed(2)}</td>
                   <td className="px-3 py-2.5 text-right font-mono tnum text-muted">${p.cachedInputPer1M.toFixed(2)}</td>

@@ -13,7 +13,7 @@ const principles = [
 export default function Method() {
   return (
     <Section id="method" className="border-t border-line">
-      <SectionHeader eyebrow="Method" title="One number, and why it can't be gamed">
+      <SectionHeader eyebrow="Method" title="How the score is measured">
         <p>
           Cost is averaged over <em className="not-italic text-ink">every</em> attempt — passes and failures — then
           divided by pass rate. A flaky model pays its own retry tax.
@@ -55,7 +55,7 @@ export default function Method() {
       <div className="mt-4 flex flex-col gap-4 rounded-xl border border-line bg-surface-2 p-5 sm:flex-row sm:items-center">
         <p className="flex-1 text-sm leading-relaxed text-ink-2">
           <b className="font-semibold text-ink">Measured.</b>{" "}Every ShallowSWE number on this page comes from the
-          pilot rollouts, with dollar values derived from the dated{" "}
+          measured rollouts, with dollar values derived from the dated{" "}
           <span className="font-mono text-ink">openrouter {PRICE_SHEET_DATE}</span> price sheet. DeepSWE values are its
           published v1.1 leaderboard, shown for context and never blended in.
         </p>

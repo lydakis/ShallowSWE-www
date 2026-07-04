@@ -12,14 +12,13 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
-  title: "ShallowSWE — a benchmark for the easy parts",
+  title: "ShallowSWE — a cost benchmark for routine work",
   description:
-    "The score is not accuracy. The score is cost. ShallowSWE holds software tasks near saturation and measures cost per successful completion by category, tier, and model.",
-  metadataBase: new URL("https://shallowswe.dev"),
+    "The score isn't accuracy — it's cost. ShallowSWE measures cost per successful completion for routine software work.",
+  metadataBase: new URL("https://shallowswe.com"),
   openGraph: {
-    title: "ShallowSWE — a benchmark for the easy parts",
-    description:
-      "Same rigor, opposite end of the pool. Cost per successful completion for everyday software work.",
+    title: "ShallowSWE — a cost benchmark for routine work",
+    description: "Cost per successful completion for routine software work.",
     type: "website",
   },
   twitter: {

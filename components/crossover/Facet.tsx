@@ -42,28 +42,6 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
   const byEnd = [...series].sort((a, b) => a.pts.at(-1)!.v - b.pts.at(-1)!.v);
   const labelIds = new Set([byEnd[0].id, byEnd[byEnd.length - 1].id]);
 
-  // Inversion points: where two models' lines cross between measured tasks.
-  const crossings: { x: number; y: number; a: string; b: string }[] = [];
-  for (let i = 0; i < series.length; i++)
-    for (let j = i + 1; j < series.length; j++)
-      for (let k = 0; k < Math.min(series[i].pts.length, series[j].pts.length) - 1; k++) {
-        const a0 = series[i].pts[k];
-        const a1 = series[i].pts[k + 1];
-        const b0 = series[j].pts[k];
-        const b1 = series[j].pts[k + 1];
-        const d0 = a0.y - b0.y;
-        const d1 = a1.y - b1.y;
-        if (d0 * d1 < 0) {
-          const t = d0 / (d0 - d1);
-          crossings.push({
-            x: a0.x + t * (a1.x - a0.x),
-            y: a0.y + t * (a1.y - a0.y),
-            a: series[i].id,
-            b: series[j].id,
-          });
-        }
-      }
-
   const active = (id: string) => highlight === null || highlight === id;
 
   return (
@@ -125,25 +103,6 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
               </g>
             )),
           )}
-
-          {/* inversion markers: a diamond where the cheaper choice flips */}
-          {crossings.map((c, i) => (
-            <rect
-              key={`x${i}`}
-              x={c.x - 4}
-              y={c.y - 4}
-              width="8"
-              height="8"
-              transform={`rotate(45 ${c.x} ${c.y})`}
-              fill="var(--chart-surface)"
-              stroke="var(--ink)"
-              strokeWidth="1.5"
-              opacity={active(c.a) || active(c.b) ? 1 : 0.14}
-              style={{ transition: "opacity 0.2s" }}
-            >
-              <title>inversion: the leaner choice flips here</title>
-            </rect>
-          ))}
 
           {/* endpoint labels for extremes */}
           {series

@@ -1,14 +1,14 @@
 import { Section, SectionHeader } from "./Section";
 import CrossoverChart from "./crossover/CrossoverChart";
 import Leaderboard from "./Leaderboard";
-import { PRICE_SHEET_DATE, PILOT_TRIALS } from "@/app/data/model";
+import { PRICE_SHEET_DATE, SUITE_TASKS, ROLLOUTS } from "@/app/data/model";
 
 export default function ChartSection() {
   return (
     <Section id="chart">
-      <SectionHeader eyebrow="Measured leaderboard" title={<>Pilot basket leaderboard</>}>
+      <SectionHeader eyebrow="Measured leaderboard" title={<>Cost leaderboard</>}>
         <p>
-          Cost, tokens, pass rate, and turns per successful completion across the pilot suite. Set the basket weights to
+          Cost, tokens, pass rate, and turns per successful completion across all four tasks. Set the basket weights to
           reprice the leaderboard.
         </p>
       </SectionHeader>
@@ -37,8 +37,8 @@ export default function ChartSection() {
       </details>
 
       <p className="mt-6 font-mono text-[0.7rem] leading-relaxed text-muted">
-        {PILOT_TRIALS} measured Pier trials · mini-swe-agent · priced on openrouter {PRICE_SHEET_DATE} · failures are
-        included in CPSC
+        basket-weighted · {SUITE_TASKS} tasks, N={ROLLOUTS}, growing to 36 · mini-swe-agent · openrouter{" "}
+        {PRICE_SHEET_DATE} · failures included in CPSC
       </p>
     </Section>
   );

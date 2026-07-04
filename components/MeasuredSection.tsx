@@ -1,29 +1,17 @@
 import { Section, SectionHeader } from "./Section";
 import ModelDot from "./ModelDot";
-import {
-  PILOT_TRIALS,
-  PRICE_SHEET_DATE,
-  ROLLOUTS,
-  SUITE_TASKS,
-  fmtTokens,
-  fmtUsd,
-  modelById,
-  pilotModelRows,
-} from "@/app/data/model";
+import { PRICE_SHEET_DATE, fmtTokens, fmtUsd, modelById, pilotModelRows } from "@/app/data/model";
 
 export default function MeasuredSection() {
   return (
     <Section id="measured" className="border-t border-line">
-      <SectionHeader eyebrow="Measured pilot" title="Receipts from the run">
-        <p>
-          This table is the full pilot run: {SUITE_TASKS} tasks, {ROLLOUTS} rollouts per model-task pair, {PILOT_TRIALS}{" "}
-          Pier trials, mini-swe-agent held constant.
-        </p>
+      <SectionHeader eyebrow="Measured run" title="Receipts from the run">
+        <p>One row per model-effort, pooled over every scored attempt in the run.</p>
       </SectionHeader>
 
       <div className="scroll-x mt-8 rounded-xl border border-line">
         <table className="w-full border-collapse text-sm">
-          <caption className="sr-only">Measured pilot results by model-effort row</caption>
+          <caption className="sr-only">Measured results by model-effort row</caption>
           <thead>
             <tr className="border-b border-line text-left">
               {["Model", "Pass", "Turns", "Tokens / success", "Input", "Output", "Cache read", "Reasoning", "CPSC"].map((h, i) => (
