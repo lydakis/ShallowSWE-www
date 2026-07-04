@@ -47,7 +47,7 @@ export default function Leaderboard() {
       {/* the declared basket: category-weighted CPSC over the run */}
       <div className="mb-4 rounded-xl border border-line bg-surface p-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <span className="text-sm text-ink-2">Weight the basket to your workload.</span>
+          <span className="text-sm text-ink-2">Your workload isn&rsquo;t ours — set the mix, the ranking is yours.</span>
           <div className="flex flex-wrap gap-1.5">
             {presets.map((p) => (
               <button

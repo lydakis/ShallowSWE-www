@@ -8,19 +8,16 @@ export default function Hero() {
           {/* Thesis */}
           <div>
             <h1 className="font-display text-[2.65rem] leading-[1.03] tracking-tight text-ink sm:text-6xl">
-              Every model here can already do{" "}
+              Not every task needs a{" "}
               <span className="relative inline-block">
-                these tasks.
+                frontier model.
                 <span className="waterline absolute -bottom-2 left-0 right-0" aria-hidden />
               </span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-ink-2">
-              The score isn&rsquo;t accuracy — it&rsquo;s what each one spends to finish: dollars, tokens, turns per
-              success.
-            </p>
-            <p className="mt-3 max-w-xl text-[1.05rem] leading-relaxed text-muted">
-              An independent benchmark. The opposite end of the pool from DeepSWE.
+            <p className="mt-6 max-w-xl text-[1.15rem] leading-relaxed text-ink-2">
+              This ranking looks wrong on purpose. The tasks are ordinary — the work models actually get handed — and
+              every model here finishes them. What separates them is cost.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
