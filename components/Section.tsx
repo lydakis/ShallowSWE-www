@@ -15,7 +15,7 @@ export function SectionHeader({
         <span className="h-px w-6 bg-waterline" />
         <span className="eyebrow">{eyebrow}</span>
       </div>
-      <h2 className="font-display text-3xl leading-tight tracking-tight text-ink sm:text-[2.4rem]">{title}</h2>
+      <h2 className="font-display text-3xl leading-tight text-ink sm:text-[2.4rem]">{title}</h2>
       {children && <div className="mt-4 text-[1.02rem] leading-relaxed text-ink-2">{children}</div>}
     </div>
   );

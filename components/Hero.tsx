@@ -7,7 +7,7 @@ export default function Hero() {
         <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           {/* Thesis */}
           <div>
-            <h1 className="font-display text-[2.65rem] leading-[1.03] tracking-tight text-ink sm:text-6xl">
+            <h1 className="font-display text-[2.65rem] leading-[1.03] text-ink sm:text-6xl">
               Not every task needs a{" "}
               <span className="relative inline-block">
                 frontier model.
@@ -16,8 +16,9 @@ export default function Hero() {
             </h1>
 
             <p className="mt-6 max-w-xl text-[1.15rem] leading-relaxed text-ink-2">
-              This ranking looks wrong on purpose. The tasks are ordinary — the work models actually get handed — and
-              failed attempts stay in the denominator. What separates them is cost per success.
+              ShallowSWE selects tasks frontier agents should handle easily: everyday fixes, artifacts, workflow updates,
+              and repo operations. That is deliberate. If frontier models struggle, the suite is measuring maximum SWE
+              capability again; if they do not, the ranking can focus on cost per verified success.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">

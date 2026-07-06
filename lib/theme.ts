@@ -3,12 +3,20 @@
 import { useSyncExternalStore } from "react";
 
 type Theme = "light" | "dark";
+export type ThemeSetting = "system" | Theme;
 const KEY = "sswe-theme";
+const LIGHT_THEME_COLOR = "#eff1f2";
+const DARK_THEME_COLOR = "#080d10";
 
-function resolve(): Theme {
-  if (typeof document === "undefined") return "light";
-  const explicit = document.documentElement.getAttribute("data-theme");
-  if (explicit === "light" || explicit === "dark") return explicit;
+function readSetting(): ThemeSetting {
+  if (typeof window === "undefined") return "system";
+  const value = window.localStorage.getItem(KEY);
+  return value === "light" || value === "dark" ? value : "system";
+}
+
+function resolveSetting(setting: ThemeSetting): Theme {
+  if (setting === "light" || setting === "dark") return setting;
+  if (typeof window === "undefined") return "light";
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
@@ -17,30 +25,73 @@ function emit() {
   listeners.forEach((l) => l());
 }
 
+function setThemeColor(theme: Theme) {
+  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"][data-sswe-theme-color]');
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.name = "theme-color";
+    meta.setAttribute("data-sswe-theme-color", "");
+    document.head.appendChild(meta);
+  }
+  meta.content = theme === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR;
+}
+
+function applyTheme(setting: ThemeSetting) {
+  const resolved = resolveSetting(setting);
+  if (setting === "light" || setting === "dark") {
+    document.documentElement.setAttribute("data-theme", setting);
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+  document.documentElement.setAttribute("data-theme-setting", setting);
+  setThemeColor(resolved);
+}
+
+function getSnapshot() {
+  const setting = readSetting();
+  return `${setting}:${resolveSetting(setting)}`;
+}
+
 /** Resolved current theme, reactive to toggles and OS changes. */
 export function useResolvedTheme(): Theme {
+  return useThemePreference().resolvedTheme;
+}
+
+export function useThemePreference() {
   const subscribe = (cb: () => void) => {
     listeners.add(cb);
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    mq.addEventListener("change", cb);
+    const onMediaChange = () => {
+      if (readSetting() === "system") applyTheme("system");
+      cb();
+    };
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === KEY) {
+        applyTheme(readSetting());
+        cb();
+      }
+    };
+    mq.addEventListener("change", onMediaChange);
+    window.addEventListener("storage", onStorage);
     return () => {
       listeners.delete(cb);
-      mq.removeEventListener("change", cb);
+      mq.removeEventListener("change", onMediaChange);
+      window.removeEventListener("storage", onStorage);
     };
   };
-  return useSyncExternalStore(subscribe, resolve, () => "light");
-}
-
-/** Toggle control state. `mounted` guards against SSR mismatch on the icon. */
-export function useThemeToggle() {
-  const theme = useResolvedTheme();
-  const toggle = () => {
-    const next: Theme = resolve() === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", next);
+  const [setting, resolvedTheme] = useSyncExternalStore(subscribe, getSnapshot, () => "system:light").split(
+    ":",
+  ) as [ThemeSetting, Theme];
+  const setSetting = (next: ThemeSetting) => {
     try {
-      localStorage.setItem(KEY, next);
+      if (next === "system") {
+        window.localStorage.removeItem(KEY);
+      } else {
+        window.localStorage.setItem(KEY, next);
+      }
     } catch {}
+    applyTheme(next);
     emit();
   };
-  return { theme, mounted: true, toggle };
+  return { setting, resolvedTheme, setSetting };
 }

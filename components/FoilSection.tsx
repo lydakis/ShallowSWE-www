@@ -5,19 +5,20 @@ import { DEEPSWE_SOURCE } from "@/app/data/model";
 export default function FoilSection() {
   return (
     <Section id="foil" className="border-t border-line">
-      <SectionHeader eyebrow="DeepSWE comparison" title="DeepSWE and ShallowSWE cost rows">
+      <SectionHeader eyebrow="DeepSWE comparison" title="The deep end against the shallow end">
         <p>
-          Effort-matched rows with DeepSWE dollars per solved task and ShallowSWE cost per successful completion.
+          The same models, matched effort for effort: ranked by DeepSWE pass@1 on hard tasks, and by measured cost per
+          success here. Watch the order flip.
         </p>
       </SectionHeader>
 
-      <div className="panel mt-8 p-4 sm:p-6" style={{ boxShadow: "var(--shadow)" }}>
+      <div className="panel mt-8 overflow-hidden" style={{ boxShadow: "var(--shadow)" }}>
         <FoilCharts />
       </div>
 
       <p className="mt-4 font-mono text-[0.7rem] leading-relaxed text-muted">
-        effort-matched rows · deep: measured — {DEEPSWE_SOURCE.name}, {DEEPSWE_SOURCE.generatedAt}; $ per solved =
-        mean_cost_usd ÷ pass@1 · shallow: measured — ShallowSWE equal-category basket
+        effort-matched rows · deep: measured from {DEEPSWE_SOURCE.name}, {DEEPSWE_SOURCE.generatedAt}; intelligence axis =
+        pass@1 · shallow: measured from the selected ShallowSWE CPSC basket
       </p>
     </Section>
   );

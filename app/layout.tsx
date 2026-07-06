@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Bricolage_Grotesque } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
@@ -13,12 +13,12 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
-  title: "ShallowSWE — a cost benchmark for routine work",
+  title: "ShallowSWE",
   description:
-    "The score isn't accuracy — it's cost. ShallowSWE measures cost per successful completion for routine software work.",
+    "The score isn't accuracy. It's cost. ShallowSWE measures cost per successful completion for routine software work.",
   metadataBase: new URL("https://shallowswe.com"),
   openGraph: {
-    title: "ShallowSWE — a cost benchmark for routine work",
+    title: "ShallowSWE: a cost benchmark for routine work",
     description: "Cost per successful completion for routine software work.",
     type: "website",
   },
@@ -27,8 +27,55 @@ export const metadata: Metadata = {
   },
 };
 
-// Set the theme before paint to avoid a flash.
-const themeScript = `(function(){try{var t=localStorage.getItem('sswe-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`;
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#eff1f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#080d10" },
+  ],
+};
+
+const themeScript = `(() => {
+  const key = "sswe-theme";
+  const light = "#eff1f2";
+  const dark = "#080d10";
+  const read = () => {
+    try {
+      const value = localStorage.getItem(key);
+      return value === "light" || value === "dark" ? value : "system";
+    } catch {
+      return "system";
+    }
+  };
+  const resolved = (setting) =>
+    setting === "light" || setting === "dark"
+      ? setting
+      : window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+  const setThemeColor = (theme) => {
+    let meta = document.querySelector('meta[name="theme-color"][data-sswe-theme-color]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "theme-color";
+      meta.setAttribute("data-sswe-theme-color", "");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", theme === "dark" ? dark : light);
+  };
+  const apply = (setting = read()) => {
+    const root = document.documentElement;
+    if (setting === "light" || setting === "dark") {
+      root.setAttribute("data-theme", setting);
+    } else {
+      root.removeAttribute("data-theme");
+    }
+    root.setAttribute("data-theme-setting", setting);
+    setThemeColor(resolved(setting));
+  };
+  apply();
+  window.__ssweApplyTheme = apply;
+})();`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

@@ -16,11 +16,6 @@ for (const s of shots) {
     deviceScaleFactor: 2,
     colorScheme: s.theme === "dark" ? "dark" : "light",
   });
-  await ctx.addInitScript((t) => {
-    try {
-      localStorage.setItem("sswe-theme", t);
-    } catch {}
-  }, s.theme);
   const page = await ctx.newPage();
   await page.goto(URL, { waitUntil: "networkidle" });
   await page.waitForTimeout(1200); // settle animations

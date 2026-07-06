@@ -6,14 +6,14 @@ export default function Footer() {
     <footer className="mt-8 border-t border-line bg-plane-2">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="waterline mb-10" aria-hidden />
-        <div className="grid gap-8 sm:grid-cols-[1.5fr_1fr_1fr]">
+        <div className="grid gap-8 sm:grid-cols-[1.45fr_0.9fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-2.5 text-ink">
               <Logo className="h-7 w-7" />
               <span className="font-display text-lg">ShallowSWE</span>
             </div>
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-ink-2">
-              An independent benchmark for routine software work — cost per successful completion, not accuracy. The
+              An independent benchmark for routine software work: cost per successful completion, not accuracy. The
               opposite end of the pool from DeepSWE.
             </p>
           </div>
@@ -41,7 +41,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <a href="/data/rollouts.json" download className="font-mono text-ink-2 transition-colors hover:text-brand">
-                  rollouts.json
+                  repair-loop-rows.json
                 </a>
               </li>
               <li>
@@ -50,8 +50,13 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="/data/workload-index.json" download className="font-mono text-ink-2 transition-colors hover:text-brand">
-                  workload-index.json
+                <a href="/data/aggregate-by-model.json" download className="font-mono text-ink-2 transition-colors hover:text-brand">
+                  aggregate-by-model.json
+                </a>
+              </li>
+              <li>
+                <a href="/data/aggregate-by-task-model.json" download className="font-mono text-ink-2 transition-colors hover:text-brand">
+                  aggregate-by-task-model.json
                 </a>
               </li>
               <li>
@@ -62,12 +67,28 @@ export default function Footer() {
               <li className="font-mono text-muted">snapshot {PRICE_SHEET_DATE}</li>
             </ul>
           </div>
+
+          <div>
+            <div className="eyebrow mb-3">Source</div>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href="https://github.com/lydakis/ShallowSWE" className="font-mono text-ink-2 transition-colors hover:text-brand">
+                  benchmark repo
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/lydakis/ShallowSWE-www" className="font-mono text-ink-2 transition-colors hover:text-brand">
+                  website repo
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="mt-10 border-t border-line pt-6 text-xs leading-relaxed text-muted">
           <p>
-            ShallowSWE is an independent benchmark inspired by DeepSWE&rsquo;s rigor. It is not affiliated with DeepSWE,
-            Datacurve, Harbor, or Pier. All displayed ShallowSWE values are from the July 3, 2026 measured run.
+            ShallowSWE is independent and not affiliated with DeepSWE, Datacurve, Harbor, or Pier. Displayed values are
+            from the bounded repair-loop preview snapshot shown in the data manifest.
           </p>
           <p className="mt-2 font-mono">© {new Date().getFullYear()} ShallowSWE · the shallow end of the pool</p>
         </div>

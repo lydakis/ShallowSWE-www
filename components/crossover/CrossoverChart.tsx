@@ -9,11 +9,12 @@ import {
   taskLabelsFor,
 } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { logTicks, niceLogBounds } from "@/lib/scale";
 import Facet from "./Facet";
 
-const DOMAINS: Record<Metric, { domain: [number, number]; ticks: number[] }> = {
-  cpsc: { domain: [0.02, 1.8], ticks: [0.03, 0.1, 0.3, 1] },
-  tps: { domain: [15000, 1500000], ticks: [20000, 50000, 100000, 300000, 1000000] },
+const FALLBACK_DOMAINS: Record<Metric, [number, number]> = {
+  cpsc: [0.01, 2],
+  tps: [5000, 2000000],
 };
 
 export default function CrossoverChart() {
@@ -21,16 +22,17 @@ export default function CrossoverChart() {
   const [highlight, setHighlight] = useState<string | null>(null);
   const hue = useHue();
   const values = measuredValues(metric);
-  const base = DOMAINS[metric];
-  const domain: [number, number] = [
-    Math.min(base.domain[0], Math.min(...values) * 0.85),
-    Math.max(base.domain[1], Math.max(...values) * 1.15),
-  ];
+  const domain = niceLogBounds(values, FALLBACK_DOMAINS[metric]);
+  const ticks = logTicks(domain[0], domain[1]).filter((t) => t > domain[0] && t < domain[1]);
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-3">
-        <div role="tablist" aria-label="Metric" className="inline-flex rounded-full border border-line bg-surface p-1">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <div className="font-display text-base text-ink">Task-level breakdown</div>
+          <div className="mt-0.5 font-mono text-[0.66rem] text-muted">Cost and tokens per success, task by task</div>
+        </div>
+        <div role="tablist" aria-label="Metric" className="inline-flex self-start rounded-full border border-line bg-surface p-1 sm:self-auto">
           {(
             [
               ["cpsc", "Cost / success"],
@@ -84,7 +86,7 @@ export default function CrossoverChart() {
             category={c}
             metric={metric}
             domain={domain}
-            ticks={base.ticks}
+            ticks={ticks}
             hue={hue}
             highlight={highlight}
             xLabels={taskLabelsFor(c.id)}

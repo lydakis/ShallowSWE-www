@@ -34,10 +34,61 @@ export function logTicks(min: number, max: number): number[] {
   return ticks;
 }
 
-export function niceLogBounds(values: number[]): [number, number] {
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const lo = Math.pow(10, Math.floor(Math.log10(min) * 2) / 2);
-  const hi = Math.pow(10, Math.ceil(Math.log10(max) * 2) / 2);
+function positiveFinite(values: number[]): number[] {
+  return values.filter((value) => Number.isFinite(value) && value > 0);
+}
+
+function logFloor(value: number): number {
+  const exponent = Math.floor(Math.log10(value));
+  const base = Math.pow(10, exponent);
+  const normalized = value / base;
+  if (normalized >= 5) return 5 * base;
+  if (normalized >= 2) return 2 * base;
+  return base;
+}
+
+function logCeil(value: number): number {
+  const exponent = Math.floor(Math.log10(value));
+  const base = Math.pow(10, exponent);
+  const normalized = value / base;
+  if (normalized <= 1) return base;
+  if (normalized <= 2) return 2 * base;
+  if (normalized <= 5) return 5 * base;
+  return 10 * base;
+}
+
+export function niceLogBounds(values: number[], fallback: [number, number] = [0.01, 1]): [number, number] {
+  const finite = positiveFinite(values);
+  if (!finite.length) return fallback;
+  let min = Math.min(...finite);
+  let max = Math.max(...finite);
+  if (min === max) {
+    min /= 2;
+    max *= 2;
+  } else {
+    min /= 1.35;
+    max *= 1.35;
+  }
+  const lo = logFloor(min);
+  const hi = logCeil(max);
   return [lo, hi];
+}
+
+export function paddedLinearBounds(
+  values: number[],
+  fallback: [number, number],
+  { padding = 0.08, minSpan = 1 }: { padding?: number; minSpan?: number } = {},
+): [number, number] {
+  const finite = values.filter((value) => Number.isFinite(value));
+  if (!finite.length) return fallback;
+  let min = Math.min(...finite);
+  let max = Math.max(...finite);
+  if (min === max) {
+    min -= minSpan / 2;
+    max += minSpan / 2;
+  }
+  const span = Math.max(max - min, minSpan);
+  const mid = (min + max) / 2;
+  const paddedSpan = span * (1 + padding * 2);
+  return [mid - paddedSpan / 2, mid + paddedSpan / 2];
 }

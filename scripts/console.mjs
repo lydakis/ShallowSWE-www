@@ -2,7 +2,6 @@ import { chromium } from "playwright";
 const b = await chromium.launch();
 for (const theme of ["light","dark"]) {
   const ctx = await b.newContext({ colorScheme: theme, viewport:{width:1280,height:900} });
-  await ctx.addInitScript((t)=>{try{localStorage.setItem("sswe-theme",t)}catch{}}, theme);
   const p = await ctx.newPage();
   const msgs = [];
   p.on("console", m => { if(["error","warning"].includes(m.type())) msgs.push(`[${theme}:${m.type()}] ${m.text()}`); });

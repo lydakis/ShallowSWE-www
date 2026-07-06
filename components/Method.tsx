@@ -1,13 +1,23 @@
 import { Section, SectionHeader } from "./Section";
-import { PRICE_SHEET_DATE, ROLLOUT_POLICY } from "@/app/data/model";
+import { PRICE_SHEET_DATE } from "@/app/data/model";
 
 const principles = [
-  ["Programmatic verifiers only", "no LLM judges anywhere in the scoring path"],
-  ["One scaffold, held constant", "mini-swe-agent, zero per-model tuning"],
-  [ROLLOUT_POLICY, "full Pier trajectories stored locally and rollup JSON published"],
-  ["Tokens are canonical", "dollars derived from a dated, versioned price sheet"],
-  ["No wall-clock time", "not reproducible across providers and hosts"],
-  ["Infra failures excluded", "retried until scored; exclusion counts published"],
+  [
+    "Scored by hidden tests",
+    "no LLM judges, no human grading — and a failing model is told only that it failed, never which check",
+  ],
+  ["One model per row", "no fallbacks, ensembles, or handoffs to a stronger model mid-task"],
+  [
+    "Same scaffold for every model",
+    "one agent harness, one prompt template, zero per-model tuning — ShallowSWE benchmarks models, not scaffolds",
+  ],
+  ["Giving up still costs", "hitting a spend, attempt, or time cap scores as a failure, and its spend stays in the bill"],
+  ["Prices are pinned", "dollars are token counts times the dated openrouter price sheet, downloadable below"],
+  ["Outages don't count against models", "provider and harness errors are retried, not scored"],
+  [
+    "Read close ranks as ties",
+    "per-task samples are small; exact attempt counts ship in the data files",
+  ],
 ];
 
 export default function Method() {
@@ -15,8 +25,9 @@ export default function Method() {
     <Section id="method" className="border-t border-line">
       <SectionHeader eyebrow="Method" title="How the score is measured">
         <p>
-          Cost is averaged over <em className="not-italic text-ink">every</em> attempt — passes and failures — then
-          divided by pass rate. A flaky model pays its own retry tax.
+          A scored row is one model working one task from a fixed starting seed. Each time the agent declares done,
+          the benchmark runs hidden programmatic tests. If they fail, the same agent keeps working until success or a
+          cap.
         </p>
       </SectionHeader>
 
@@ -28,13 +39,13 @@ export default function Method() {
             <span className="text-2xl text-ink sm:text-3xl">CPSC</span>
             <span className="text-2xl text-muted sm:text-3xl">=</span>
             <span className="flex flex-col text-center">
-              <span className="px-2 pb-2 text-base text-ink sm:text-lg">mean cost per attempt</span>
-              <span className="border-t border-line-strong px-2 pt-2 text-base text-ink sm:text-lg">pass rate</span>
+              <span className="px-2 pb-2 text-base text-ink sm:text-lg">total scored repair-loop spend</span>
+              <span className="border-t border-line-strong px-2 pt-2 text-base text-ink sm:text-lg">verified successes</span>
             </span>
           </div>
           <p className="mt-6 border-t border-line pt-4 text-sm leading-relaxed text-ink-2">
-            <b className="font-semibold text-ink">Tokens per success</b>{" "}is the same formula in tokens — the
-            pricing-independent number.
+            Weighted views use the same ratio form: weighted mean spend divided by weighted solve rate. The site does
+            not average per-task CPSC values directly.
           </p>
         </div>
 
@@ -44,7 +55,7 @@ export default function Method() {
             <li key={t} className="flex items-start gap-2 text-sm leading-snug">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-waterline" />
               <span className="text-ink-2">
-                <b className="font-semibold text-ink">{t}</b>{" "}— {d}
+                <b className="font-semibold text-ink">{t}</b>: {d}
               </span>
             </li>
           ))}
@@ -55,9 +66,8 @@ export default function Method() {
       <div className="mt-4 flex flex-col gap-4 rounded-xl border border-line bg-surface-2 p-5 sm:flex-row sm:items-center">
         <p className="flex-1 text-sm leading-relaxed text-ink-2">
           <b className="font-semibold text-ink">Measured.</b>{" "}Every ShallowSWE number on this page comes from the
-          measured rollouts, with dollar values derived from the dated{" "}
-          <span className="font-mono text-ink">openrouter {PRICE_SHEET_DATE}</span> price sheet. DeepSWE values are its
-          published v1.1 leaderboard, shown for context and never blended in.
+          bounded repair-loop rows, with dollar values derived from the dated{" "}
+          <span className="font-mono text-ink">openrouter {PRICE_SHEET_DATE}</span> price sheet.
         </p>
         <a
           href="/data/rollouts.json"
@@ -67,7 +77,7 @@ export default function Method() {
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path d="M12 3v12m0 0 4-4m-4 4-4-4M4 20h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          rollouts.json
+          repair-loop rows
         </a>
       </div>
     </Section>

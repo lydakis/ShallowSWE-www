@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { weightedAggregates, modelById, models, fmtUsd } from "@/app/data/model";
+import { weightedAggregates, modelById, models, fmtPercent, fmtUsd } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
 import { useWeights } from "@/lib/weights";
 import { stackLabels } from "@/lib/chartLabels";
@@ -10,8 +10,6 @@ import { linScale, logScale, logTicks, niceLogBounds, paddedLinearBounds } from 
 const VB_W = 560;
 const VB_H = 410;
 const PLOT = { l: 60, r: 470, t: 34, b: 336 };
-const X_TICK_CANDIDATES = [0, 5, 10, 15, 20, 25, 30, 40, 50, 60];
-
 const priceKeyOf = Object.fromEntries(models.map((m) => [m.id, m.priceKey]));
 
 function median(values: number[]): number {
@@ -20,7 +18,17 @@ function median(values: number[]): number {
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
-export default function EffortCurveChart({ embedded = false }: { embedded?: boolean } = {}) {
+function percentTicks(min: number, max: number): number[] {
+  const span = max - min;
+  const step = span <= 0.2 ? 0.05 : span <= 0.45 ? 0.1 : 0.25;
+  const ticks: number[] = [];
+  for (let value = Math.ceil(min / step) * step; value <= max + 0.00001; value += step) {
+    ticks.push(Math.round(value * 100) / 100);
+  }
+  return ticks.length ? ticks : [min, max];
+}
+
+export default function SuccessCostChart({ embedded = false }: { embedded?: boolean } = {}) {
   const hue = useHue();
   const { weights } = useWeights();
   const [hover, setHover] = useState<string | null>(null);
@@ -30,34 +38,42 @@ export default function EffortCurveChart({ embedded = false }: { embedded?: bool
     .map((a) => ({
       id: a.modelId,
       m: modelById[a.modelId],
-      turns: a.turns,
+      solveRate: a.solveRate,
+      firstCheckPassRate: a.firstCheckPassRate,
       cpsc: a.cpsc!,
+      repairLoops: a.repairLoops,
+      successes: a.successes,
+      costPerRepairLoop: a.costPerRepairLoop,
     }));
+
   if (pts.length === 0) {
     return (
       <figure className={embedded ? "p-4" : "panel p-4"}>
-        <figcaption className="font-mono text-xs text-muted">No verified successes in the selected basket.</figcaption>
+        <figcaption className="font-mono text-xs text-muted">No CPSC rows in the selected basket.</figcaption>
       </figure>
     );
   }
 
-  const turns = pts.map((p) => p.turns);
+  const firstCheckRates = pts.map((p) => p.firstCheckPassRate);
   const costs = pts.map((p) => p.cpsc).filter((v) => Number.isFinite(v) && v > 0);
-  const [rawXMin, rawXMax] = paddedLinearBounds(turns, [0, 30], { padding: 0.1, minSpan: 8 });
-  const xMin = Math.max(0, Math.floor(rawXMin));
-  const xMax = Math.ceil(rawXMax);
+  const [rawXMin, rawXMax] = paddedLinearBounds(firstCheckRates, [0, 1], {
+    padding: 0.12,
+    minSpan: 0.18,
+  });
+  let xMin = Math.max(0, Math.floor(rawXMin * 20) / 20);
+  let xMax = Math.min(1, Math.ceil(rawXMax * 20) / 20);
+  if (xMax <= xMin) {
+    xMin = Math.max(0, xMin - 0.05);
+    xMax = Math.min(1, xMax + 0.05);
+  }
   const [yMin, yMax] = niceLogBounds(costs, [0.01, 1]);
   const x = linScale(xMin, xMax, PLOT.l, PLOT.r);
   const y = logScale(yMin, yMax, PLOT.t, PLOT.b);
-
-  const xTicks = X_TICK_CANDIDATES.filter((t) => t >= xMin && t <= xMax);
+  const xTicks = percentTicks(xMin, xMax);
   const yTicks = logTicks(yMin, yMax).filter((t) => t > yMin && t < yMax);
-  const turnCut = median(turns);
-  const costCut = median(costs);
-  const turnCutX = x(turnCut);
-  const costCutY = y(costCut);
+  const firstCheckCutX = x(median(firstCheckRates));
+  const costCutY = y(median(costs));
 
-  // connect a model family's effort variants so families read as one unit
   const families = new Map<string, typeof pts>();
   for (const p of pts) {
     const k = priceKeyOf[p.id];
@@ -65,15 +81,15 @@ export default function EffortCurveChart({ embedded = false }: { embedded?: bool
   }
   const connectors = [...families.values()]
     .filter((g) => g.length > 1)
-    .map((g) => [...g].sort((a, b) => a.turns - b.turns));
+    .map((g) => [...g].sort((a, b) => a.firstCheckPassRate - b.firstCheckPassRate));
 
   const placedLabels = pts.map((p) => {
-    const px = x(p.turns);
+    const px = x(p.firstCheckPassRate);
     const py = y(p.cpsc);
-    const right = px < PLOT.l + 118 || px >= (PLOT.l + PLOT.r) / 2;
+    const right = px < PLOT.l + 118;
     return { ...p, px, py, right };
   });
-  const stackedYs = stackLabels(placedLabels, PLOT.t + 14, PLOT.b - 6);
+  const stackedYs = stackLabels(placedLabels, PLOT.t + 14, PLOT.b - 6, 18);
   const labels = placedLabels.map((p, i) => ({
     ...p,
     labelY: stackedYs[i],
@@ -82,7 +98,7 @@ export default function EffortCurveChart({ embedded = false }: { embedded?: bool
   }));
 
   const hp = pts.find((p) => p.id === hover) ?? null;
-  const tipX = hp ? (x(hp.turns) / VB_W) * 100 : 0;
+  const tipX = hp ? (x(hp.firstCheckPassRate) / VB_W) * 100 : 0;
   const tipY = hp ? (y(hp.cpsc) / VB_H) * 100 : 0;
   const tipTransform = `translate(${tipX > 78 ? "-92%" : tipX < 18 ? "-8%" : "-50%"}, ${
     tipY < 30 ? "14px" : "calc(-100% - 14px)"
@@ -92,8 +108,8 @@ export default function EffortCurveChart({ embedded = false }: { embedded?: bool
     <>
       {!embedded && (
         <figcaption className="flex items-baseline justify-between border-b border-line px-4 py-2.5">
-          <span className="font-display text-[0.95rem] text-ink">Turns against cost</span>
-          <span className="font-mono text-[0.66rem] text-muted">Log CPSC by model effort</span>
+          <span className="font-display text-[0.95rem] text-ink">First-check pass against cost</span>
+          <span className="font-mono text-[0.66rem] text-muted">Log CPSC by first hidden-check pass rate</span>
         </figcaption>
       )}
       <div className="relative">
@@ -101,35 +117,25 @@ export default function EffortCurveChart({ embedded = false }: { embedded?: bool
           viewBox={`0 0 ${VB_W} ${VB_H}`}
           className="w-full select-none"
           role="img"
-          aria-label="Scatter of cost per successful completion against agent turns, one dot per model-effort row. A model's effort variants are connected."
+          aria-label="Scatter of cost per successful completion against first hidden-check pass rate, one dot per model-effort row."
         >
           <text x={(PLOT.l + PLOT.r) / 2} y={VB_H - 12} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" fill="var(--ink-2)">
-            AGENT TURNS TO FINISH
+            FIRST-CHECK PASS RATE
           </text>
           <text x={16} y={(PLOT.t + PLOT.b) / 2} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" fill="var(--ink-2)" transform={`rotate(-90 16 ${(PLOT.t + PLOT.b) / 2})`}>
             COST PER SUCCESS · LOG
           </text>
           <text x={PLOT.l} y={PLOT.t - 9} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
-            ▲ cheaper · ◀ fewer turns
+            ▲ cheaper · more first-check passes →
           </text>
 
           <rect
-            x={PLOT.l}
+            x={firstCheckCutX}
             y={PLOT.t}
-            width={turnCutX - PLOT.l}
+            width={PLOT.r - firstCheckCutX}
             height={costCutY - PLOT.t}
             fill="var(--waterline)"
             fillOpacity="0.06"
-          />
-          <line
-            x1={turnCutX}
-            y1={PLOT.t}
-            x2={turnCutX}
-            y2={PLOT.b}
-            stroke="var(--waterline)"
-            strokeWidth="1"
-            strokeOpacity="0.24"
-            strokeDasharray="4 5"
           />
           <line
             x1={PLOT.l}
@@ -145,7 +151,7 @@ export default function EffortCurveChart({ embedded = false }: { embedded?: bool
             <g key={`x${t}`}>
               <line x1={x(t)} y1={PLOT.t} x2={x(t)} y2={PLOT.b} stroke="var(--line)" strokeWidth="1" />
               <text x={x(t)} y={PLOT.b + 17} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" className="tnum" fill="var(--muted)">
-                {t}
+                {fmtPercent(t)}
               </text>
             </g>
           ))}
@@ -158,11 +164,21 @@ export default function EffortCurveChart({ embedded = false }: { embedded?: bool
             </g>
           ))}
 
-          {/* family connectors (low → medium effort) */}
+          <line
+            x1={firstCheckCutX}
+            y1={PLOT.t}
+            x2={firstCheckCutX}
+            y2={PLOT.b}
+            stroke="var(--waterline)"
+            strokeWidth="1"
+            strokeOpacity="0.28"
+            strokeDasharray="4 5"
+          />
+
           {connectors.map((g) => (
             <polyline
               key={priceKeyOf[g[0].id]}
-              points={g.map((p) => `${x(p.turns)},${y(p.cpsc)}`).join(" ")}
+              points={g.map((p) => `${x(p.firstCheckPassRate)},${y(p.cpsc)}`).join(" ")}
               fill="none"
               stroke={hue(g[0].id)}
               strokeWidth="1.5"
@@ -173,8 +189,8 @@ export default function EffortCurveChart({ embedded = false }: { embedded?: bool
 
           {pts.map((p) => (
             <g key={p.id} opacity={hover && hover !== p.id ? 0.35 : 1} style={{ transition: "opacity 0.15s" }}>
-              <circle cx={x(p.turns)} cy={y(p.cpsc)} r={hover === p.id ? 8 : 6.5} fill="var(--chart-surface)" />
-              <circle cx={x(p.turns)} cy={y(p.cpsc)} r={hover === p.id ? 5.5 : 4.5} fill={hue(p.id)} />
+              <circle cx={x(p.firstCheckPassRate)} cy={y(p.cpsc)} r={hover === p.id ? 8 : 6.5} fill="var(--chart-surface)" />
+              <circle cx={x(p.firstCheckPassRate)} cy={y(p.cpsc)} r={hover === p.id ? 5.5 : 4.5} fill={hue(p.id)} />
             </g>
           ))}
           {labels.map((p) => (
@@ -205,11 +221,10 @@ export default function EffortCurveChart({ embedded = false }: { embedded?: bool
             </text>
           ))}
 
-          {/* hover hit targets (bigger than the dots) */}
           {pts.map((p) => (
             <circle
               key={`hit${p.id}`}
-              cx={x(p.turns)}
+              cx={x(p.firstCheckPassRate)}
               cy={y(p.cpsc)}
               r="13"
               fill="transparent"
@@ -236,14 +251,17 @@ export default function EffortCurveChart({ embedded = false }: { embedded?: bool
               {hp.m.short}
             </div>
             <div className="mt-0.5 font-mono text-[0.68rem] tnum text-ink-2">
-              {hp.turns.toFixed(1)} turns · {fmtUsd(hp.cpsc)} / success
+              {fmtPercent(hp.firstCheckPassRate)} first-check · {fmtUsd(hp.cpsc)} / success
+            </div>
+            <div className="mt-0.5 font-mono text-[0.66rem] tnum text-muted">
+              {hp.successes} / {hp.repairLoops} solved · {fmtPercent(hp.solveRate)} final success
             </div>
           </div>
         )}
       </div>
       <div className="border-t border-line px-4 py-2 font-mono text-[0.68rem] leading-relaxed text-muted">
-        one dot per model-effort row · x: mean agent turns · y: cost per success · lines connect a model&rsquo;s effort
-        variants · dashed cuts are panel medians; the shaded quadrant beats both
+        one dot per model-effort row · x: first hidden-check passes / scored repair loops · y: cost per success · final
+        repair-loop success remains in the table · x-axis zooms to the observed first-check range
       </div>
     </>
   );

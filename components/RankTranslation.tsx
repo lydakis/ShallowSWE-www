@@ -1,6 +1,6 @@
 "use client";
 
-import { rankTranslation, modelById, fmtUsd } from "@/app/data/model";
+import { rankTranslation, modelById, fmtPercent, fmtUsd } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
 import { useWeights } from "@/lib/weights";
 
@@ -19,48 +19,47 @@ export default function RankTranslation() {
   const rows = rankTranslation(weights);
   const vbH = TOP + Math.max(rows.length - 1, 0) * STEP + BOTTOM_PAD;
 
+  if (rows.length === 0) {
+    return (
+      <figure className="flex min-h-[16rem] items-center justify-center">
+        <figcaption className="font-mono text-xs text-muted">
+          No ShallowSWE CPSC rows yet for the selected basket.
+        </figcaption>
+      </figure>
+    );
+  }
+
   return (
     <figure>
       <svg
         viewBox={`0 0 ${VB_W} ${vbH}`}
         className="w-full select-none"
         role="img"
-        aria-label="Slopegraph connecting each model-effort row's dollar rank on DeepSWE hard tasks to its rank on the ShallowSWE run."
+        aria-label="Slopegraph connecting each model-effort row's DeepSWE pass at one rank to its ShallowSWE cost per successful completion rank."
       >
         {/* column headers */}
-        <text x={COL_L} y={30} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="10.5" letterSpacing="0.06em" fill="var(--ink)">
+        <text x={COL_L} y={30} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="10.5" fill="var(--ink)">
           DEEP END
         </text>
         <text x={COL_L} y={45} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--muted)">
-          $ / solved hard task · DeepSWE
+          pass@1 · DeepSWE
         </text>
-        <text x={COL_R} y={30} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="10.5" letterSpacing="0.06em" fill="var(--ink)">
+        <text x={COL_R} y={30} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="10.5" fill="var(--ink)">
           SHALLOW END
         </text>
         <text x={COL_R} y={45} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
           $ / success · ShallowSWE
         </text>
 
-        {/* rank guide numbers down the middle */}
-        {rows.map((_, i) => (
-          <text
-            key={`g${i}`}
-            x={(COL_L + COL_R) / 2}
-            y={y(i + 1) + 3.5}
-            textAnchor="middle"
-            fontFamily="var(--font-mono)"
-            fontSize="9"
-            className="tnum"
-            fill="var(--muted)"
-          >
-            #{i + 1}
-          </text>
-        ))}
-
-        {/* connective slopes */}
+        {/* connective slopes; effort variants share a family hue, so the low
+            variant is dashed to keep the two lines apart mid-chart */}
         {rows.map((r) => {
           const c = hue(r.modelId);
+          const m = modelById[r.modelId];
           const moved = r.deepRank !== r.shallowRank;
+          const hasSibling = rows.some(
+            (other) => other.modelId !== r.modelId && modelById[other.modelId].priceKey === m.priceKey,
+          );
           return (
             <line
               key={`l${r.modelId}`}
@@ -71,10 +70,30 @@ export default function RankTranslation() {
               stroke={c}
               strokeWidth={moved ? 2.4 : 1.4}
               strokeOpacity={moved ? 0.9 : 0.4}
+              strokeDasharray={hasSibling && m.effort === "low" ? "6 5" : undefined}
               strokeLinecap="round"
             />
           );
         })}
+
+        {/* rank guide numbers, over the slopes with a surface halo */}
+        {rows.map((_, i) => (
+          <text
+            key={`g${i}`}
+            x={(COL_L + COL_R) / 2}
+            y={y(i + 1) + 3.5}
+            textAnchor="middle"
+            fontFamily="var(--font-mono)"
+            fontSize="9"
+            className="tnum"
+            fill="var(--muted)"
+            stroke="var(--chart-surface)"
+            strokeWidth="3.5"
+            paintOrder="stroke"
+          >
+            #{i + 1}
+          </text>
+        ))}
 
         {/* endpoints + labels */}
         {rows.map((r) => {
@@ -88,7 +107,7 @@ export default function RankTranslation() {
                 {m.short}
               </text>
               <text x={COL_L - 4} y={y(r.deepRank) + 9} textAnchor="end" fontFamily="var(--font-mono)" fontSize="9" className="tnum" fill="var(--muted)">
-                {fmtUsd(r.deepValue)}
+                {fmtPercent(r.deepValue)}
               </text>
 
               {/* shallow end */}
@@ -104,8 +123,8 @@ export default function RankTranslation() {
         })}
       </svg>
       <figcaption className="mt-2 px-1 font-mono text-[0.68rem] leading-relaxed text-muted">
-        rank 1 = lowest dollars per success · left: DeepSWE effort-matched $/solved · right: measured ShallowSWE
-        CPSC
+        rank 1 = highest DeepSWE pass@1 on the left, lowest ShallowSWE CPSC on the right · dashed line = a
+        family&rsquo;s low-effort variant
       </figcaption>
     </figure>
   );

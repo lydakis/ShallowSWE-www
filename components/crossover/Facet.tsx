@@ -10,6 +10,7 @@ import {
   fmtMetric,
   fmtMaybeMetric,
   modelById,
+  taskIdsFor,
 } from "@/app/data/model";
 import { logScale } from "@/lib/scale";
 import { FACET, PLOT, pointX } from "./types";
@@ -27,15 +28,23 @@ interface Props {
 export default function Facet({ category, metric, domain, ticks, hue, highlight, xLabels }: Props) {
   const [hover, setHover] = useState<number | null>(null);
   const y = logScale(domain[0], domain[1], PLOT.top, PLOT.bottom);
+  const taskIds = taskIdsFor(category.id);
 
   const series = panelModels.map((m) => {
     const cells = cellsFor(category.id, m.id);
-    const pts = cells.map((c, i) => ({
-      cell: c,
-      x: pointX(i, cells.length),
-      v: metricValue(c, metric),
-      y: metricValue(c, metric) == null ? null : y(metricValue(c, metric)!),
-    }));
+    const pts = taskIds.map((taskId, i) => {
+      const c = cells.find((cell) => cell.taskId === taskId);
+      const v = c ? metricValue(c, metric) : null;
+      const failed = c != null && c.repairLoops > 0 && c.successes === 0;
+      return {
+        cell: c,
+        taskIndex: i,
+        x: pointX(i, taskIds.length),
+        v,
+        failed,
+        y: v == null ? null : y(v),
+      };
+    });
     return { id: m.id, color: hue(m.id), pts };
   });
 
@@ -43,12 +52,32 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
   const byEnd = [...series]
     .filter((s) => s.pts.at(-1)?.v != null)
     .sort((a, b) => a.pts.at(-1)!.v! - b.pts.at(-1)!.v!);
-  const labelIds = new Set([byEnd[0].id, byEnd[byEnd.length - 1].id]);
+  const labelIds = new Set(byEnd.length ? [byEnd[0].id, byEnd[byEnd.length - 1].id] : []);
 
   const active = (id: string) => highlight === null || highlight === id;
+  const axisLabels = compactAxisLabels(xLabels);
+  const tooltipValue = (p: (typeof series)[number]["pts"][number]): string => {
+    if (!p.cell) return "not measured";
+    if (p.failed) return `failed · ${stopReasonLabel(p.cell.stopReasons)}`;
+    return fmtMaybeMetric(p.v, metric);
+  };
+  const tooltipRank = (p: (typeof series)[number]["pts"][number]): number => {
+    if (p.v != null) return p.v;
+    if (p.failed) return Number.POSITIVE_INFINITY - 1;
+    return Number.POSITIVE_INFINITY;
+  };
+  const tipXPercent = hover === null ? 0 : (pointX(hover, xLabels.length) / FACET.W) * 100;
+  const tipTransform =
+    hover === null
+      ? "translateX(-50%)"
+      : hover <= 1
+        ? "translateX(0)"
+        : hover >= xLabels.length - 2
+          ? "translateX(-100%)"
+          : "translateX(-50%)";
 
   return (
-    <figure className="panel overflow-hidden">
+    <figure className="panel overflow-visible">
       <figcaption className="flex items-baseline justify-between border-b border-line px-4 py-2.5">
         <span className="font-display text-[0.95rem] text-ink">{category.label}</span>
         <span className="font-mono text-[0.66rem] text-muted">{category.gloss}</span>
@@ -68,15 +97,15 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
             );
           })}
           {/* surface tick at top */}
-          <text x={PLOT.left} y={PLOT.top - 5} fontFamily="var(--font-mono)" fontSize="8.5" letterSpacing="0.1em" fill="var(--waterline)">
+          <text x={PLOT.left} y={PLOT.top - 5} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
             ▲ cheaper
           </text>
 
           {/* task x labels + crosshair columns */}
           {xLabels.map((tl, i) => (
             <g key={tl}>
-              <text x={pointX(i, xLabels.length)} y={PLOT.bottom + 20} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9" fill={hover === i ? "var(--ink)" : "var(--muted)"}>
-                {tl}
+              <text x={pointX(i, xLabels.length)} y={PLOT.bottom + 20} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" fill={hover === i ? "var(--ink)" : "var(--muted)"}>
+                {axisLabels[i]}
               </text>
               {hover === i && <line x1={pointX(i, xLabels.length)} y1={PLOT.top} x2={pointX(i, xLabels.length)} y2={PLOT.bottom} stroke="var(--line-strong)" strokeWidth="1" strokeDasharray="2 3" />}
             </g>
@@ -105,8 +134,8 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
           {series.map((s) =>
             s.pts.filter((p): p is typeof p & { y: number } => p.y != null).map((p, i) => (
               <g key={s.id + i} opacity={active(s.id) ? 1 : 0.14} style={{ transition: "opacity 0.2s" }}>
-                <circle cx={p.x} cy={p.y} r={hover === i ? 5 : 4} fill="var(--chart-surface)" />
-                <circle cx={p.x} cy={p.y} r={hover === i ? 3.4 : 2.6} fill={s.color} />
+                <circle cx={p.x} cy={p.y} r={hover === p.taskIndex ? 5 : 4} fill="var(--chart-surface)" />
+                <circle cx={p.x} cy={p.y} r={hover === p.taskIndex ? 3.4 : 2.6} fill={s.color} />
               </g>
             )),
           )}
@@ -139,6 +168,7 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
                 width={w}
                 height={PLOT.bottom - PLOT.top}
                 fill="transparent"
+                style={{ cursor: "pointer" }}
                 onMouseEnter={() => setHover(i)}
                 onMouseLeave={() => setHover(null)}
                 onClick={() => setHover((h) => (h === i ? null : i))}
@@ -150,25 +180,25 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
         {/* tooltip */}
         {hover !== null && (
           <div
-            className="pointer-events-none absolute top-2 z-10 rounded-lg border border-line bg-surface/95 p-2.5 backdrop-blur"
+            className="pointer-events-none absolute top-2 z-30 max-w-[min(28rem,calc(100vw-2rem))] rounded-lg border border-line bg-surface/95 p-2.5 backdrop-blur"
             style={{
-              left: `${(pointX(hover, xLabels.length) / FACET.W) * 100}%`,
-              transform: `translateX(${hover === xLabels.length - 1 ? "-105%" : hover === 1 ? "-50%" : "5%"})`,
+              left: `${tipXPercent}%`,
+              transform: tipTransform,
               boxShadow: "var(--shadow)",
             }}
           >
-            <div className="mb-1.5 font-mono text-[0.62rem] tracking-wide text-muted">
+            <div className="mb-1.5 font-mono text-[0.62rem] text-muted">
               {category.label} · {xLabels[hover]}
             </div>
             <div className="space-y-1">
               {[...series]
-                .sort((a, b) => (a.pts[hover].v ?? Number.POSITIVE_INFINITY) - (b.pts[hover].v ?? Number.POSITIVE_INFINITY))
+                .sort((a, b) => tooltipRank(a.pts[hover]) - tooltipRank(b.pts[hover]))
                 .map((s) => (
                   <div key={s.id} className="flex items-center gap-2 whitespace-nowrap text-[0.72rem]">
                     <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: s.color }} />
                     <span className={`${active(s.id) ? "text-ink" : "text-muted"}`}>{modelById[s.id].short}</span>
                     <span className="ml-auto pl-2 font-mono tnum text-ink-2">
-                      {fmtMaybeMetric(s.pts[hover].v, metric)}
+                      {tooltipValue(s.pts[hover])}
                     </span>
                   </div>
                 ))}
@@ -178,4 +208,20 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
       </div>
     </figure>
   );
+}
+
+function stopReasonLabel(stopReasons: Record<string, number>): string {
+  const top = Object.entries(stopReasons).sort((a, b) => b[1] - a[1])[0]?.[0];
+  if (!top) return "no success";
+  return top.replaceAll("_", " ");
+}
+
+function compactAxisLabels(labels: string[]): string[] {
+  const seen = new Map<string, number>();
+  return labels.map((label) => {
+    const code = label.split(" · ")[0] || "T";
+    const next = (seen.get(code) ?? 0) + 1;
+    seen.set(code, next);
+    return `${code}${next}`;
+  });
 }

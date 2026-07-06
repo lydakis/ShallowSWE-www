@@ -1,116 +1,65 @@
 {
-  "schema_version": "shallowswe.run_manifest.v0.1",
-  "name": "shallowswe-pilot-2026-07-04",
-  "generated_at": "2026-07-04T05:24:34Z",
-  "jobs_root": "multiple",
-  "jobs": [
-    {
-      "job_name": "shallowswe_publish_low_r1",
-      "rows": 12
-    },
-    {
-      "job_name": "shallowswe_publish_low_r2",
-      "rows": 12
-    },
-    {
-      "job_name": "shallowswe_publish_low_r3",
-      "rows": 12
-    },
-    {
-      "job_name": "shallowswe_publish_gemini_medium_r1",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_gemini_medium_r2",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_gemini_medium_r3",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_kimi_default_r1",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_kimi_default_r2",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_kimi_default_r3",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_fable_low_4task_r1",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_fable_low_4task_r2",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_fable_low_4task_r3",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_medium_4task_clean_r1",
-      "rows": 12
-    },
-    {
-      "job_name": "shallowswe_publish_medium_4task_clean_r2",
-      "rows": 12
-    },
-    {
-      "job_name": "shallowswe_publish_medium_4task_clean_r3",
-      "rows": 12
-    },
-    {
-      "job_name": "shallowswe_publish_glm52_high_4task_r1",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_glm52_high_4task_r2",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_publish_glm52_high_4task_r3",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_t4_ticket_expanded_low_missing_n1",
-      "rows": 4
-    },
-    {
-      "job_name": "shallowswe_t4_ticket_expanded_medium_missing_n1",
-      "rows": 2
-    },
-    {
-      "job_name": "shallowswe_t4_ticket_anchor_n15",
-      "rows": 45
-    },
-    {
-      "job_name": "shallowswe_t4_ticket_gpt55_medium_topgate_n5",
-      "rows": 5
-    },
-    {
-      "job_name": "shallowswe_t4_ticket_topups_2026_07_04",
-      "rows": 27,
-      "scored_rows": 24,
-      "excluded_rows": 3
-    }
-  ],
+  "schema_version": "shallowswe.repair_loop_site_manifest.v0.1",
+  "name": "shallowswe-repair-loop-preview-n3-18-v0.2-config-rollover-temp-clean",
+  "snapshot_id": "shallowswe-v0.2-large-replacement-candidate-2026-07-05",
+  "generated_at": "2026-07-06T21:53:56.176762Z",
+  "status": "preview_partial_clean",
   "tasks": [
-    "invoice-cli-regression-test-fix",
-    "report-json-format",
-    "config-flag-ignored",
+    "env-flags-to-json",
+    "extract-error-fields",
     "payout-reconcile",
-    "ticket-state-reconcile"
+    "access-log-to-incidents",
+    "billing-revenue-rollup",
+    "support-sla-business-hours",
+    "invoice-cli-regression-test-fix",
+    "retry-error-fallback",
+    "auth-token-expiry-regression",
+    "split-notification-renderer",
+    "cache-invalidates-on-settings-change",
+    "invoice-multi-source-merge",
+    "post-build-status",
+    "ticket-cut-from-bug-report",
+    "config-flag-ignored",
+    "ticket-update-dont-duplicate",
+    "merge-divergent-config-branches",
+    "config-key-rollover"
   ],
-  "rollouts_per_task_model_config": "mixed",
-  "rollout_policy": "mixed rollout counts, shown per row; T4 expanded model-effort rows topped up to N5 scored attempts, with calibration anchors at N15",
-  "panel": "panels/deepswe-v1.1-expanded-pilot.json plus accepted T4 expanded panel rows",
-  "agent": "mini-swe-agent",
-  "runner": "pier",
-  "prices": "prices/openrouter-2026-07-03.json",
-  "notes": "Expanded measured publish pilot with accepted T4 Invoke task integrated into the same basket. Six Claude/OpenAI T4 rows are topped up to N5 scored attempts; Gemini, Kimi, and GLM T4 calibration anchors remain N15. Public rollouts retain 3 provider/network retry exclusions. Excludes the local smoke task py-normalize-username."
+  "repair_loop_seeds_per_task_model_config": 3,
+  "repair_loop_policy": "N=3 bounded repair-loop preview; same model_config continues after sanitized verifier feedback until pass or cap",
+  "model_panel": "panels/deepswe-v1.1-expanded-pilot.json",
+  "agent": "shallowswe-resumable-mini-swe-agent",
+  "runner": "Pier + ShallowSWE repair-loop controller",
+  "protocol": {
+    "single_model_run_invariant": true,
+    "no_fallbacks": true,
+    "requires_conversation_continuation": true,
+    "requires_filesystem_continuation": true,
+    "verifier_submission_cap": 20,
+    "agent_step_cap": 120,
+    "wall_time_cap_seconds": 2400,
+    "dollar_cap_usd": 5.0,
+    "allowed_feedback_classes": [
+      "generic_failure",
+      "runtime_error",
+      "missing_required_artifact",
+      "output_mismatch"
+    ]
+  },
+  "budget_gate": {
+    "max_budget_usd": 250.0,
+    "global_hard_stop_usd": 250.0,
+    "estimate_artifact": "results/shallowswe-repair-loop-preview-plan-v0.2-large-replacements-2026-07-05/budget-estimate.json",
+    "requires_explicit_approval_if_over_budget": true
+  },
+  "run_report": {
+    "total_planned_rows": 540,
+    "completed_rows": 540,
+    "skipped_existing_rows": 200,
+    "cumulative_spend_usd": 69.081362942,
+    "stopped": false,
+    "stop_reason": null,
+    "parallelism": 1,
+    "source_output_dir": "results/shallowswe-repair-loop-preview-n3-18-v0.2-config-rollover-temp-2026-07-06"
+  },
+  "partial_rows_exported": 540
 }

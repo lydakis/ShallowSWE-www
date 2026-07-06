@@ -15,7 +15,7 @@ export default function Nav() {
       <nav className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6">
         <Link href="#top" className="flex items-center gap-2.5 text-ink">
           <Logo className="h-7 w-7 text-ink" />
-          <span className="font-display text-[1.05rem] tracking-tight">ShallowSWE</span>
+          <span className="font-display text-[1.05rem]">ShallowSWE</span>
         </Link>
         <div className="ml-4 hidden items-center gap-1 md:flex">
           {links.map((l) => (
@@ -33,7 +33,13 @@ export default function Nav() {
             href="/data/rollouts.json"
             className="hidden rounded-full border border-line px-3 py-1.5 font-mono text-xs text-ink-2 transition-colors hover:border-line-strong hover:text-ink sm:inline-block"
           >
-            rollouts.json
+            rows.json
+          </a>
+          <a
+            href="https://github.com/lydakis/ShallowSWE"
+            className="hidden rounded-full border border-line px-3 py-1.5 font-mono text-xs text-ink-2 transition-colors hover:border-line-strong hover:text-ink sm:inline-block"
+          >
+            GitHub
           </a>
           <ThemeToggle />
         </div>

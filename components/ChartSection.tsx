@@ -1,21 +1,27 @@
 import { Section, SectionHeader } from "./Section";
+import CostAnatomyChart from "./CostAnatomyChart";
 import CrossoverChart from "./crossover/CrossoverChart";
-import EffortCurveChart from "./EffortCurveChart";
+import EffortCharts from "./EffortCharts";
 import Leaderboard from "./Leaderboard";
-import { PRICE_SHEET_DATE, SUITE_TASKS } from "@/app/data/model";
+import { PRICE_SHEET_DATE, SEED_COVERAGE, SUITE_TASKS } from "@/app/data/model";
 
 export default function ChartSection() {
   return (
     <Section id="chart">
-      <SectionHeader eyebrow="Measured leaderboard" title={<>Cost leaderboard</>}>
+      <SectionHeader eyebrow="The leaderboard" title={<>Cost per verified success</>}>
         <p>
-          Cost, tokens, pass rate, and turns per successful completion across all five tasks. Set the basket weights to
-          reprice the leaderboard.
+          Each row gives one model one task. When the model says it is done, hidden checks run; it keeps fixing until
+          they pass or a cap stops it. That whole attempt is a <b className="font-semibold text-ink">repair loop</b> —
+          and every dollar of it counts, failed tries included.
         </p>
       </SectionHeader>
 
       <div className="mt-8">
         <Leaderboard />
+      </div>
+
+      <div className="mt-6">
+        <CostAnatomyChart />
       </div>
 
       {/* Diagnostics explain where the basket price comes from, but they dominate
@@ -29,23 +35,20 @@ export default function ChartSection() {
             <span className="min-w-0">Run diagnostics</span>
           </span>
           <span className="eyebrow max-w-full break-words text-[0.62rem] sm:shrink-0 sm:text-[0.72rem]">
-            Task breakdown · turns · diagnostic
+            Turns · first-check pass · task breakdown
           </span>
         </summary>
         <div className="space-y-8 border-t border-line px-4 py-5 sm:px-5">
-          <div>
-            <div className="mb-3 font-display text-base text-ink">Task-level breakdown</div>
-            <CrossoverChart />
-          </div>
-          <div className="pt-1">
-            <EffortCurveChart />
-          </div>
+          <EffortCharts />
+          <CrossoverChart />
         </div>
       </details>
 
       <p className="mt-6 font-mono text-[0.7rem] leading-relaxed text-muted">
-        basket-weighted · {SUITE_TASKS} tasks · attempts shown per row · mini-swe-agent · openrouter{" "}
-        {PRICE_SHEET_DATE} · failures included in CPSC
+        basket-weighted · {SUITE_TASKS} tasks · N={SEED_COVERAGE} seeds per task/model · treat close ranks as ties ·
+        mini-swe-agent · openrouter {PRICE_SHEET_DATE} ·
+        Solved = verified successes / scored repair loops · scored failures and cap hits included in CPSC · infra
+        exclusions tracked in raw rows and retried for coverage
       </p>
     </Section>
   );

@@ -1,29 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { panelModels, weightedAggregates, deepsweCostPerSolved, fmtUsd } from "@/app/data/model";
+import {
+  panelModels,
+  weightedAggregates,
+  deepswePassAt1,
+  deepsweCostPerSolved,
+  fmtPercent,
+  fmtUsd,
+} from "@/app/data/model";
 import { useHue } from "@/lib/hues";
 import { useWeights } from "@/lib/weights";
-import { logScale } from "@/lib/scale";
+import { stackLabels } from "@/lib/chartLabels";
+import { linScale, logScale, logTicks, niceLogBounds, paddedLinearBounds } from "@/lib/scale";
 
 const VB_W = 520;
 const VB_H = 400;
 const PLOT = { l: 64, r: 500, t: 40, b: 348 };
-const X_TICKS = [5, 10, 20];
-const Y_TICKS = [0.03, 0.1, 0.3];
+const PASS_TICK_CANDIDATES = [0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65];
 
-const LABEL: Record<string, { dx: number; dy: number; anchor: "start" | "end" }> = {
-  "fable-5-low": { dx: 12, dy: -8, anchor: "start" },
-  "sonnet-5-low": { dx: 12, dy: 16, anchor: "start" },
-  "sonnet-5-medium": { dx: 12, dy: 14, anchor: "start" },
-  "kimi-k2-7-default": { dx: 12, dy: 22, anchor: "start" },
-  "opus-4-8-low": { dx: 12, dy: -14, anchor: "start" },
-  "opus-4-8-medium": { dx: 12, dy: 16, anchor: "start" },
-  "gpt-5-5-low": { dx: 12, dy: 4, anchor: "start" },
-  "gpt-5-5-medium": { dx: 12, dy: 18, anchor: "start" },
-  "gemini-flash-medium": { dx: -12, dy: -6, anchor: "end" },
-  "glm-5-2-high": { dx: 12, dy: -14, anchor: "start" },
-};
+export type QuadrantMode = "pass" | "deepcost";
 
 function median(values: number[]): number {
   const sorted = [...values].sort((a, b) => a - b);
@@ -31,22 +27,61 @@ function median(values: number[]): number {
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
-export default function CostQuadrantChart() {
+export default function CostQuadrantChart({ mode = "pass" }: { mode?: QuadrantMode } = {}) {
   const hue = useHue();
   const { weights } = useWeights();
   const [hover, setHover] = useState<string | null>(null);
+  const deepCost = mode === "deepcost";
 
-  const easyById = Object.fromEntries(weightedAggregates(weights).map((a) => [a.modelId, a.cpsc]));
+  const shallowById = Object.fromEntries(weightedAggregates(weights).map((a) => [a.modelId, a.cpsc]));
   const points = panelModels
-    .map((m) => ({ m, hard: deepsweCostPerSolved(m.id), shallow: easyById[m.id] }))
-    .filter((p): p is { m: (typeof panelModels)[number]; hard: number; shallow: number } => p.hard != null);
+    .map((m) => ({
+      m,
+      hard: deepCost ? deepsweCostPerSolved(m.id) : deepswePassAt1(m.id),
+      shallow: shallowById[m.id],
+    }))
+    .filter(
+      (p): p is { m: (typeof panelModels)[number]; hard: number; shallow: number } =>
+        p.hard != null && p.shallow != null,
+    );
 
-  const x = logScale(4, 25, PLOT.l, PLOT.r);
-  const y = logScale(0.02, 0.7, PLOT.t, PLOT.b);
-  const hardMedian = median(points.map((p) => p.hard));
-  const shallowMedian = median(points.map((p) => p.shallow));
-  const hardCutX = x(hardMedian);
-  const shallowCutY = y(shallowMedian);
+  if (points.length === 0) {
+    return (
+      <figure className="flex min-h-[20rem] items-center justify-center">
+        <figcaption className="font-mono text-xs text-muted">
+          No ShallowSWE CPSC rows yet for the selected basket.
+        </figcaption>
+      </figure>
+    );
+  }
+
+  const hardValues = points.map((p) => p.hard);
+  let x: (v: number) => number;
+  let xTicks: number[];
+  if (deepCost) {
+    const [minHard, maxHard] = niceLogBounds(hardValues, [0.5, 50]);
+    x = logScale(minHard, maxHard, PLOT.l, PLOT.r);
+    xTicks = logTicks(minHard, maxHard).filter((t) => t > minHard && t < maxHard);
+  } else {
+    const [rawMinHard, rawMaxHard] = paddedLinearBounds(hardValues, [0.3, 0.6], { padding: 0.12, minSpan: 0.12 });
+    const minHard = Math.max(0, rawMinHard);
+    const maxHard = Math.min(1, rawMaxHard);
+    x = linScale(minHard, maxHard, PLOT.l, PLOT.r);
+    xTicks = PASS_TICK_CANDIDATES.filter((t) => t > minHard && t < maxHard);
+  }
+  const shallowValues = points.map((p) => p.shallow);
+  const [minShallow, maxShallow] = niceLogBounds(shallowValues, [0.01, 1]);
+  const y = logScale(minShallow, maxShallow, PLOT.t, PLOT.b);
+  const yTicks = logTicks(minShallow, maxShallow).filter((t) => t > minShallow && t < maxShallow);
+  const hardCutX = x(median(hardValues));
+  const shallowCutY = y(median(shallowValues));
+  const xMedian = median(points.map((p) => x(p.hard)));
+
+  // the winning quadrant is cheap on ShallowSWE and either smarter (pass@1)
+  // or also cheaper (deep $/solved) on DeepSWE
+  const quadrant = deepCost
+    ? { x: PLOT.l, width: hardCutX - PLOT.l }
+    : { x: hardCutX, width: PLOT.r - hardCutX };
 
   // connect a model family's effort variants
   const families = new Map<string, typeof points>();
@@ -56,6 +91,20 @@ export default function CostQuadrantChart() {
   const connectors = [...families.values()]
     .filter((g) => g.length > 1)
     .map((g) => [...g].sort((a, b) => a.hard - b.hard));
+
+  const placedLabels = points.map((p) => {
+    const px = x(p.hard);
+    const py = y(p.shallow);
+    const right = px < xMedian;
+    return { ...p, px, py, right };
+  });
+  const stackedYs = stackLabels(placedLabels, PLOT.t + 14, PLOT.b - 6, 18);
+  const labels = placedLabels.map((p, i) => ({
+    ...p,
+    labelY: stackedYs[i],
+    labelX: p.px + (p.right ? 13 : -13),
+    anchor: p.right ? ("start" as const) : ("end" as const),
+  }));
 
   const hp = points.find((p) => p.m.id === hover) ?? null;
   const tipX = hp ? (x(hp.hard) / VB_W) * 100 : 0;
@@ -71,26 +120,30 @@ export default function CostQuadrantChart() {
           viewBox={`0 0 ${VB_W} ${VB_H}`}
           className="w-full select-none"
           role="img"
-          aria-label="Scatter with one dot per model-effort row. Horizontal: DeepSWE cost per solved hard task. Vertical: measured ShallowSWE cost per success. A model's effort variants are connected."
+          aria-label={
+            deepCost
+              ? "Scatter with one dot per model-effort row. Horizontal: DeepSWE cost per solved task, log scale. Vertical: measured ShallowSWE cost per success. A model's effort variants are connected."
+              : "Scatter with one dot per model-effort row. Horizontal: DeepSWE pass at one. Vertical: measured ShallowSWE cost per success. A model's effort variants are connected."
+          }
         >
-          <text x={(PLOT.l + PLOT.r) / 2} y={VB_H - 8} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" letterSpacing="0.08em" fill="var(--ink-2)">
-            $ PER SOLVED HARD TASK · DEEPSWE · MATCHED EFFORT
+          <text x={(PLOT.l + PLOT.r) / 2} y={VB_H - 8} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" fill="var(--ink-2)">
+            {deepCost ? "$ PER SOLVED · DEEPSWE · LOG" : "PASS@1 · DEEPSWE · MATCHED EFFORT"}
           </text>
-          <text x={14} y={(PLOT.t + PLOT.b) / 2} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" letterSpacing="0.08em" fill="var(--ink-2)" transform={`rotate(-90 14 ${(PLOT.t + PLOT.b) / 2})`}>
+          <text x={14} y={(PLOT.t + PLOT.b) / 2} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" fill="var(--ink-2)" transform={`rotate(-90 14 ${(PLOT.t + PLOT.b) / 2})`}>
             $ PER SUCCESS · SHALLOWSWE · MEASURED
           </text>
           <text x={PLOT.l} y={PLOT.t - 8} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
             LOWER SHALLOWSWE CPSC
           </text>
           <text x={PLOT.l} y={VB_H - 24} fontFamily="var(--font-mono)" fontSize="8.5" fill="var(--waterline)">
-            LOWER DEEPSWE $/SOLVED
+            {deepCost ? "◀ CHEAPER PER DEEPSWE SOLVE" : "HIGHER DEEPSWE PASS@1 →"}
           </text>
 
-          {/* dynamic median split: upper-left is lower cost on both benchmarks */}
+          {/* dynamic median split */}
           <rect
-            x={PLOT.l}
+            x={quadrant.x}
             y={PLOT.t}
-            width={hardCutX - PLOT.l}
+            width={quadrant.width}
             height={shallowCutY - PLOT.t}
             fill="var(--waterline)"
             fillOpacity="0.07"
@@ -115,26 +168,15 @@ export default function CostQuadrantChart() {
             strokeOpacity="0.28"
             strokeDasharray="4 5"
           />
-          <text
-            x={PLOT.l + 10}
-            y={PLOT.t + 16}
-            fontFamily="var(--font-mono)"
-            fontSize="8.5"
-            letterSpacing="0.08em"
-            fill="var(--waterline)"
-          >
-            LOWER BOTH
-          </text>
-
-          {X_TICKS.map((t) => (
+          {xTicks.map((t) => (
             <g key={`x${t}`}>
               <line x1={x(t)} y1={PLOT.t} x2={x(t)} y2={PLOT.b} stroke="var(--line)" strokeWidth="1" />
               <text x={x(t)} y={PLOT.b + 16} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9.5" className="tnum" fill="var(--muted)">
-                ${t}
+                {deepCost ? fmtUsd(t) : fmtPercent(t)}
               </text>
             </g>
           ))}
-          {Y_TICKS.map((t) => (
+          {yTicks.map((t) => (
             <g key={`y${t}`}>
               <line x1={PLOT.l} y1={y(t)} x2={PLOT.r} y2={y(t)} stroke="var(--line)" strokeWidth="1" />
               <text x={PLOT.l - 6} y={y(t) + 3} textAnchor="end" fontFamily="var(--font-mono)" fontSize="9.5" className="tnum" fill="var(--muted)">
@@ -157,18 +199,42 @@ export default function CostQuadrantChart() {
           ))}
 
           {points.map(({ m, hard, shallow }) => {
-            const lb = LABEL[m.id] ?? { dx: hard > 12 ? -12 : 12, dy: 4, anchor: hard > 12 ? "end" : "start" };
             const dim = hover && hover !== m.id;
             return (
               <g key={m.id} opacity={dim ? 0.35 : 1} style={{ transition: "opacity 0.15s" }}>
                 <circle cx={x(hard)} cy={y(shallow)} r={hover === m.id ? 8 : 7} fill="var(--chart-surface)" />
                 <circle cx={x(hard)} cy={y(shallow)} r={hover === m.id ? 5.5 : 5} fill={hue(m.id)} />
-                <text x={x(hard) + lb.dx} y={y(shallow) + lb.dy} textAnchor={lb.anchor} fontFamily="var(--font-display)" fontSize="11.5" fontWeight="600" fill="var(--ink)">
-                  {m.short}
-                </text>
               </g>
             );
           })}
+
+          {labels.map((p) => (
+            <line
+              key={`leader-${p.m.id}`}
+              x1={p.px + (p.right ? 6 : -6)}
+              y1={p.py}
+              x2={p.labelX + (p.anchor === "start" ? -4 : 4)}
+              y2={p.labelY - 3.5}
+              stroke={hue(p.m.id)}
+              strokeWidth="1"
+              strokeOpacity={hover && hover !== p.m.id ? 0.15 : 0.35}
+            />
+          ))}
+          {labels.map((p) => (
+            <text
+              key={`label-${p.m.id}`}
+              x={p.labelX}
+              y={p.labelY}
+              textAnchor={p.anchor}
+              fontFamily="var(--font-display)"
+              fontSize="11"
+              fontWeight="600"
+              fill="var(--ink)"
+              opacity={hover && hover !== p.m.id ? 0.35 : 1}
+            >
+              {p.m.short}
+            </text>
+          ))}
 
           {/* hover hit targets */}
           {points.map(({ m, hard, shallow }) => (
@@ -178,6 +244,7 @@ export default function CostQuadrantChart() {
               cy={y(shallow)}
               r="14"
               fill="transparent"
+              style={{ cursor: "pointer" }}
               onMouseEnter={() => setHover(m.id)}
               onMouseLeave={() => setHover(null)}
               onClick={() => setHover((h) => (h === m.id ? null : m.id))}
@@ -187,7 +254,7 @@ export default function CostQuadrantChart() {
 
         {hp && (
           <div
-            className="pointer-events-none absolute z-10 whitespace-nowrap rounded-lg border border-line bg-surface/95 px-2.5 py-1.5 backdrop-blur"
+            className="pointer-events-none absolute z-30 max-w-[calc(100vw-2rem)] whitespace-nowrap rounded-lg border border-line bg-surface/95 px-2.5 py-1.5 backdrop-blur"
             style={{
               left: `${tipX}%`,
               top: `${tipY}%`,
@@ -200,14 +267,17 @@ export default function CostQuadrantChart() {
               {hp.m.short}
             </div>
             <div className="mt-0.5 font-mono text-[0.68rem] tnum text-ink-2">
-              {fmtUsd(hp.hard)} / hard solve · {fmtUsd(hp.shallow)} / success
+              {deepCost
+                ? `DeepSWE ${fmtUsd(hp.hard)} / solved · ShallowSWE ${fmtUsd(hp.shallow)}`
+                : `DeepSWE ${fmtPercent(hp.hard)} · ShallowSWE ${fmtUsd(hp.shallow)}`}
             </div>
           </div>
         )}
       </div>
       <figcaption className="mt-2 px-1 font-mono text-[0.68rem] leading-relaxed text-muted">
-        one dot per model-effort row · x: DeepSWE cost per solved task · y: measured ShallowSWE CPSC · lines connect a
-        model&rsquo;s effort variants
+        {deepCost
+          ? "one dot per model-effort row · x: DeepSWE cost per solved task · y: measured ShallowSWE CPSC · lines connect a model's effort variants · dashed cuts are panel medians; the shaded quadrant is cheaper than the median on both benchmarks"
+          : "one dot per model-effort row · x: DeepSWE pass@1 · y: measured ShallowSWE CPSC · lines connect a model's effort variants · dashed cuts are panel medians; the shaded quadrant beats the median on both axes"}
       </figcaption>
     </figure>
   );
