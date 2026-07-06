@@ -109,6 +109,7 @@
 
 html {
   background: var(--plane);
+  background-color: var(--plane);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
@@ -128,7 +129,9 @@ html {
 
 body {
   min-height: 100%;
+  min-height: 100dvh;
   background: var(--plane);
+  background-color: var(--plane);
   color: var(--ink);
   font-family: var(--font-sans);
   font-feature-settings: "ss01", "cv01";

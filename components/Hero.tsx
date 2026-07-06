@@ -1,4 +1,5 @@
 import HeroDepth from "./HeroDepth";
+import { SEED_COVERAGE, SNAPSHOT_STATUS, SUITE_TASKS } from "@/app/data/model";
 
 export default function Hero() {
   return (
@@ -7,6 +8,9 @@ export default function Hero() {
         <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           {/* Thesis */}
           <div>
+            <p className="eyebrow mb-4">
+              {SNAPSHOT_STATUS} · {SUITE_TASKS} tasks · N={SEED_COVERAGE} seeds — v1 expands the suite
+            </p>
             <h1 className="font-display text-[2.65rem] leading-[1.03] text-ink sm:text-6xl">
               Not every task needs a{" "}
               <span className="relative inline-block">

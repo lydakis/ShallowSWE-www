@@ -26,6 +26,12 @@ function emit() {
 }
 
 function setThemeColor(theme: Theme) {
+  const color = theme === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR;
+  document.documentElement.style.backgroundColor = color;
+  document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((node) => {
+    node.content = color;
+    node.removeAttribute("media");
+  });
   let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"][data-sswe-theme-color]');
   if (!meta) {
     meta = document.createElement("meta");
@@ -33,7 +39,7 @@ function setThemeColor(theme: Theme) {
     meta.setAttribute("data-sswe-theme-color", "");
     document.head.appendChild(meta);
   }
-  meta.content = theme === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR;
+  meta.content = color;
 }
 
 function applyTheme(setting: ThemeSetting) {

@@ -54,6 +54,12 @@ const themeScript = `(() => {
         ? "dark"
         : "light";
   const setThemeColor = (theme) => {
+    const color = theme === "dark" ? dark : light;
+    document.documentElement.style.backgroundColor = color;
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+      meta.setAttribute("content", color);
+      meta.removeAttribute("media");
+    });
     let meta = document.querySelector('meta[name="theme-color"][data-sswe-theme-color]');
     if (!meta) {
       meta = document.createElement("meta");
@@ -61,7 +67,7 @@ const themeScript = `(() => {
       meta.setAttribute("data-sswe-theme-color", "");
       document.head.appendChild(meta);
     }
-    meta.setAttribute("content", theme === "dark" ? dark : light);
+    meta.setAttribute("content", color);
   };
   const apply = (setting = read()) => {
     const root = document.documentElement;
