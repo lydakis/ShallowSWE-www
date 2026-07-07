@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import {
   weightedAggregates,
+  weightedCpscIntervals,
   type Aggregate,
   categories,
   sizes,
@@ -17,7 +18,58 @@ import {
 } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
 import { redistributeTernaryWeights, useWeights } from "@/lib/weights";
+import { logScale } from "@/lib/scale";
 import BasketSlices from "./BasketSlices";
+
+const CI_STRIP_W = 148;
+const CI_STRIP_H = 12;
+
+const CI_COLUMN_TITLE =
+  "95% confidence interval on cost / success, from resampling the task suite. All rows share one scale: " +
+  "when two rows' bands overlap, their ranks are a statistical tie. Not sortable — it qualifies the " +
+  "Cost / success ranking rather than adding a metric.";
+
+/**
+ * The 95% CI as a band on a log scale shared by every row, so overlapping
+ * intervals — ties — read by vertical alignment instead of number-comparing.
+ * Exact bounds live in the tooltip.
+ */
+function CiStrip({
+  lo,
+  hi,
+  value,
+  domain,
+  color,
+}: {
+  lo: number;
+  hi: number;
+  value: number;
+  domain: [number, number];
+  color: string;
+}) {
+  const x = logScale(domain[0], domain[1], 3, CI_STRIP_W - 3);
+  return (
+    <svg
+      width={CI_STRIP_W}
+      height={CI_STRIP_H}
+      viewBox={`0 0 ${CI_STRIP_W} ${CI_STRIP_H}`}
+      className="shrink-0"
+      aria-hidden
+    >
+      <line
+        x1={x(lo)}
+        y1={CI_STRIP_H / 2}
+        x2={x(hi)}
+        y2={CI_STRIP_H / 2}
+        stroke={color}
+        strokeWidth="5"
+        strokeLinecap="round"
+        opacity="0.35"
+      />
+      <circle cx={x(value)} cy={CI_STRIP_H / 2} r="2.5" fill={color} />
+    </svg>
+  );
+}
 
 type SortKey =
   | "cpsc"
@@ -214,8 +266,15 @@ export default function Leaderboard() {
     direction: "asc",
   });
   const [basketOpen, setBasketOpen] = useState(false);
+  const [showCi, setShowCi] = useState(false);
   const { weights, setWeights } = useWeights();
   const hue = useHue();
+  const cpscIntervals = useMemo(() => weightedCpscIntervals(weights), [weights]);
+  const ciDomain = useMemo<[number, number]>(() => {
+    const spans = Object.values(cpscIntervals);
+    if (spans.length === 0) return [0.001, 1];
+    return [Math.min(...spans.map((s) => s.lo)) / 1.1, Math.max(...spans.map((s) => s.hi)) * 1.1];
+  }, [cpscIntervals]);
 
   const categoryIds = categories.map((c) => c.id);
   const sizeIds = sizes.map((size) => size.id);
@@ -359,6 +418,18 @@ export default function Leaderboard() {
           <a href="#method" className="font-mono text-[0.72rem] text-waterline underline-offset-2 hover:underline">
             how it&rsquo;s measured ↓
           </a>
+          <button
+            type="button"
+            aria-pressed={showCi}
+            onClick={() => setShowCi((v) => !v)}
+            className={`ml-auto rounded-full border px-2.5 py-0.5 font-mono text-[0.7rem] transition-colors ${
+              showCi
+                ? "border-line-strong bg-surface-2 text-ink"
+                : "border-line text-ink-2 hover:border-line-strong hover:text-ink"
+            }`}
+          >
+            {showCi ? "hide 95% ranges" : "show 95% ranges"}
+          </button>
         </p>
       )}
 
@@ -372,30 +443,38 @@ export default function Leaderboard() {
                 const active = sort.key === c.key;
                 const nextDirection = active ? toggleSortDirection(sort.direction) : defaultSortDirection(c);
                 return (
-                  <th
-                    key={c.key}
-                    className="px-3 py-2.5 text-right"
-                    aria-sort={active ? (sort.direction === "asc" ? "ascending" : "descending") : undefined}
-                  >
-                    <TableTooltip content={c.title} side="bottom">
-                      <button
-                        type="button"
-                        onClick={() => setSort({ key: c.key, direction: nextDirection })}
-                        className={`inline-flex items-center gap-1 font-medium transition-colors ${
-                          active ? "text-ink" : "text-ink-2 hover:text-ink"
-                        }`}
-                      >
-                        <span
-                          className={
-                            active ? "underline decoration-waterline decoration-2 underline-offset-4" : undefined
-                          }
+                  <Fragment key={c.key}>
+                    <th
+                      className="px-3 py-2.5 text-right"
+                      aria-sort={active ? (sort.direction === "asc" ? "ascending" : "descending") : undefined}
+                    >
+                      <TableTooltip content={c.title} side="bottom">
+                        <button
+                          type="button"
+                          onClick={() => setSort({ key: c.key, direction: nextDirection })}
+                          className={`inline-flex items-center gap-1 font-medium transition-colors ${
+                            active ? "text-ink" : "text-ink-2 hover:text-ink"
+                          }`}
                         >
-                          {c.label}
-                        </span>
-                        <span className="text-[0.6rem]">{active ? (sort.direction === "asc" ? "↑" : "↓") : "↕"}</span>
-                      </button>
-                    </TableTooltip>
-                  </th>
+                          <span
+                            className={
+                              active ? "underline decoration-waterline decoration-2 underline-offset-4" : undefined
+                            }
+                          >
+                            {c.label}
+                          </span>
+                          <span className="text-[0.6rem]">{active ? (sort.direction === "asc" ? "↑" : "↓") : "↕"}</span>
+                        </button>
+                      </TableTooltip>
+                    </th>
+                    {c.key === "cpsc" && showCi && (
+                      <th className="px-3 py-2.5 text-left">
+                        <TableTooltip content={CI_COLUMN_TITLE} side="bottom">
+                          <span className="font-medium text-ink-2">95% range</span>
+                        </TableTooltip>
+                      </th>
+                    )}
+                  </Fragment>
                 );
               })}
             </tr>
@@ -403,7 +482,7 @@ export default function Leaderboard() {
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={cols.length + 1} className="px-3 py-8 text-center font-mono text-xs text-muted">
+                <td colSpan={cols.length + (showCi ? 2 : 1)} className="px-3 py-8 text-center font-mono text-xs text-muted">
                   No measured rows yet for the selected basket.
                 </td>
               </tr>
@@ -423,18 +502,48 @@ export default function Leaderboard() {
                     </TableTooltip>
                     <span className="ml-1.5 font-mono text-[0.7rem] text-muted">{m.vendor}</span>
                   </th>
-                  {cols.map((c) => (
-                    <td
-                      key={c.key}
-                      className={`px-3 py-2.5 text-right font-mono tnum ${
-                        sort.key === c.key ? "text-ink" : "text-ink-2"
-                      }`}
-                    >
-                      <TableTooltip className="inline-flex w-full justify-end" content={c.valueTitle?.(r)}>
-                        <span>{c.fmt(r)}</span>
-                      </TableTooltip>
-                    </td>
-                  ))}
+                  {cols.map((c) => {
+                    const ci = c.key === "cpsc" && r.cpsc != null ? cpscIntervals[r.modelId] : undefined;
+                    // With the range column hidden, the interval stays reachable
+                    // from the cost tooltip.
+                    const content =
+                      ci && !showCi
+                        ? `${c.valueTitle?.(r)} · 95% CI ${fmtUsd(ci.lo)}–${fmtUsd(ci.hi)} from resampling the task suite (overlap = tie)`
+                        : c.valueTitle?.(r);
+                    return (
+                      <Fragment key={c.key}>
+                        <td
+                          className={`px-3 py-2.5 text-right font-mono tnum ${
+                            sort.key === c.key ? "text-ink" : "text-ink-2"
+                          }`}
+                        >
+                          <TableTooltip className="inline-flex w-full justify-end" content={content}>
+                            <span>{c.fmt(r)}</span>
+                          </TableTooltip>
+                        </td>
+                        {c.key === "cpsc" && showCi && (
+                          <td className="px-3 py-2.5">
+                            {ci ? (
+                              <TableTooltip
+                                className="inline-flex"
+                                content={`95% CI ${fmtUsd(ci.lo)}–${fmtUsd(ci.hi)} · rows whose bands overlap are rank ties`}
+                              >
+                                <CiStrip
+                                  lo={ci.lo}
+                                  hi={ci.hi}
+                                  value={r.cpsc!}
+                                  domain={ciDomain}
+                                  color={hue(r.modelId)}
+                                />
+                              </TableTooltip>
+                            ) : (
+                              <span className="font-mono text-xs text-muted">n/a</span>
+                            )}
+                          </td>
+                        )}
+                      </Fragment>
+                    );
+                  })}
                 </tr>
               );
             })}
