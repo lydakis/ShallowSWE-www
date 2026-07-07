@@ -3,7 +3,7 @@ import { PRICE_SHEET_DATE } from "@/app/data/model";
 
 export default function Footer() {
   return (
-    <footer className="mt-8 border-t border-line bg-plane-2">
+    <footer className="mt-8 border-t border-line bg-plane">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="waterline mb-10" aria-hidden />
         <div className="grid gap-8 sm:grid-cols-[1.45fr_0.9fr_1fr_1fr]">

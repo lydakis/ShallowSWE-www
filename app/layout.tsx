@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Bricolage_Grotesque } from "next/font/google";
+import { cookies } from "next/headers";
+import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -27,24 +29,59 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport: Viewport = {
-  colorScheme: "light dark",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#eff1f2" },
-    { media: "(prefers-color-scheme: dark)", color: "#080d10" },
-  ],
-};
+const THEME_KEY = "sswe-theme";
+const LIGHT_THEME_COLOR = "#eff1f2";
+const DARK_THEME_COLOR = "#080d10";
+
+type ThemeSetting = "system" | "light" | "dark";
+
+function normalizeThemeSetting(value: string | undefined): ThemeSetting {
+  return value === "light" || value === "dark" ? value : "system";
+}
+
+function viewportForTheme(setting: ThemeSetting): Viewport {
+  if (setting === "light" || setting === "dark") {
+    return {
+      colorScheme: setting,
+      themeColor: setting === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR,
+    };
+  }
+
+  return {
+    colorScheme: "light dark",
+    themeColor: [
+      { media: "(prefers-color-scheme: light)", color: LIGHT_THEME_COLOR },
+      { media: "(prefers-color-scheme: dark)", color: DARK_THEME_COLOR },
+    ],
+  };
+}
+
+export async function generateViewport(): Promise<Viewport> {
+  const cookieStore = await cookies();
+  return viewportForTheme(normalizeThemeSetting(cookieStore.get(THEME_KEY)?.value));
+}
 
 const themeScript = `(() => {
   const key = "sswe-theme";
   const light = "#eff1f2";
   const dark = "#080d10";
+  const readCookie = () => {
+    const match = document.cookie.match(/(?:^|; )sswe-theme=(light|dark)(?:;|$)/);
+    return match ? match[1] : "system";
+  };
+  const writeCookie = (setting) => {
+    if (setting === "light" || setting === "dark") {
+      document.cookie = key + "=" + setting + "; Max-Age=31536000; Path=/; SameSite=Lax";
+    } else {
+      document.cookie = key + "=; Max-Age=0; Path=/; SameSite=Lax";
+    }
+  };
   const read = () => {
     try {
       const value = localStorage.getItem(key);
-      return value === "light" || value === "dark" ? value : "system";
+      return value === "light" || value === "dark" ? value : readCookie();
     } catch {
-      return "system";
+      return readCookie();
     }
   };
   const resolved = (setting) =>
@@ -56,18 +93,19 @@ const themeScript = `(() => {
   const setThemeColor = (theme) => {
     const color = theme === "dark" ? dark : light;
     document.documentElement.style.backgroundColor = color;
-    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
-      meta.setAttribute("content", color);
-      meta.removeAttribute("media");
-    });
-    let meta = document.querySelector('meta[name="theme-color"][data-sswe-theme-color]');
-    if (!meta) {
-      meta = document.createElement("meta");
+    if (document.body) document.body.style.backgroundColor = color;
+    const metas = Array.from(document.querySelectorAll('meta[name="theme-color"]'));
+    if (!metas.length) {
+      const meta = document.createElement("meta");
       meta.name = "theme-color";
       meta.setAttribute("data-sswe-theme-color", "");
       document.head.appendChild(meta);
+      metas.push(meta);
     }
-    meta.setAttribute("content", color);
+    metas.forEach((meta) => {
+      meta.setAttribute("content", color);
+      meta.removeAttribute("media");
+    });
   };
   const apply = (setting = read()) => {
     const root = document.documentElement;
@@ -77,26 +115,35 @@ const themeScript = `(() => {
       root.removeAttribute("data-theme");
     }
     root.setAttribute("data-theme-setting", setting);
+    writeCookie(setting);
     setThemeColor(resolved(setting));
   };
   apply();
   window.__ssweApplyTheme = apply;
 })();`;
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const cookieStore = await cookies();
+  const initialTheme = normalizeThemeSetting(cookieStore.get(THEME_KEY)?.value);
+  const explicitTheme = initialTheme === "system" ? undefined : initialTheme;
+
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} h-full antialiased`}
-    >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body className="min-h-full flex flex-col">
-        {children}
-        <Analytics />
-      </body>
-    </html>
+    <Suspense>
+      <html
+        lang="en"
+        data-theme={explicitTheme}
+        data-theme-setting={initialTheme}
+        suppressHydrationWarning
+        className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} h-full antialiased`}
+      >
+        <head>
+          <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        </head>
+        <body className="min-h-full flex flex-col">
+          {children}
+          <Analytics />
+        </body>
+      </html>
+    </Suspense>
   );
 }

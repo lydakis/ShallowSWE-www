@@ -7,11 +7,18 @@ export type ThemeSetting = "system" | Theme;
 const KEY = "sswe-theme";
 const LIGHT_THEME_COLOR = "#eff1f2";
 const DARK_THEME_COLOR = "#080d10";
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+
+function readCookieSetting(): ThemeSetting {
+  if (typeof document === "undefined") return "system";
+  const match = document.cookie.match(/(?:^|; )sswe-theme=(light|dark)(?:;|$)/);
+  return match ? (match[1] as Theme) : "system";
+}
 
 function readSetting(): ThemeSetting {
   if (typeof window === "undefined") return "system";
   const value = window.localStorage.getItem(KEY);
-  return value === "light" || value === "dark" ? value : "system";
+  return value === "light" || value === "dark" ? value : readCookieSetting();
 }
 
 function resolveSetting(setting: ThemeSetting): Theme {
@@ -28,18 +35,19 @@ function emit() {
 function setThemeColor(theme: Theme) {
   const color = theme === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR;
   document.documentElement.style.backgroundColor = color;
-  document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((node) => {
-    node.content = color;
-    node.removeAttribute("media");
-  });
-  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"][data-sswe-theme-color]');
-  if (!meta) {
-    meta = document.createElement("meta");
+  document.body.style.backgroundColor = color;
+  const metas = Array.from(document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]'));
+  if (!metas.length) {
+    const meta = document.createElement("meta");
     meta.name = "theme-color";
     meta.setAttribute("data-sswe-theme-color", "");
     document.head.appendChild(meta);
+    metas.push(meta);
   }
-  meta.content = color;
+  metas.forEach((node) => {
+    node.content = color;
+    node.removeAttribute("media");
+  });
 }
 
 function applyTheme(setting: ThemeSetting) {
@@ -51,6 +59,18 @@ function applyTheme(setting: ThemeSetting) {
   }
   document.documentElement.setAttribute("data-theme-setting", setting);
   setThemeColor(resolved);
+}
+
+function writeSetting(next: ThemeSetting) {
+  try {
+    if (next === "system") {
+      window.localStorage.removeItem(KEY);
+      document.cookie = `${KEY}=; Max-Age=0; Path=/; SameSite=Lax`;
+    } else {
+      window.localStorage.setItem(KEY, next);
+      document.cookie = `${KEY}=${next}; Max-Age=${COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
+    }
+  } catch {}
 }
 
 function getSnapshot() {
@@ -89,13 +109,7 @@ export function useThemePreference() {
     ":",
   ) as [ThemeSetting, Theme];
   const setSetting = (next: ThemeSetting) => {
-    try {
-      if (next === "system") {
-        window.localStorage.removeItem(KEY);
-      } else {
-        window.localStorage.setItem(KEY, next);
-      }
-    } catch {}
+    writeSetting(next);
     applyTheme(next);
     emit();
   };
