@@ -402,7 +402,7 @@ export default function Leaderboard() {
         )}
       </div>
 
-      <div className="mb-3 grid gap-3 px-1 text-sm leading-relaxed text-ink-2 sm:flex sm:items-baseline">
+      <div className="mb-3 grid gap-3 px-1 text-sm leading-relaxed text-ink-2 lg:grid-cols-[minmax(0,1fr)_max-content] lg:items-start">
         <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-2">
           <span className="mr-0.5 inline-block h-1.5 w-1.5 translate-y-[-1px] rounded-full bg-waterline" aria-hidden />
           {rows.length === 0 ? (
@@ -425,7 +425,7 @@ export default function Leaderboard() {
             how it&rsquo;s measured ↓
           </a>
         </div>
-        <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:ml-auto sm:w-auto sm:justify-end">
+        <div className="flex w-full flex-nowrap items-center justify-start gap-2 lg:w-auto lg:justify-end">
           <ModelSelector />
           <button
             type="button"
@@ -443,7 +443,7 @@ export default function Leaderboard() {
       </div>
 
       <div className="scroll-x rounded-xl border border-line">
-        <table className="min-w-[58rem] border-collapse text-sm">
+        <table className="w-full min-w-[58rem] border-collapse text-sm">
           <caption className="sr-only">Measured leaderboard for the selected basket weights, sortable</caption>
           <thead>
             <tr className="border-b border-line">
