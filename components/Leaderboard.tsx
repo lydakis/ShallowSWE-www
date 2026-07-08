@@ -17,9 +17,11 @@ import {
   fmtUsd,
 } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { useModelSelection } from "@/lib/model-selection";
 import { redistributeTernaryWeights, useWeights } from "@/lib/weights";
 import { logScale } from "@/lib/scale";
 import BasketSlices from "./BasketSlices";
+import ModelSelector from "./ModelSelector";
 
 const CI_STRIP_W = 148;
 const CI_STRIP_H = 12;
@@ -268,19 +270,16 @@ export default function Leaderboard() {
   const [basketOpen, setBasketOpen] = useState(false);
   const [showCi, setShowCi] = useState(false);
   const { weights, setWeights } = useWeights();
+  const { selectedModelIdSet } = useModelSelection();
   const hue = useHue();
   const cpscIntervals = useMemo(() => weightedCpscIntervals(weights), [weights]);
-  const ciDomain = useMemo<[number, number]>(() => {
-    const spans = Object.values(cpscIntervals);
-    if (spans.length === 0) return [0.001, 1];
-    return [Math.min(...spans.map((s) => s.lo)) / 1.1, Math.max(...spans.map((s) => s.hi)) * 1.1];
-  }, [cpscIntervals]);
 
   const categoryIds = categories.map((c) => c.id);
   const sizeIds = sizes.map((size) => size.id);
   const categoryTotal = categories.reduce((s, c) => s + weights.categories[c.id], 0) || 1;
   const sizeTotal = sizes.reduce((s, size) => s + weights.sizes[size.id], 0) || 1;
   const rows = weightedAggregates(weights)
+    .filter((row) => selectedModelIdSet.has(row.modelId))
     .filter((row) => row.repairLoops > 0)
     .sort((a, b) => {
       const col = cols.find((c) => c.key === sort.key)!;
@@ -292,11 +291,16 @@ export default function Leaderboard() {
       if (bRaw == null) return -1;
       return (aRaw - bRaw) * dir;
     });
+  const ciDomain = useMemo<[number, number]>(() => {
+    const spans = rows.map((row) => cpscIntervals[row.modelId]).filter((span): span is NonNullable<typeof span> => span != null);
+    if (spans.length === 0) return [0.001, 1];
+    return [Math.min(...spans.map((s) => s.lo)) / 1.1, Math.max(...spans.map((s) => s.hi)) * 1.1];
+  }, [cpscIntervals, rows]);
 
   return (
     <div>
       {/* the declared basket: category-weighted CPSC over the run */}
-      <div id="basket-mixer" className="mb-4 scroll-mt-20 overflow-hidden rounded-xl border border-line bg-surface">
+      <div id="basket-mixer" className="relative z-20 mb-4 scroll-mt-20 rounded-xl border border-line bg-surface">
         <div className="flex flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
           <button
             type="button"
@@ -398,12 +402,14 @@ export default function Leaderboard() {
         )}
       </div>
 
-      {rows.length > 0 && (
-        <p className="mb-3 flex flex-wrap items-baseline gap-x-1.5 px-1 text-sm leading-relaxed text-ink-2">
+      <div className="mb-3 grid gap-3 px-1 text-sm leading-relaxed text-ink-2 sm:flex sm:items-baseline">
+        <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-2">
           <span className="mr-0.5 inline-block h-1.5 w-1.5 translate-y-[-1px] rounded-full bg-waterline" aria-hidden />
-          {rows.every((r) => r.successes === r.repairLoops) ? (
+          {rows.length === 0 ? (
+            <span>No measured rows for the selected model set.</span>
+          ) : rows.every((r) => r.successes === r.repairLoops) ? (
             <>
-              Every model clears this basket — all{" "}
+              Every selected model clears this basket — all{" "}
               <span className="font-mono tnum text-ink">{rows.reduce((s, r) => s + r.repairLoops, 0)}</span> scored
               repair loops ended in a verified pass. The ranking below is price, not ability.
             </>
@@ -418,11 +424,14 @@ export default function Leaderboard() {
           <a href="#method" className="font-mono text-[0.72rem] text-waterline underline-offset-2 hover:underline">
             how it&rsquo;s measured ↓
           </a>
+        </div>
+        <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:ml-auto sm:w-auto sm:justify-end">
+          <ModelSelector />
           <button
             type="button"
             aria-pressed={showCi}
             onClick={() => setShowCi((v) => !v)}
-            className={`ml-auto rounded-full border px-2.5 py-0.5 font-mono text-[0.7rem] transition-colors ${
+            className={`rounded-full border px-2.5 py-1.5 font-mono text-[0.7rem] transition-colors ${
               showCi
                 ? "border-line-strong bg-surface-2 text-ink"
                 : "border-line text-ink-2 hover:border-line-strong hover:text-ink"
@@ -430,11 +439,11 @@ export default function Leaderboard() {
           >
             {showCi ? "hide 95% ranges" : "show 95% ranges"}
           </button>
-        </p>
-      )}
+        </div>
+      </div>
 
       <div className="scroll-x rounded-xl border border-line">
-        <table className="w-full border-collapse text-sm">
+        <table className="min-w-[58rem] border-collapse text-sm">
           <caption className="sr-only">Measured leaderboard for the selected basket weights, sortable</caption>
           <thead>
             <tr className="border-b border-line">
@@ -492,7 +501,9 @@ export default function Leaderboard() {
               return (
                 <tr key={r.modelId} className="border-b border-line last:border-0">
                   <th scope="row" className="px-3 py-2.5 text-left font-normal">
-                    <span className="mr-2 font-mono text-xs text-muted tnum">{i + 1}</span>
+                    <span className="mr-2 inline-block w-6 text-right font-mono text-xs text-muted tnum">
+                      {i + 1}
+                    </span>
                     <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-full align-middle" style={{ background: hue(r.modelId) }} />
                     <TableTooltip className="inline-flex align-middle" content={`Price / 1M tokens: ${fmtModelPricing(r.modelId)}`}>
                       <span className="text-ink">{m.label}</span>

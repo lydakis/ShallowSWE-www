@@ -2,6 +2,7 @@
 
 import { weightedAggregates, modelById, fmtUsd } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { useModelSelection } from "@/lib/model-selection";
 import { useWeights } from "@/lib/weights";
 import { logScale, logTicks, niceLogBounds } from "@/lib/scale";
 
@@ -14,7 +15,8 @@ const LINE_X = 128; // the sounding line
 export default function HeroDepth() {
   const hue = useHue();
   const { weights } = useWeights();
-  const aggregates = weightedAggregates(weights).filter((a) => a.cpsc != null);
+  const { selectedModelIdSet } = useModelSelection();
+  const aggregates = weightedAggregates(weights).filter((a) => selectedModelIdSet.has(a.modelId) && a.cpsc != null);
   if (aggregates.length === 0) {
     return (
       <figure className="flex min-h-[18rem] items-center justify-center">

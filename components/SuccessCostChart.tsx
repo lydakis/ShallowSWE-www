@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { weightedAggregates, modelById, models, fmtPercent, fmtUsd } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { useModelSelection } from "@/lib/model-selection";
 import { useWeights } from "@/lib/weights";
 import { stackLabels } from "@/lib/chartLabels";
 import { linScale, logScale, logTicks, niceLogBounds, paddedLinearBounds } from "@/lib/scale";
@@ -31,9 +32,11 @@ function percentTicks(min: number, max: number): number[] {
 export default function SuccessCostChart({ embedded = false }: { embedded?: boolean } = {}) {
   const hue = useHue();
   const { weights } = useWeights();
+  const { selectedModelIdSet } = useModelSelection();
   const [hover, setHover] = useState<string | null>(null);
 
   const pts = weightedAggregates(weights)
+    .filter((a) => selectedModelIdSet.has(a.modelId))
     .filter((a) => a.cpsc != null)
     .map((a) => ({
       id: a.modelId,

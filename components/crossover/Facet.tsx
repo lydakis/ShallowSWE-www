@@ -4,13 +4,13 @@ import { useState } from "react";
 import {
   CategoryDef,
   Metric,
-  panelModels,
   cellsFor,
   metricValue,
   fmtMetric,
   fmtMaybeMetric,
   modelById,
   taskIdsFor,
+  type ModelDef,
 } from "@/app/data/model";
 import { logScale } from "@/lib/scale";
 import { FACET, PLOT, pointX } from "./types";
@@ -23,14 +23,15 @@ interface Props {
   hue: (id: string) => string;
   highlight: string | null;
   xLabels: string[];
+  models: ModelDef[];
 }
 
-export default function Facet({ category, metric, domain, ticks, hue, highlight, xLabels }: Props) {
+export default function Facet({ category, metric, domain, ticks, hue, highlight, xLabels, models }: Props) {
   const [hover, setHover] = useState<number | null>(null);
   const y = logScale(domain[0], domain[1], PLOT.top, PLOT.bottom);
   const taskIds = taskIdsFor(category.id);
 
-  const series = panelModels.map((m) => {
+  const series = models.map((m) => {
     const cells = cellsFor(category.id, m.id);
     const pts = taskIds.map((taskId, i) => {
       const c = cells.find((cell) => cell.taskId === taskId);
@@ -60,6 +61,14 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
     if (!p.cell) return "not measured";
     if (p.failed) return `failed · ${stopReasonLabel(p.cell.stopReasons)}`;
     return fmtMaybeMetric(p.v, metric);
+  };
+  const tooltipDetail = (p: (typeof series)[number]["pts"][number]): string | null => {
+    if (!p.cell) return null;
+    const scored =
+      p.cell.totalTrials === p.cell.repairLoops
+        ? `n=${p.cell.repairLoops}`
+        : `n=${p.cell.repairLoops}/${p.cell.totalTrials}`;
+    return `${p.cell.successes}/${p.cell.repairLoops} solved · ${scored} scored`;
   };
   const tooltipRank = (p: (typeof series)[number]["pts"][number]): number => {
     if (p.v != null) return p.v;
@@ -194,12 +203,15 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
               {[...series]
                 .sort((a, b) => tooltipRank(a.pts[hover]) - tooltipRank(b.pts[hover]))
                 .map((s) => (
-                  <div key={s.id} className="flex items-center gap-2 whitespace-nowrap text-[0.72rem]">
-                    <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: s.color }} />
+                  <div key={s.id} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-baseline gap-x-2 text-[0.72rem]">
+                    <span className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ background: s.color }} />
                     <span className={`${active(s.id) ? "text-ink" : "text-muted"}`}>{modelById[s.id].short}</span>
-                    <span className="ml-auto pl-2 font-mono tnum text-ink-2">
-                      {tooltipValue(s.pts[hover])}
-                    </span>
+                    <span className="pl-2 font-mono tnum text-ink-2">{tooltipValue(s.pts[hover])}</span>
+                    {tooltipDetail(s.pts[hover]) && (
+                      <span className="col-span-2 col-start-2 -mt-0.5 font-mono text-[0.62rem] text-muted">
+                        {tooltipDetail(s.pts[hover])}
+                      </span>
+                    )}
                   </div>
                 ))}
             </div>

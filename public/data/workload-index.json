@@ -115,6 +115,17 @@
       "partial_basket_tokens_per_success": 60980.34228333332
     },
     {
+      "model_config": "openrouter/x-ai/grok-4.5",
+      "model": "openrouter/x-ai/grok-4.5",
+      "reasoning_effort": null,
+      "covered_weight": 1.0000000000000002,
+      "weighted_solve_rate": 1.0,
+      "basket_cpsc": 0.05110324656666665,
+      "partial_basket_cpsc": 0.05110324656666665,
+      "basket_tokens_per_success": 40260.746583333326,
+      "partial_basket_tokens_per_success": 40260.746583333326
+    },
+    {
       "model_config": "openrouter/z-ai/glm-5.2[high]",
       "model": "openrouter/z-ai/glm-5.2",
       "reasoning_effort": "high",

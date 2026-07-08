@@ -1,16 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Bricolage_Grotesque } from "next/font/google";
+import { Geist_Mono, IBM_Plex_Sans } from "next/font/google";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -134,7 +133,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         data-theme={explicitTheme}
         data-theme-setting={initialTheme}
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} h-full antialiased`}
+        className={`${plexSans.variable} ${geistMono.variable} h-full antialiased`}
       >
         <head>
           <script dangerouslySetInnerHTML={{ __html: themeScript }} />

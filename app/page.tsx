@@ -7,20 +7,23 @@ import Method from "@/components/Method";
 import Footer from "@/components/Footer";
 import StickyMixer from "@/components/StickyMixer";
 import { WeightsProvider } from "@/lib/weights";
+import { ModelSelectionProvider } from "@/lib/model-selection";
 
 export default function Home() {
   return (
     <WeightsProvider>
-      <Nav />
-      <StickyMixer />
-      <main>
-        <Hero />
-        <ChartSection />
-        <FoilSection />
-        <Suite />
-        <Method />
-      </main>
-      <Footer />
+      <ModelSelectionProvider>
+        <Nav />
+        <StickyMixer />
+        <main>
+          <Hero />
+          <ChartSection />
+          <FoilSection />
+          <Suite />
+          <Method />
+        </main>
+        <Footer />
+      </ModelSelectionProvider>
     </WeightsProvider>
   );
 }

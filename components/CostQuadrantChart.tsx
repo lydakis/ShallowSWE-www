@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import {
-  panelModels,
   weightedAggregates,
   deepswePassAt1,
   deepsweCostPerSolved,
   fmtPercent,
   fmtUsd,
+  type ModelDef,
 } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { useModelSelection } from "@/lib/model-selection";
 import { useWeights } from "@/lib/weights";
 import { stackLabels } from "@/lib/chartLabels";
 import { linScale, logScale, logTicks, niceLogBounds, paddedLinearBounds } from "@/lib/scale";
@@ -30,18 +31,19 @@ function median(values: number[]): number {
 export default function CostQuadrantChart({ mode = "pass" }: { mode?: QuadrantMode } = {}) {
   const hue = useHue();
   const { weights } = useWeights();
+  const { visibleModels } = useModelSelection();
   const [hover, setHover] = useState<string | null>(null);
   const deepCost = mode === "deepcost";
 
   const shallowById = Object.fromEntries(weightedAggregates(weights).map((a) => [a.modelId, a.cpsc]));
-  const points = panelModels
+  const points = visibleModels
     .map((m) => ({
       m,
       hard: deepCost ? deepsweCostPerSolved(m.id) : deepswePassAt1(m.id),
       shallow: shallowById[m.id],
     }))
     .filter(
-      (p): p is { m: (typeof panelModels)[number]; hard: number; shallow: number } =>
+      (p): p is { m: ModelDef; hard: number; shallow: number } =>
         p.hard != null && p.shallow != null,
     );
 
@@ -49,7 +51,7 @@ export default function CostQuadrantChart({ mode = "pass" }: { mode?: QuadrantMo
     return (
       <figure className="flex min-h-[20rem] items-center justify-center">
         <figcaption className="font-mono text-xs text-muted">
-          No ShallowSWE CPSC rows yet for the selected basket.
+          No DeepSWE-matched rows for the selected model set.
         </figcaption>
       </figure>
     );

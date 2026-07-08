@@ -2,6 +2,7 @@
 
 import { rankTranslation, modelById, fmtPercent, fmtUsd } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { useModelSelection } from "@/lib/model-selection";
 import { useWeights } from "@/lib/weights";
 
 const VB_W = 560;
@@ -16,14 +17,15 @@ const y = (rank: number) => TOP + (rank - 1) * STEP;
 export default function RankTranslation() {
   const hue = useHue();
   const { weights } = useWeights();
-  const rows = rankTranslation(weights);
+  const { selectedModelIdSet } = useModelSelection();
+  const rows = rankTranslation(weights, selectedModelIdSet);
   const vbH = TOP + Math.max(rows.length - 1, 0) * STEP + BOTTOM_PAD;
 
   if (rows.length === 0) {
     return (
       <figure className="flex min-h-[16rem] items-center justify-center">
         <figcaption className="font-mono text-xs text-muted">
-          No ShallowSWE CPSC rows yet for the selected basket.
+          No DeepSWE-matched rows for the selected model set.
         </figcaption>
       </figure>
     );

@@ -7,8 +7,8 @@ import SuccessCostChart from "./SuccessCostChart";
 type View = "turns" | "success";
 
 const VIEWS: { id: View; label: string }[] = [
-  { id: "turns", label: "Turns" },
   { id: "success", label: "First-check pass" },
+  { id: "turns", label: "Turns" },
 ];
 
 const VIEW_COPY: Record<View, { title: string; subtitle: string }> = {
@@ -23,7 +23,7 @@ const VIEW_COPY: Record<View, { title: string; subtitle: string }> = {
 };
 
 export default function EffortCharts() {
-  const [view, setView] = useState<View>("turns");
+  const [view, setView] = useState<View>("success");
   const copy = VIEW_COPY[view];
 
   return (

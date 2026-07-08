@@ -9,6 +9,7 @@ import {
   PRICE_SHEET_DATE,
 } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { useModelSelection } from "@/lib/model-selection";
 import { useResolvedTheme } from "@/lib/theme";
 import { useWeights } from "@/lib/weights";
 import { linScale } from "@/lib/scale";
@@ -48,9 +49,10 @@ export default function CostAnatomyChart() {
   const hue = useHue();
   const theme = useResolvedTheme();
   const { weights } = useWeights();
+  const { selectedModelIdSet } = useModelSelection();
   const [hover, setHover] = useState<string | null>(null);
 
-  const rows = weightedCostAnatomy(weights);
+  const rows = weightedCostAnatomy(weights).filter((row) => selectedModelIdSet.has(row.modelId));
   if (rows.length === 0) {
     return (
       <figure className="panel p-4">

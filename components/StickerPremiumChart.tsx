@@ -10,6 +10,7 @@ import {
   referencePriceOptions,
 } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
+import { useModelSelection } from "@/lib/model-selection";
 import { useWeights } from "@/lib/weights";
 import { logScale, logTicks, niceLogBounds } from "@/lib/scale";
 
@@ -28,11 +29,12 @@ function fmtPremium(value: number): string {
 export default function StickerPremiumChart() {
   const hue = useHue();
   const { weights } = useWeights();
+  const { selectedModelIdSet } = useModelSelection();
   const [hover, setHover] = useState<string | null>(null);
   const [refKey, setRefKey] = useState(REFERENCE_PRICE_KEY);
 
   const refLabel = referencePriceOptions.find((o) => o.key === refKey)?.label ?? refKey;
-  const rows = stickerPremiumRows(weights, refKey);
+  const rows = stickerPremiumRows(weights, refKey).filter((row) => selectedModelIdSet.has(row.modelId));
   if (rows.length === 0) {
     return (
       <figure className="panel p-4">
