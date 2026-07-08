@@ -6,6 +6,7 @@ import {
   weightedAggregates,
   weightedCpscIntervals,
   type Aggregate,
+  type BasketWeights,
   categories,
   sizes,
   fmtEffort,
@@ -18,7 +19,7 @@ import {
 } from "@/app/data/model";
 import { useHue } from "@/lib/hues";
 import { useModelSelection } from "@/lib/model-selection";
-import { redistributeTernaryWeights, useWeights } from "@/lib/weights";
+import { categorySliceOf, redistributeTernaryWeights, sizeSliceOf, useWeights } from "@/lib/weights";
 import { logScale } from "@/lib/scale";
 import BasketSlices from "./BasketSlices";
 import ModelSelector from "./ModelSelector";
@@ -161,6 +162,18 @@ function fmtMean(value: number): string {
   return value.toFixed(value < 10 ? 2 : 1);
 }
 
+function basketLabel(weights: BasketWeights): string {
+  const categorySlice = categorySliceOf(weights);
+  const sizeSlice = sizeSliceOf(weights);
+
+  if (categorySlice == null || sizeSlice == null) return "custom basket";
+  if (categorySlice === "all" && sizeSlice === "all") return "full basket";
+
+  const category = categorySlice === "all" ? null : categories.find((c) => c.id === categorySlice)?.label;
+  const size = sizeSlice === "all" ? null : sizes.find((s) => s.id === sizeSlice)?.label;
+  return [category, size].filter(Boolean).join(" + ") + " basket";
+}
+
 const TOOLTIP_MARGIN = 12;
 const TOOLTIP_MAX_WIDTH = 288;
 
@@ -278,6 +291,7 @@ export default function Leaderboard() {
   const sizeIds = sizes.map((size) => size.id);
   const categoryTotal = categories.reduce((s, c) => s + weights.categories[c.id], 0) || 1;
   const sizeTotal = sizes.reduce((s, size) => s + weights.sizes[size.id], 0) || 1;
+  const selectedBasketLabel = basketLabel(weights);
   const rows = weightedAggregates(weights)
     .filter((row) => selectedModelIdSet.has(row.modelId))
     .filter((row) => row.repairLoops > 0)
@@ -406,20 +420,21 @@ export default function Leaderboard() {
         <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-2">
           <span className="mr-0.5 inline-block h-1.5 w-1.5 translate-y-[-1px] rounded-full bg-waterline" aria-hidden />
           {rows.length === 0 ? (
-            <span>No measured rows for the selected model set.</span>
+            <span>No measured rows for the selected model set in the {selectedBasketLabel}.</span>
           ) : rows.every((r) => r.successes === r.repairLoops) ? (
-            <>
-              Every selected model clears this basket — all{" "}
-              <span className="font-mono tnum text-ink">{rows.reduce((s, r) => s + r.repairLoops, 0)}</span> scored
-              repair loops ended in a verified pass. The ranking below is price, not ability.
-            </>
+            <span>
+              <span className="whitespace-nowrap font-mono tnum text-ink">
+                {rows.reduce((s, r) => s + r.repairLoops, 0)} / {rows.reduce((s, r) => s + r.repairLoops, 0)}
+              </span>{" "}
+              scored repair loops passed in the {selectedBasketLabel}. Ranking is price, not ability.
+            </span>
           ) : (
-            <>
+            <span>
               <span className="font-mono tnum text-ink">
                 {rows.reduce((s, r) => s + r.successes, 0)} / {rows.reduce((s, r) => s + r.repairLoops, 0)}
               </span>{" "}
-              scored repair loops ended in a verified pass — failed loops stay in the cost numerator.
-            </>
+              scored repair loops passed in the {selectedBasketLabel}; failures stay in the cost numerator.
+            </span>
           )}
           <a href="#method" className="font-mono text-[0.72rem] text-waterline underline-offset-2 hover:underline">
             how it&rsquo;s measured ↓
