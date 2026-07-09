@@ -466,7 +466,9 @@ export default function Leaderboard() {
           <caption className="sr-only">Measured leaderboard for the selected basket weights, sortable</caption>
           <thead>
             <tr className="border-b border-line">
-              <th className="w-56 min-w-[14rem] px-3 py-2.5 text-left font-medium text-ink-2">Model</th>
+              <th className="w-56 min-w-[14rem] px-3 py-2.5 text-left font-medium text-ink-2 sm:w-80 sm:min-w-[20rem]">
+                Model
+              </th>
               {cols.map((c) => {
                 const active = sort.key === c.key;
                 const nextDirection = active ? toggleSortDirection(sort.direction) : defaultSortDirection(c);
@@ -519,7 +521,7 @@ export default function Leaderboard() {
               const m = modelById[r.modelId];
               return (
                 <tr key={r.modelId} className="border-b border-line last:border-0">
-                  <th scope="row" className="w-56 min-w-[14rem] px-3 py-2.5 text-left font-normal">
+                  <th scope="row" className="w-56 min-w-[14rem] px-3 py-2.5 text-left font-normal sm:w-80 sm:min-w-[20rem]">
                     <div className="grid grid-cols-[1.5rem_0.625rem_minmax(0,1fr)] items-center gap-x-2">
                       <span className="text-right font-mono text-xs text-muted tnum">{i + 1}</span>
                       <span className="h-2.5 w-2.5 rounded-full" style={{ background: hue(r.modelId) }} aria-hidden />
@@ -530,14 +532,14 @@ export default function Leaderboard() {
                         >
                           <span className="text-ink">{m.label}</span>
                         </TableTooltip>
-                        <span className="block whitespace-nowrap font-mono text-[0.7rem] text-muted sm:ml-1.5 sm:inline">
+                        <span className="block whitespace-nowrap font-mono text-[0.7rem] text-muted sm:ml-1.5 sm:inline-flex sm:items-baseline sm:gap-1.5">
                           <TableTooltip className="inline-flex shrink-0 align-middle" content={effortTitle(m.effort)}>
                             <span>{fmtEffort(m.effort)}</span>
                           </TableTooltip>
                           <span className="mx-1 sm:hidden" aria-hidden>
                             ·
                           </span>
-                          {m.vendor}
+                          <span>{m.vendor}</span>
                         </span>
                       </span>
                     </div>

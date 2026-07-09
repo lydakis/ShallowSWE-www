@@ -189,7 +189,7 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
         {/* tooltip */}
         {hover !== null && (
           <div
-            className="pointer-events-none absolute top-2 z-30 max-w-[min(28rem,calc(100vw-2rem))] rounded-lg border border-line bg-surface/95 p-2.5 backdrop-blur"
+            className="pointer-events-none absolute top-2 z-30 w-[min(22rem,calc(100vw-2rem))] rounded-lg border border-line bg-surface/95 p-2.5 backdrop-blur"
             style={{
               left: `${tipXPercent}%`,
               transform: tipTransform,
@@ -203,12 +203,19 @@ export default function Facet({ category, metric, domain, ticks, hue, highlight,
               {[...series]
                 .sort((a, b) => tooltipRank(a.pts[hover]) - tooltipRank(b.pts[hover]))
                 .map((s) => (
-                  <div key={s.id} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-baseline gap-x-2 text-[0.72rem]">
+                  <div
+                    key={s.id}
+                    className="grid grid-cols-[auto_minmax(0,1fr)_max-content] items-baseline gap-x-2 text-[0.72rem]"
+                  >
                     <span className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ background: s.color }} />
-                    <span className={`${active(s.id) ? "text-ink" : "text-muted"}`}>{modelById[s.id].short}</span>
-                    <span className="pl-2 font-mono tnum text-ink-2">{tooltipValue(s.pts[hover])}</span>
+                    <span className={`min-w-0 truncate ${active(s.id) ? "text-ink" : "text-muted"}`}>
+                      {modelById[s.id].short}
+                    </span>
+                    <span className="whitespace-nowrap pl-2 text-right font-mono tnum text-ink-2">
+                      {tooltipValue(s.pts[hover])}
+                    </span>
                     {tooltipDetail(s.pts[hover]) && (
-                      <span className="col-span-2 col-start-2 -mt-0.5 font-mono text-[0.62rem] text-muted">
+                      <span className="col-span-2 col-start-2 -mt-0.5 whitespace-nowrap font-mono text-[0.62rem] text-muted">
                         {tooltipDetail(s.pts[hover])}
                       </span>
                     )}
