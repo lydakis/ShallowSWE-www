@@ -3,6 +3,7 @@ import { Geist_Mono, IBM_Plex_Sans } from "next/font/google";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/next";
+import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_OG_TITLE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
@@ -14,17 +15,45 @@ const plexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "ShallowSWE",
-  description:
-    "The score isn't accuracy. It's cost. ShallowSWE measures cost per successful completion for routine software work.",
-  metadataBase: new URL("https://shallowswe.com"),
+  applicationName: SITE_NAME,
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: "/",
+  },
+  keywords: SITE_KEYWORDS,
+  authors: [{ name: "George Lydakis", url: "https://github.com/lydakis" }],
+  creator: "George Lydakis",
+  publisher: SITE_NAME,
+  category: "technology",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "ShallowSWE: a cost benchmark for routine work",
-    description: "Cost per successful completion for routine software work.",
+    title: SITE_OG_TITLE,
+    description: SITE_DESCRIPTION,
+    url: "/",
+    siteName: SITE_NAME,
+    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
+    title: SITE_OG_TITLE,
+    description: SITE_DESCRIPTION,
+    creator: "@lydakis",
   },
 };
 

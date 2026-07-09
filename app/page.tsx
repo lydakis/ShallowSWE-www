@@ -8,22 +8,92 @@ import Footer from "@/components/Footer";
 import StickyMixer from "@/components/StickyMixer";
 import { WeightsProvider } from "@/lib/weights";
 import { ModelSelectionProvider } from "@/lib/model-selection";
+import {
+  absoluteUrl,
+  SITE_DATA_DOWNLOADS,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_LAST_MODIFIED,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/site";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      description: SITE_DESCRIPTION,
+      inLanguage: "en",
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      about: { "@id": `${SITE_URL}/#dataset` },
+    },
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      sameAs: ["https://github.com/lydakis/ShallowSWE", "https://github.com/lydakis/ShallowSWE-www"],
+    },
+    {
+      "@type": "Dataset",
+      "@id": `${SITE_URL}/#dataset`,
+      name: "ShallowSWE bounded repair-loop preview",
+      url: SITE_URL,
+      description: SITE_DESCRIPTION,
+      inLanguage: "en",
+      isBasedOn: "https://github.com/lydakis/ShallowSWE",
+      dateModified: SITE_LAST_MODIFIED,
+      keywords: SITE_KEYWORDS,
+      measurementTechnique: "Bounded repair-loop runs with hidden programmatic tests",
+      variableMeasured: [
+        "Cost per successful completion",
+        "Cost per verified success",
+        "Solve rate",
+        "Tokens per success",
+        "Verifier submissions",
+      ],
+      distribution: SITE_DATA_DOWNLOADS.map((download) => ({
+        "@type": "DataDownload",
+        name: download.name,
+        description: download.description,
+        encodingFormat: "application/json",
+        contentUrl: absoluteUrl(download.path),
+      })),
+    },
+  ],
+};
+
+function serializeJsonLd(value: unknown): string {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
+}
 
 export default function Home() {
   return (
-    <WeightsProvider>
-      <ModelSelectionProvider>
-        <Nav />
-        <StickyMixer />
-        <main>
-          <Hero />
-          <ChartSection />
-          <FoilSection />
-          <Suite />
-          <Method />
-        </main>
-        <Footer />
-      </ModelSelectionProvider>
-    </WeightsProvider>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(jsonLd),
+        }}
+      />
+      <WeightsProvider>
+        <ModelSelectionProvider>
+          <Nav />
+          <StickyMixer />
+          <main>
+            <Hero />
+            <ChartSection />
+            <FoilSection />
+            <Suite />
+            <Method />
+          </main>
+          <Footer />
+        </ModelSelectionProvider>
+      </WeightsProvider>
+    </>
   );
 }

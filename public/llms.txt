@@ -1,0 +1,28 @@
+# ShallowSWE
+
+> ShallowSWE is an independent benchmark for routine software work. It ranks model configurations by cost per verified success, not raw accuracy.
+
+## Core pages
+
+- [Homepage](https://shallowswe.com/): Interactive benchmark preview with leaderboard, task suite, method, and downloadable data.
+- [Sitemap](https://shallowswe.com/sitemap.xml): Canonical crawl entry point.
+- [Robots](https://shallowswe.com/robots.txt): Crawl policy.
+
+## Data
+
+- [Repair-loop rows](https://shallowswe.com/data/rollouts.json): Scored bounded repair-loop rows.
+- [Aggregate by model](https://shallowswe.com/data/aggregate-by-model.json): Model-level aggregate benchmark results.
+- [Aggregate by task and model](https://shallowswe.com/data/aggregate-by-task-model.json): Task and model aggregate benchmark results.
+- [DeepSWE comparison](https://shallowswe.com/data/deepswe-comparison.json): Comparison data for DeepSWE and ShallowSWE views.
+- [Run manifest](https://shallowswe.com/data/run-manifest.json): Snapshot metadata for the published benchmark run.
+
+## Source
+
+- [Benchmark repo](https://github.com/lydakis/ShallowSWE): Benchmark tasks, runner, and data generation source.
+- [Website repo](https://github.com/lydakis/ShallowSWE-www): Website source.
+
+## Notes for agents
+
+- Treat ShallowSWE as a routine-work cost benchmark, not a maximum-capability SWE benchmark.
+- The primary metric is cost per successful completion, also described as cost per verified success.
+- Rows are scored by hidden programmatic tests, with no LLM judges and no per-model scaffold tuning.
