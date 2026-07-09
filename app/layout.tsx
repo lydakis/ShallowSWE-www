@@ -60,6 +60,11 @@ export const metadata: Metadata = {
 const THEME_KEY = "sswe-theme";
 const LIGHT_THEME_COLOR = "#eff1f2";
 const DARK_THEME_COLOR = "#080d10";
+const BASE_VIEWPORT = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+} satisfies Viewport;
 
 type ThemeSetting = "system" | "light" | "dark";
 
@@ -68,17 +73,25 @@ function normalizeThemeSetting(value: string | undefined): ThemeSetting {
 }
 
 function viewportForTheme(setting: ThemeSetting): Viewport {
-  if (setting === "light" || setting === "dark") {
+  if (setting === "light") {
     return {
+      ...BASE_VIEWPORT,
       colorScheme: setting,
-      themeColor: setting === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR,
+    };
+  }
+
+  if (setting === "dark") {
+    return {
+      ...BASE_VIEWPORT,
+      colorScheme: setting,
+      themeColor: DARK_THEME_COLOR,
     };
   }
 
   return {
+    ...BASE_VIEWPORT,
     colorScheme: "light dark",
     themeColor: [
-      { media: "(prefers-color-scheme: light)", color: LIGHT_THEME_COLOR },
       { media: "(prefers-color-scheme: dark)", color: DARK_THEME_COLOR },
     ],
   };
@@ -91,8 +104,8 @@ export async function generateViewport(): Promise<Viewport> {
 
 const themeScript = `(() => {
   const key = "sswe-theme";
-  const light = "#eff1f2";
-  const dark = "#080d10";
+  const light = "${LIGHT_THEME_COLOR}";
+  const dark = "${DARK_THEME_COLOR}";
   const readCookie = () => {
     const match = document.cookie.match(/(?:^|; )sswe-theme=(light|dark)(?:;|$)/);
     return match ? match[1] : "system";
@@ -123,6 +136,10 @@ const themeScript = `(() => {
     document.documentElement.style.backgroundColor = color;
     if (document.body) document.body.style.backgroundColor = color;
     const metas = Array.from(document.querySelectorAll('meta[name="theme-color"]'));
+    if (theme === "light") {
+      metas.forEach((meta) => meta.remove());
+      return;
+    }
     if (!metas.length) {
       const meta = document.createElement("meta");
       meta.name = "theme-color";

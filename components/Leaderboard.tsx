@@ -43,33 +43,37 @@ function CiStrip({
   value,
   domain,
   color,
+  width = CI_STRIP_W,
+  height = CI_STRIP_H,
 }: {
   lo: number;
   hi: number;
   value: number;
   domain: [number, number];
   color: string;
+  width?: number;
+  height?: number;
 }) {
-  const x = logScale(domain[0], domain[1], 3, CI_STRIP_W - 3);
+  const x = logScale(domain[0], domain[1], 3, width - 3);
   return (
     <svg
-      width={CI_STRIP_W}
-      height={CI_STRIP_H}
-      viewBox={`0 0 ${CI_STRIP_W} ${CI_STRIP_H}`}
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
       className="shrink-0"
       aria-hidden
     >
       <line
         x1={x(lo)}
-        y1={CI_STRIP_H / 2}
+        y1={height / 2}
         x2={x(hi)}
-        y2={CI_STRIP_H / 2}
+        y2={height / 2}
         stroke={color}
         strokeWidth="5"
         strokeLinecap="round"
         opacity="0.35"
       />
-      <circle cx={x(value)} cy={CI_STRIP_H / 2} r="2.5" fill={color} />
+      <circle cx={x(value)} cy={height / 2} r="2.5" fill={color} />
     </svg>
   );
 }
@@ -417,26 +421,26 @@ export default function Leaderboard() {
       </div>
 
       <div className="mb-3 grid gap-3 px-1 text-sm leading-relaxed text-ink-2 lg:grid-cols-[minmax(0,1fr)_max-content] lg:items-start">
-        <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-2">
-          <span className="mr-0.5 inline-block h-1.5 w-1.5 translate-y-[-1px] rounded-full bg-waterline" aria-hidden />
+        <div className="grid min-w-0 grid-cols-[0.375rem_minmax(0,1fr)] gap-x-3 gap-y-1.5">
+          <span className="mt-[0.6rem] h-1.5 w-1.5 rounded-full bg-waterline" aria-hidden />
           {rows.length === 0 ? (
-            <span>No measured rows for the selected model set in the {selectedBasketLabel}.</span>
+            <span className="min-w-0">No measured rows for the selected model set in the {selectedBasketLabel}.</span>
           ) : rows.every((r) => r.successes === r.repairLoops) ? (
-            <span>
+            <span className="min-w-0">
               <span className="whitespace-nowrap font-mono tnum text-ink">
                 {rows.reduce((s, r) => s + r.repairLoops, 0)} / {rows.reduce((s, r) => s + r.repairLoops, 0)}
               </span>{" "}
               scored repair loops passed in the {selectedBasketLabel}. Ranking is price, not ability.
             </span>
           ) : (
-            <span>
+            <span className="min-w-0">
               <span className="font-mono tnum text-ink">
                 {rows.reduce((s, r) => s + r.successes, 0)} / {rows.reduce((s, r) => s + r.repairLoops, 0)}
               </span>{" "}
               scored repair loops passed in the {selectedBasketLabel}; failures stay in the cost numerator.
             </span>
           )}
-          <a href="#method" className="font-mono text-[0.72rem] text-waterline underline-offset-2 hover:underline">
+          <a href="#method" className="col-start-2 font-mono text-[0.72rem] text-waterline underline-offset-2 hover:underline">
             how it&rsquo;s measured ↓
           </a>
         </div>
@@ -462,7 +466,7 @@ export default function Leaderboard() {
           <caption className="sr-only">Measured leaderboard for the selected basket weights, sortable</caption>
           <thead>
             <tr className="border-b border-line">
-              <th className="px-3 py-2.5 text-left font-medium text-ink-2">Model</th>
+              <th className="w-56 min-w-[14rem] px-3 py-2.5 text-left font-medium text-ink-2">Model</th>
               {cols.map((c) => {
                 const active = sort.key === c.key;
                 const nextDirection = active ? toggleSortDirection(sort.direction) : defaultSortDirection(c);
@@ -476,7 +480,7 @@ export default function Leaderboard() {
                         <button
                           type="button"
                           onClick={() => setSort({ key: c.key, direction: nextDirection })}
-                          className={`inline-flex items-center gap-1 font-medium transition-colors ${
+                          className={`inline-flex items-center gap-1 whitespace-nowrap font-medium transition-colors ${
                             active ? "text-ink" : "text-ink-2 hover:text-ink"
                           }`}
                         >
@@ -492,7 +496,7 @@ export default function Leaderboard() {
                       </TableTooltip>
                     </th>
                     {c.key === "cpsc" && showCi && (
-                      <th className="px-3 py-2.5 text-left">
+                      <th className="hidden px-3 py-2.5 text-left sm:table-cell">
                         <TableTooltip content={CI_COLUMN_TITLE} side="bottom">
                           <span className="font-medium text-ink-2">95% range</span>
                         </TableTooltip>
@@ -515,18 +519,28 @@ export default function Leaderboard() {
               const m = modelById[r.modelId];
               return (
                 <tr key={r.modelId} className="border-b border-line last:border-0">
-                  <th scope="row" className="px-3 py-2.5 text-left font-normal">
-                    <span className="mr-2 inline-block w-6 text-right font-mono text-xs text-muted tnum">
-                      {i + 1}
-                    </span>
-                    <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-full align-middle" style={{ background: hue(r.modelId) }} />
-                    <TableTooltip className="inline-flex align-middle" content={`Price / 1M tokens: ${fmtModelPricing(r.modelId)}`}>
-                      <span className="text-ink">{m.label}</span>
-                    </TableTooltip>
-                    <TableTooltip className="ml-1.5 inline-flex align-middle" content={effortTitle(m.effort)}>
-                      <span className="font-mono text-[0.7rem] text-muted">{fmtEffort(m.effort)}</span>
-                    </TableTooltip>
-                    <span className="ml-1.5 font-mono text-[0.7rem] text-muted">{m.vendor}</span>
+                  <th scope="row" className="w-56 min-w-[14rem] px-3 py-2.5 text-left font-normal">
+                    <div className="grid grid-cols-[1.5rem_0.625rem_minmax(0,1fr)] items-center gap-x-2">
+                      <span className="text-right font-mono text-xs text-muted tnum">{i + 1}</span>
+                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: hue(r.modelId) }} aria-hidden />
+                      <span className="min-w-0">
+                        <TableTooltip
+                          className="block whitespace-nowrap align-middle sm:inline-flex"
+                          content={`Price / 1M tokens: ${fmtModelPricing(r.modelId)}`}
+                        >
+                          <span className="text-ink">{m.label}</span>
+                        </TableTooltip>
+                        <span className="block whitespace-nowrap font-mono text-[0.7rem] text-muted sm:ml-1.5 sm:inline">
+                          <TableTooltip className="inline-flex shrink-0 align-middle" content={effortTitle(m.effort)}>
+                            <span>{fmtEffort(m.effort)}</span>
+                          </TableTooltip>
+                          <span className="mx-1 sm:hidden" aria-hidden>
+                            ·
+                          </span>
+                          {m.vendor}
+                        </span>
+                      </span>
+                    </div>
                   </th>
                   {cols.map((c) => {
                     const ci = c.key === "cpsc" && r.cpsc != null ? cpscIntervals[r.modelId] : undefined;
@@ -546,9 +560,24 @@ export default function Leaderboard() {
                           <TableTooltip className="inline-flex w-full justify-end" content={content}>
                             <span>{c.fmt(r)}</span>
                           </TableTooltip>
+                          {c.key === "cpsc" && showCi && ci && (
+                            <TableTooltip
+                              className="mt-2 flex justify-end sm:hidden"
+                              content={`95% CI ${fmtUsd(ci.lo)}–${fmtUsd(ci.hi)} · rows whose bands overlap are rank ties`}
+                            >
+                              <CiStrip
+                                lo={ci.lo}
+                                hi={ci.hi}
+                                value={r.cpsc!}
+                                domain={ciDomain}
+                                color={hue(r.modelId)}
+                                width={104}
+                              />
+                            </TableTooltip>
+                          )}
                         </td>
                         {c.key === "cpsc" && showCi && (
-                          <td className="px-3 py-2.5">
+                          <td className="hidden px-3 py-2.5 sm:table-cell">
                             {ci ? (
                               <TableTooltip
                                 className="inline-flex"

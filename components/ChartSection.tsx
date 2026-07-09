@@ -44,7 +44,7 @@ export default function ChartSection() {
             <span className="min-w-0">Behind the numbers</span>
           </span>
           <span className="eyebrow max-w-full break-words text-[0.62rem] sm:shrink-0 sm:text-[0.72rem]">
-            Where the dollar goes · turns against cost · task-level breakdown
+            Where the dollar goes · token price and turns vs cost · task-level breakdown
           </span>
         </summary>
         <div className="space-y-8 border-t border-line px-4 py-5 sm:px-5">

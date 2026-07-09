@@ -3,10 +3,12 @@
 import { useState } from "react";
 import EffortCurveChart from "./EffortCurveChart";
 import SuccessCostChart from "./SuccessCostChart";
+import TokenPriceCostChart from "./TokenPriceCostChart";
 
-type View = "turns" | "success";
+type View = "turns" | "success" | "price";
 
 const VIEWS: { id: View; label: string }[] = [
+  { id: "price", label: "Token price" },
   { id: "success", label: "First-check pass" },
   { id: "turns", label: "Turns" },
 ];
@@ -20,10 +22,14 @@ const VIEW_COPY: Record<View, { title: string; subtitle: string }> = {
     title: "First-check pass against cost",
     subtitle: "Cost per success against first-try pass rate",
   },
+  price: {
+    title: "Token price against cost",
+    subtitle: "Cost per success against output-token list price",
+  },
 };
 
 export default function EffortCharts() {
-  const [view, setView] = useState<View>("success");
+  const [view, setView] = useState<View>("price");
   const copy = VIEW_COPY[view];
 
   return (
@@ -54,7 +60,13 @@ export default function EffortCharts() {
         </div>
       </figcaption>
 
-      {view === "turns" ? <EffortCurveChart embedded /> : <SuccessCostChart embedded />}
+      {view === "turns" ? (
+        <EffortCurveChart embedded />
+      ) : view === "price" ? (
+        <TokenPriceCostChart embedded />
+      ) : (
+        <SuccessCostChart embedded />
+      )}
     </figure>
   );
 }

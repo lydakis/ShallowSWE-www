@@ -37,6 +37,10 @@ function setThemeColor(theme: Theme) {
   document.documentElement.style.backgroundColor = color;
   document.body.style.backgroundColor = color;
   const metas = Array.from(document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]'));
+  if (theme === "light") {
+    metas.forEach((node) => node.remove());
+    return;
+  }
   if (!metas.length) {
     const meta = document.createElement("meta");
     meta.name = "theme-color";
