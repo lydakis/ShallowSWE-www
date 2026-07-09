@@ -1,8 +1,8 @@
 {
   "schema_version": "shallowswe.repair_loop_site_manifest.v0.1",
-  "name": "shallowswe-repair-loop-preview-n3-18-v0.2-grok-4-5-clean",
+  "name": "shallowswe-repair-loop-preview-n3-18-v0.2-site-plus-gpt-5-6-low-clean",
   "snapshot_id": "shallowswe-v0.2-large-replacement-candidate-2026-07-05",
-  "generated_at": "2026-07-08T23:22:21.376751Z",
+  "generated_at": "2026-07-09T19:57:27.225403Z",
   "status": "preview_partial_clean",
   "tasks": [
     "env-flags-to-json",
@@ -26,7 +26,7 @@
   ],
   "repair_loop_seeds_per_task_model_config": 3,
   "repair_loop_policy": "N=3 bounded repair-loop preview; same model_config continues after sanitized verifier feedback until pass or cap",
-  "model_panel": "panels/deepswe-v1.1-expanded-pilot-plus-grok-4-5.json",
+  "model_panel": "site merged baseline plus panels/shallowswe-gpt-5-6-low-preview.json",
   "agent": "shallowswe-resumable-mini-swe-agent",
   "runner": "Pier + ShallowSWE repair-loop controller",
   "protocol": {
@@ -48,18 +48,18 @@
   "budget_gate": {
     "max_budget_usd": 250.0,
     "global_hard_stop_usd": 250.0,
-    "estimate_artifact": "results/shallowswe-repair-loop-preview-plan-v0.2-grok-4-5-2026-07-08/budget-estimate.json",
+    "estimate_artifact": "results/shallowswe-repair-loop-preview-plan-v0.2-gpt-5-6-low-2026-07-09/budget-estimate.json",
     "requires_explicit_approval_if_over_budget": true
   },
   "run_report": {
-    "total_planned_rows": 594,
-    "completed_rows": 594,
-    "skipped_existing_rows": 540,
-    "cumulative_spend_usd": 71.849474942,
+    "total_planned_rows": 756,
+    "completed_rows": 756,
+    "skipped_existing_rows": null,
+    "cumulative_spend_usd": null,
     "stopped": false,
     "stop_reason": null,
-    "parallelism": 1,
-    "source_output_dir": "results/shallowswe-repair-loop-preview-n3-18-v0.2-grok-4-5-2026-07-08"
+    "parallelism": 3,
+    "source_output_dir": "results/shallowswe-repair-loop-preview-n3-18-v0.2-site-plus-gpt-5-6-low-2026-07-09"
   },
-  "partial_rows_exported": 594
+  "partial_rows_exported": 756
 }

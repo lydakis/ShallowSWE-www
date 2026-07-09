@@ -115,6 +115,39 @@
       "partial_basket_tokens_per_success": 60980.34228333332
     },
     {
+      "model_config": "openrouter/openai/gpt-5.6-luna[low]",
+      "model": "openrouter/openai/gpt-5.6-luna",
+      "reasoning_effort": "low",
+      "covered_weight": 1.0000000000000002,
+      "weighted_solve_rate": 0.98185,
+      "basket_cpsc": 0.02095813208823479,
+      "partial_basket_cpsc": 0.02095813208823479,
+      "basket_tokens_per_success": 22733.21067372816,
+      "partial_basket_tokens_per_success": 22733.21067372816
+    },
+    {
+      "model_config": "openrouter/openai/gpt-5.6-sol[low]",
+      "model": "openrouter/openai/gpt-5.6-sol",
+      "reasoning_effort": "low",
+      "covered_weight": 1.0000000000000002,
+      "weighted_solve_rate": 1.0,
+      "basket_cpsc": 0.15046101373749998,
+      "partial_basket_cpsc": 0.15046101373749998,
+      "basket_tokens_per_success": 28618.39546666667,
+      "partial_basket_tokens_per_success": 28618.39546666667
+    },
+    {
+      "model_config": "openrouter/openai/gpt-5.6-terra[low]",
+      "model": "openrouter/openai/gpt-5.6-terra",
+      "reasoning_effort": "low",
+      "covered_weight": 1.0000000000000002,
+      "weighted_solve_rate": 0.9813,
+      "basket_cpsc": 0.08220801703734841,
+      "partial_basket_cpsc": 0.08220801703734841,
+      "basket_tokens_per_success": 33137.16393219878,
+      "partial_basket_tokens_per_success": 33137.16393219878
+    },
+    {
       "model_config": "openrouter/x-ai/grok-4.5[high]",
       "model": "openrouter/x-ai/grok-4.5",
       "reasoning_effort": "high",
