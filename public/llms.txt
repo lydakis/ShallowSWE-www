@@ -16,6 +16,20 @@
 - [DeepSWE comparison](https://shallowswe.com/data/deepswe-comparison.json): Comparison data for DeepSWE and ShallowSWE views.
 - [Run manifest](https://shallowswe.com/data/run-manifest.json): Snapshot metadata for the published benchmark run.
 
+## Benchmarked model configs
+
+- openrouter/anthropic/claude-fable-5[low]
+- openrouter/anthropic/claude-opus-4.8[low]
+- openrouter/anthropic/claude-opus-4.8[medium]
+- openrouter/anthropic/claude-sonnet-5[low]
+- openrouter/anthropic/claude-sonnet-5[medium]
+- openrouter/google/gemini-3.5-flash[medium]
+- openrouter/moonshotai/kimi-k2.7-code
+- openrouter/openai/gpt-5.5[low]
+- openrouter/openai/gpt-5.5[medium]
+- openrouter/x-ai/grok-4.5
+- openrouter/z-ai/glm-5.2[high]
+
 ## Source
 
 - [Benchmark repo](https://github.com/lydakis/ShallowSWE): Benchmark tasks, runner, and data generation source.

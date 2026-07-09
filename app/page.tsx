@@ -10,6 +10,8 @@ import { WeightsProvider } from "@/lib/weights";
 import { ModelSelectionProvider } from "@/lib/model-selection";
 import {
   absoluteUrl,
+  SITE_BENCHMARKED_MODEL_CONFIGS,
+  SITE_BENCHMARKED_MODELS,
   SITE_DATA_DOWNLOADS,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
@@ -49,6 +51,19 @@ const jsonLd = {
       dateModified: SITE_LAST_MODIFIED,
       keywords: SITE_KEYWORDS,
       measurementTechnique: "Bounded repair-loop runs with hidden programmatic tests",
+      about: [
+        { "@type": "Thing", name: "AI coding benchmark" },
+        { "@type": "Thing", name: "software engineering benchmark" },
+        { "@type": "Thing", name: "cost per verified success" },
+        ...SITE_BENCHMARKED_MODELS.map((model) => ({
+          "@type": "Thing",
+          name: model,
+        })),
+      ],
+      mentions: SITE_BENCHMARKED_MODEL_CONFIGS.map((modelConfig) => ({
+        "@type": "Thing",
+        name: modelConfig,
+      })),
       variableMeasured: [
         "Cost per successful completion",
         "Cost per verified success",
