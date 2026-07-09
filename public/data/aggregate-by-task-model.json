@@ -6318,7 +6318,7 @@
     "cost_delta_vs_gateway_ratio": -1.5499581694834148e-16
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "access-log-to-incidents",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6357,7 +6357,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "auth-token-expiry-regression",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6396,7 +6396,7 @@
     "cost_delta_vs_gateway_ratio": 1.638076936710866e-16
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "billing-revenue-rollup",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6435,7 +6435,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "cache-invalidates-on-settings-change",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6474,7 +6474,7 @@
     "cost_delta_vs_gateway_ratio": 1.5776308810011206e-16
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "config-flag-ignored",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6513,7 +6513,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "config-key-rollover",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6552,7 +6552,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "env-flags-to-json",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6591,7 +6591,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "extract-error-fields",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6630,7 +6630,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "invoice-cli-regression-test-fix",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6669,7 +6669,7 @@
     "cost_delta_vs_gateway_ratio": -1.4396941518989207e-16
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "invoice-multi-source-merge",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6708,7 +6708,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "merge-divergent-config-branches",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6747,7 +6747,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "payout-reconcile",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6786,7 +6786,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "post-build-status",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6825,7 +6825,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "retry-error-fallback",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6864,7 +6864,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "split-notification-renderer",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6903,7 +6903,7 @@
     "cost_delta_vs_gateway_ratio": 2.2003088229031043e-16
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "support-sla-business-hours",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6942,7 +6942,7 @@
     "cost_delta_vs_gateway_ratio": -1.5448687607147222e-16
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "ticket-cut-from-bug-report",
     "total_trials": 3,
     "repair_loops": 3,
@@ -6981,7 +6981,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "task_id": "ticket-update-dont-duplicate",
     "total_trials": 3,
     "repair_loops": 3,

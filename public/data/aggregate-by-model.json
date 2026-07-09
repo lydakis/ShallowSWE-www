@@ -342,7 +342,7 @@
     "cost_delta_vs_gateway_ratio": 0.0
   },
   {
-    "model_config": "openrouter/x-ai/grok-4.5",
+    "model_config": "openrouter/x-ai/grok-4.5[high]",
     "total_trials": 54,
     "repair_loops": 54,
     "excluded_repair_loops": 0,

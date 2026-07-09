@@ -534,7 +534,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 189,
     "temperature": null,
     "sampling_config": {
@@ -1159,7 +1159,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 617,
     "temperature": null,
     "sampling_config": {
@@ -1784,7 +1784,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 2686,
     "temperature": null,
     "sampling_config": {
@@ -2409,7 +2409,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 1745,
     "temperature": null,
     "sampling_config": {
@@ -3034,7 +3034,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 288,
     "temperature": null,
     "sampling_config": {
@@ -3659,7 +3659,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 712,
     "temperature": null,
     "sampling_config": {
@@ -4284,7 +4284,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 263,
     "temperature": null,
     "sampling_config": {
@@ -4909,7 +4909,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 485,
     "temperature": null,
     "sampling_config": {
@@ -5534,7 +5534,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 282,
     "temperature": null,
     "sampling_config": {
@@ -6159,7 +6159,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 1848,
     "temperature": null,
     "sampling_config": {
@@ -6784,7 +6784,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 2659,
     "temperature": null,
     "sampling_config": {
@@ -7409,7 +7409,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 1461,
     "temperature": null,
     "sampling_config": {
@@ -8034,7 +8034,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 327,
     "temperature": null,
     "sampling_config": {
@@ -8659,7 +8659,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 268,
     "temperature": null,
     "sampling_config": {
@@ -9284,7 +9284,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 307,
     "temperature": null,
     "sampling_config": {
@@ -9909,7 +9909,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 3464,
     "temperature": null,
     "sampling_config": {
@@ -10534,7 +10534,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 191,
     "temperature": null,
     "sampling_config": {
@@ -11159,7 +11159,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 353,
     "temperature": null,
     "sampling_config": {
@@ -11784,7 +11784,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 318,
     "temperature": null,
     "sampling_config": {
@@ -12409,7 +12409,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 704,
     "temperature": null,
     "sampling_config": {
@@ -13034,7 +13034,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 2421,
     "temperature": null,
     "sampling_config": {
@@ -13659,7 +13659,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 1963,
     "temperature": null,
     "sampling_config": {
@@ -14284,7 +14284,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 287,
     "temperature": null,
     "sampling_config": {
@@ -14909,7 +14909,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 417,
     "temperature": null,
     "sampling_config": {
@@ -15534,7 +15534,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 170,
     "temperature": null,
     "sampling_config": {
@@ -16159,7 +16159,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 332,
     "temperature": null,
     "sampling_config": {
@@ -16784,7 +16784,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 240,
     "temperature": null,
     "sampling_config": {
@@ -17409,7 +17409,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 1097,
     "temperature": null,
     "sampling_config": {
@@ -18034,7 +18034,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 1601,
     "temperature": null,
     "sampling_config": {
@@ -18659,7 +18659,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 861,
     "temperature": null,
     "sampling_config": {
@@ -19284,7 +19284,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 436,
     "temperature": null,
     "sampling_config": {
@@ -19909,7 +19909,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 266,
     "temperature": null,
     "sampling_config": {
@@ -20534,7 +20534,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 240,
     "temperature": null,
     "sampling_config": {
@@ -21159,7 +21159,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 2881,
     "temperature": null,
     "sampling_config": {
@@ -21784,7 +21784,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 280,
     "temperature": null,
     "sampling_config": {
@@ -22409,7 +22409,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 595,
     "temperature": null,
     "sampling_config": {
@@ -23034,7 +23034,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 320,
     "temperature": null,
     "sampling_config": {
@@ -23659,7 +23659,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 570,
     "temperature": null,
     "sampling_config": {
@@ -24284,7 +24284,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 3424,
     "temperature": null,
     "sampling_config": {
@@ -24909,7 +24909,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 2004,
     "temperature": null,
     "sampling_config": {
@@ -25534,7 +25534,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 236,
     "temperature": null,
     "sampling_config": {
@@ -26159,7 +26159,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 376,
     "temperature": null,
     "sampling_config": {
@@ -26784,7 +26784,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 404,
     "temperature": null,
     "sampling_config": {
@@ -27409,7 +27409,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 435,
     "temperature": null,
     "sampling_config": {
@@ -28034,7 +28034,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 347,
     "temperature": null,
     "sampling_config": {
@@ -28659,7 +28659,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 2858,
     "temperature": null,
     "sampling_config": {
@@ -29284,7 +29284,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 1746,
     "temperature": null,
     "sampling_config": {
@@ -29909,7 +29909,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 1199,
     "temperature": null,
     "sampling_config": {
@@ -30534,7 +30534,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 347,
     "temperature": null,
     "sampling_config": {
@@ -31159,7 +31159,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 175,
     "temperature": null,
     "sampling_config": {
@@ -31784,7 +31784,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 239,
     "temperature": null,
     "sampling_config": {
@@ -32409,7 +32409,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 3143,
     "temperature": null,
     "sampling_config": {
@@ -33034,7 +33034,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 297,
     "temperature": null,
     "sampling_config": {
@@ -33659,7 +33659,7 @@
     "requested_model": "openrouter/x-ai/grok-4.5",
     "resolved_model": null,
     "model_variant": null,
-    "reasoning_effort": null,
+    "reasoning_effort": "high",
     "reasoning_tokens": 568,
     "temperature": null,
     "sampling_config": {
