@@ -11,6 +11,9 @@ const MODEL_NAME_OVERRIDES: Record<string, string> = {
   "gemini-3.5-flash": "Gemini 3.5 Flash",
   "kimi-k2.7-code": "Kimi K2.7 Code",
   "gpt-5.5": "GPT-5.5",
+  "gpt-5.6-luna": "GPT-5.6 Luna",
+  "gpt-5.6-terra": "GPT-5.6 Terra",
+  "gpt-5.6-sol": "GPT-5.6 Sol",
   "grok-4.5": "Grok 4.5",
   "glm-5.2": "GLM 5.2",
 };
@@ -30,7 +33,7 @@ export const SITE_NAME = "ShallowSWE";
 export const SITE_URL = "https://shallowswe.com";
 export const SITE_DESCRIPTION =
   "ShallowSWE is an AI coding benchmark comparing GPT, Claude, Gemini, Grok, Kimi, and GLM model configs by cost per verified success.";
-export const SITE_OG_TITLE = "ShallowSWE: a cost benchmark for routine work";
+export const SITE_OG_TITLE = "Choose coding models by cost of verified work | ShallowSWE";
 export const SITE_LAST_MODIFIED = runManifest.generated_at;
 export const SITE_BENCHMARKED_MODEL_CONFIGS = [...new Set(aggregateByModel.map((row) => row.model_config))];
 export const SITE_BENCHMARKED_MODELS = [...new Set(SITE_BENCHMARKED_MODEL_CONFIGS.map(displayModelName))];

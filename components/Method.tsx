@@ -4,14 +4,14 @@ import { PRICE_SHEET_DATE } from "@/app/data/model";
 const principles = [
   [
     "Scored by hidden tests",
-    "no LLM judges, no human grading — and a failing model is told only that it failed, never which check",
+    "no LLM judges or human grading; failures receive only coarse, non-oracle feedback, never the failing check",
   ],
   ["One model per row", "no fallbacks, ensembles, or handoffs to a stronger model mid-task"],
   [
-    "Same scaffold for every model",
-    "one agent harness, one prompt template, zero per-model tuning — ShallowSWE benchmarks models, not scaffolds",
+    "Controlled scaffold",
+    "one agent harness and prompt template, with only provider-required configuration differences",
   ],
-  ["Giving up still costs", "hitting a spend, attempt, or time cap scores as a failure, and its spend stays in the bill"],
+  ["Giving up still costs", "hitting a spend, verifier-submission, or agent-step cap scores as a failure, and its spend stays in the bill"],
   ["Prices are pinned", "dollars are token counts times the dated openrouter price sheet, downloadable below"],
   ["Outages don't count against models", "provider and harness errors are retried, not scored"],
   [
@@ -27,7 +27,7 @@ export default function Method() {
         <p>
           A scored row is one model working one task from a fixed starting seed. Each time the agent declares done,
           the benchmark runs hidden programmatic tests. If they fail, the same agent keeps working until success or a
-          cap.
+          cap. CPSC measures model API spend, not developer time or total cost of ownership.
         </p>
       </SectionHeader>
 

@@ -111,7 +111,7 @@ const cols: {
     key: "p95LoopCost",
     label: "p95 loop cost",
     title:
-      "95th percentile cost of one scored repair loop in the selected basket — the bad-day price, not the average one.",
+      "Weighted 95th percentile cost across individual scored repair loops in the selected basket — the bad-day price, not the average one.",
     fmt: (row) => fmtUsd(row.p95CostPerRepairLoop),
     valueTitle: (row) =>
       `Mean loop cost: ${fmtUsd(row.costPerRepairLoop)} · solved ${row.successes} / ${row.repairLoops} scored loops`,

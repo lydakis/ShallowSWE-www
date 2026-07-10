@@ -13,7 +13,7 @@ export default function ChartSection() {
         <p>
           Each row gives one model one task. When the model says it is done, hidden checks run; it keeps fixing until
           they pass or a cap stops it. That whole attempt is a <b className="font-semibold text-ink">repair loop</b> —
-          and every dollar of it counts, failed tries included.
+          and every model dollar of it counts, failed tries included.
         </p>
       </SectionHeader>
 
