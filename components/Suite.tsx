@@ -32,32 +32,18 @@ export default function Suite() {
         ))}
       </div>
 
-      <div className="mt-8">
-        <div className="eyebrow mb-4">How a task earns its spot</div>
-        <ul className="grid gap-x-6 gap-y-4 lg:grid-cols-3">
-          {[
-            [
-              "Admitted by the ceiling",
-              "a task enters the suite only if a frozen frontier panel clears it one-shot at a pre-registered rate — if frontier models can't do it reliably, it isn't shallow, it's out",
-            ],
-            [
-              "Sized by the floor",
-              "small, medium, and large are measured bands, not author guesses: a cheaper probe panel's first-try pass rate decides where each task lands",
-            ],
-            [
-              "Written from scratch",
-              "nothing is adapted from public repos or benchmarks — a memorized solution takes fewer tokens than a derived one, and tokens are the entire product",
-            ],
-          ].map(([t, d]) => (
-            <li key={t} className="flex items-start gap-2 text-sm leading-snug">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-waterline" />
-              <span className="text-ink-2">
-                <b className="font-semibold text-ink">{t}</b>: {d}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <p className="mt-8 flex max-w-3xl items-start gap-2 text-sm leading-relaxed text-ink-2">
+        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-waterline" aria-hidden />
+        <span>
+          <b className="font-semibold text-ink">How a task earns its spot</b>: admitted by a frozen frontier ceiling,
+          sized by a measured floor panel, and written from scratch — never adapted from public repos or benchmarks.
+          The full admission and quality gates are in the{" "}
+          <a href="/methodology#gates" className="text-brand transition-colors hover:text-brand-bright">
+            methodology
+          </a>
+          .
+        </span>
+      </p>
     </Section>
   );
 }
