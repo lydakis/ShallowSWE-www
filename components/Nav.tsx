@@ -8,6 +8,7 @@ const links = [
   { href: "/#foil", label: "Deep vs shallow" },
   { href: "/#suite", label: "Suite" },
   { href: "/#method", label: "Method" },
+  { href: "/#research", label: "Research" },
 ];
 
 export default function Nav({ sectionLinks = true }: { sectionLinks?: boolean }) {

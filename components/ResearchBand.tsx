@@ -35,10 +35,13 @@ export default function ResearchBand() {
   return (
     <section id="research" className="border-t border-line bg-plane-2">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <div className="mb-8 flex items-center gap-2.5">
+        <div className="mb-3 flex items-center gap-2.5">
           <span className="h-px w-6 bg-waterline" />
           <span className="eyebrow">Research &amp; evidence</span>
         </div>
+        <h2 className="mb-8 max-w-2xl font-display text-2xl leading-tight text-ink sm:text-3xl">
+          Everything behind the numbers
+        </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item) => (
             <a
