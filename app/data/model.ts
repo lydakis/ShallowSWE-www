@@ -4,6 +4,7 @@ import priceSheetJson from "@/public/data/prices-openrouter-2026-07-09.json";
 import runManifestJson from "@/public/data/run-manifest.json";
 import deepsweComparisonJson from "@/public/data/deepswe-comparison.json";
 import rolloutsJson from "@/public/data/rollouts.json";
+import { priceTokenUsage } from "@/lib/pricing";
 
 export type SizeClass = "small" | "mid" | "large";
 export type CategoryId = "artifact" | "code" | "workflow";
@@ -709,18 +710,22 @@ export interface CostAnatomyRow {
   freshInputUsd: number;
   /** Mean $ per scored repair loop spent on cache-read tokens. */
   cacheReadUsd: number;
+  /** Mean $ per scored repair loop spent on cache-write tokens. */
+  cacheWriteUsd: number;
   /** Mean $ per scored repair loop spent on output (incl. reasoning) tokens. */
   outputUsd: number;
   totalUsd: number;
   freshInputTokens: number;
   cacheReadTokens: number;
+  cacheWriteTokens: number;
   outputTokens: number;
 }
 
 /**
  * Decomposes each model's basket-weighted mean loop cost into price-sheet
- * components. Reported input token means include cache reads, so billed fresh
- * input is (input − cache read); the sum reconciles with mean loop cost.
+ * components. Reported input token means include cache reads and writes, so
+ * those subsets must be removed before billing fresh input. The sum reconciles
+ * with mean loop cost.
  */
 export function weightedCostAnatomy(weights: BasketWeights): CostAnatomyRow[] {
   return models
@@ -728,9 +733,11 @@ export function weightedCostAnatomy(weights: BasketWeights): CostAnatomyRow[] {
       const price = prices[model.priceKey];
       let fresh$ = 0;
       let cache$ = 0;
+      let write$ = 0;
       let out$ = 0;
       let freshTok = 0;
       let cacheTok = 0;
+      let writeTok = 0;
       let outTok = 0;
       let observedWeight = 0;
       for (const item of tasks) {
@@ -738,28 +745,40 @@ export function weightedCostAnatomy(weights: BasketWeights): CostAnatomyRow[] {
         if (!cell || cell.repairLoops <= 0) continue;
         const weight = taskWeight(item, weights);
         if (weight <= 0) continue;
-        const freshTokens = Math.max(0, cell.inputTokens - cell.cacheRead);
-        const outputTokens = cell.outputTokens;
-        fresh$ += weight * (freshTokens * price.inputPer1M) / 1e6;
-        cache$ += weight * (cell.cacheRead * price.cachedInputPer1M) / 1e6;
-        out$ += weight * (outputTokens * price.outputPer1M) / 1e6;
-        freshTok += weight * freshTokens;
-        cacheTok += weight * cell.cacheRead;
-        outTok += weight * outputTokens;
+        const priced = priceTokenUsage(
+          {
+            inputTokens: cell.inputTokens,
+            cacheReadTokens: cell.cacheRead,
+            cacheWriteTokens: cell.cacheWrite,
+            outputTokens: cell.outputTokens,
+          },
+          price,
+        );
+        fresh$ += weight * priced.usd.freshInput;
+        cache$ += weight * priced.usd.cacheRead;
+        write$ += weight * priced.usd.cacheWrite;
+        out$ += weight * priced.usd.output;
+        freshTok += weight * priced.tokens.freshInput;
+        cacheTok += weight * priced.tokens.cacheRead;
+        writeTok += weight * priced.tokens.cacheWrite;
+        outTok += weight * priced.tokens.output;
         observedWeight += weight;
       }
       if (observedWeight <= 0) return null;
       const freshInputUsd = fresh$ / observedWeight;
       const cacheReadUsd = cache$ / observedWeight;
+      const cacheWriteUsd = write$ / observedWeight;
       const outputUsd = out$ / observedWeight;
       return {
         modelId: model.id,
         freshInputUsd,
         cacheReadUsd,
+        cacheWriteUsd,
         outputUsd,
-        totalUsd: freshInputUsd + cacheReadUsd + outputUsd,
+        totalUsd: freshInputUsd + cacheReadUsd + cacheWriteUsd + outputUsd,
         freshInputTokens: freshTok / observedWeight,
         cacheReadTokens: cacheTok / observedWeight,
+        cacheWriteTokens: writeTok / observedWeight,
         outputTokens: outTok / observedWeight,
       };
     })
@@ -872,13 +891,15 @@ export function stickerPremiumRows(
           (candidate) => candidate.modelId === model.id && candidate.taskId === item.id,
         );
         if (!cell || cell.repairLoops <= 0) continue;
-        const freshTokens = Math.max(0, cell.inputTokens - cell.cacheRead);
-        const repricedLoopUsd =
-          (freshTokens * ref.inputPer1M +
-            cell.cacheRead * ref.cachedInputPer1M +
-            cell.cacheWrite * (ref.cacheWritePer1M ?? ref.inputPer1M) +
-            cell.outputTokens * ref.outputPer1M) /
-          1e6;
+        const repricedLoopUsd = priceTokenUsage(
+          {
+            inputTokens: cell.inputTokens,
+            cacheReadTokens: cell.cacheRead,
+            cacheWriteTokens: cell.cacheWrite,
+            outputTokens: cell.outputTokens,
+          },
+          ref,
+        ).usd.total;
         spendNumerator += weight * cell.costPerRepairLoop;
         repricedNumerator += weight * repricedLoopUsd;
         solveNumerator += weight * cell.solveRate;

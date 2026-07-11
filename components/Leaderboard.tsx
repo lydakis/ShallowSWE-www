@@ -103,15 +103,16 @@ const cols: {
     title:
       "Basket-weighted spend across all scored repair loops, divided by verified successes — the headline metric.",
     fmt: (row) => (row.cpsc == null ? "n/a" : fmtUsd(row.cpsc)),
-    valueTitle: (row) => `= ${fmtUsd(row.totalSpend)} total spend / ${row.successes} successes`,
+    valueTitle: (row) =>
+      `= ${fmtUsd(row.costPerRepairLoop)} weighted mean loop cost / ${fmtPercent(row.solveRate)} weighted solve rate`,
     sortValue: (row) => row.cpsc,
     goodLow: true,
   },
   {
     key: "p95LoopCost",
-    label: "p95 loop cost",
+    label: "Mean task p95 cost",
     title:
-      "Weighted 95th percentile cost across individual scored repair loops in the selected basket — the bad-day price, not the average one.",
+      "Basket-weighted mean of each task's 95th-percentile repair-loop cost. This is not a pooled percentile across all loops.",
     fmt: (row) => fmtUsd(row.p95CostPerRepairLoop),
     valueTitle: (row) =>
       `Mean loop cost: ${fmtUsd(row.costPerRepairLoop)} · solved ${row.successes} / ${row.repairLoops} scored loops`,

@@ -21,7 +21,7 @@ All displayed ShallowSWE numbers come from the bounded repair-loop artifacts in 
 - `aggregate-by-model.json`
 - `aggregate-by-task-model.json`
 - `run-manifest.json`
-- `prices-openrouter-2026-07-03.json`
+- `prices-openrouter-2026-07-09.json`
 
 `app/data/model.ts` imports those JSON files and derives the leaderboard and task diagnostics from them. Do not add hand-entered benchmark numbers to components.
 

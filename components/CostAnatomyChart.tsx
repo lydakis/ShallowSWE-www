@@ -23,15 +23,15 @@ const TOP = 18;
 const BOTTOM_PAD = 34;
 const SEGMENT_GAP = 2;
 
-// One hue, lightness ordered by unit price (cache reads cheapest → output
-// dearest); a sequential ramp, not a categorical trio, in both themes.
+// One hue, lightness ordered by token billing category.
 const SEGMENT_COLORS = {
-  light: { cache: "#a7c7e0", fresh: "#3b82c4", output: "#12466e" },
-  dark: { cache: "#24506e", fresh: "#4a9fd8", output: "#a5d8f3" },
+  light: { cache: "#b7d4e8", write: "#73acd3", fresh: "#3b82c4", output: "#12466e" },
+  dark: { cache: "#24506e", write: "#337da9", fresh: "#4a9fd8", output: "#a5d8f3" },
 } as const;
 
 const SEGMENTS = [
   { id: "cache", label: "Cache reads" },
+  { id: "write", label: "Cache writes" },
   { id: "fresh", label: "Fresh input" },
   { id: "output", label: "Output" },
 ] as const;
@@ -76,6 +76,7 @@ export default function CostAnatomyChart() {
 
   const segmentsOf = (r: (typeof rows)[number]): { id: SegmentId; usd: number; tokens: number }[] => [
     { id: "cache", usd: r.cacheReadUsd, tokens: r.cacheReadTokens },
+    { id: "write", usd: r.cacheWriteUsd, tokens: r.cacheWriteTokens },
     { id: "fresh", usd: r.freshInputUsd, tokens: r.freshInputTokens },
     { id: "output", usd: r.outputUsd, tokens: r.outputTokens },
   ];
@@ -102,7 +103,7 @@ export default function CostAnatomyChart() {
           viewBox={`0 0 ${VB_W} ${vbH}`}
           className="w-full select-none"
           role="img"
-          aria-label="Stacked bars decomposing each model-effort row's mean repair-loop cost into cache reads, fresh input, and output token spend. Cheapest rows first."
+          aria-label="Stacked bars decomposing each model-effort row's mean repair-loop cost into cache reads, cache writes, fresh input, and output token spend. Cheapest rows first."
         >
           {ticks.map((t) => (
             <g key={`t${t}`}>
@@ -212,8 +213,8 @@ export default function CostAnatomyChart() {
       </div>
 
       <div className="border-t border-line px-4 py-2 font-mono text-[0.68rem] leading-relaxed text-muted">
-        one bar per model-effort row, cheapest first · basket-weighted mean $ per scored repair loop · fresh input =
-        prompt tokens billed uncached · reconstructed from token means × openrouter {PRICE_SHEET_DATE} price sheet
+        one bar per model-effort row, cheapest first · basket-weighted mean $ per scored repair loop · fresh input excludes
+        cache reads and writes · reconstructed from token means × openrouter {PRICE_SHEET_DATE} price sheet
       </div>
     </figure>
   );
