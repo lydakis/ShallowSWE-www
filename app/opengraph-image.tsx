@@ -45,9 +45,14 @@ export default function OG() {
           <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 34 }}>
             <svg width="40" height="40" viewBox="0 0 32 32">
               <rect width="32" height="32" rx="8" fill="#0f171c" stroke={line} strokeWidth="1" />
-              <path d="M5 12c3 0 3 2 6 2s3-2 6-2 3 2 6 2 3-2 4-2" stroke={cyan} strokeWidth="2.2" strokeLinecap="round" fill="none" />
-              <circle cx="11" cy="19" r="2.2" fill={cyan} />
-              <circle cx="21" cy="25" r="2.2" fill="#5c6f78" />
+              <circle cx="16" cy="16.4" r="4.5" fill={ink} />
+              <path
+                d="M3.5 19.9c3.125 0 3.125 2.2 6.25 2.2s3.125-2.2 6.25-2.2 3.125 2.2 6.25 2.2 3.125-2.2 6.25-2.2"
+                stroke={cyan}
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                fill="none"
+              />
             </svg>
             <div style={{ fontSize: 30, fontWeight: 700 }}>ShallowSWE</div>
           </div>
