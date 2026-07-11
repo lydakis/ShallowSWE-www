@@ -35,7 +35,7 @@ export default function Hero() {
                 <span className="transition-transform group-hover:translate-y-0.5">↓</span>
               </a>
               <a
-                href="#method"
+                href="/methodology"
                 className="inline-flex items-center gap-2 rounded-full border border-line-strong px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-surface-2"
               >
                 How it works

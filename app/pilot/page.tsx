@@ -1,0 +1,276 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import DocPage from "@/components/docs/DocPage";
+import { sourceFileUrl } from "@/components/docs/Provenance";
+import manifest from "@/content/manifest.json";
+
+export const metadata: Metadata = {
+  title: "Pilot status",
+  description:
+    "Status of the ShallowSWE six-task protocol-validation pilot: 112 official trajectories, stage gates, stop conditions, and the current review state. No official runs have started.",
+  alternates: { canonical: "/pilot" },
+};
+
+const toc = [
+  { id: "status", label: "Current status" },
+  { id: "glance", label: "The plan at a glance" },
+  { id: "tasks", label: "The six-task panel" },
+  { id: "trajectories", label: "112 official trajectories" },
+  { id: "stages", label: "Stage gates" },
+  { id: "stop", label: "Stop conditions" },
+];
+
+const stages = [
+  {
+    name: "Freeze and local QA",
+    gate: "Six reviewed task packets, executed quality evidence, frozen hashes and canary manifest. $0 metered spend.",
+    state: "in review",
+  },
+  {
+    name: "Development triage",
+    gate: "About 66 subscription-funded trajectories to find packaging defects cheaply. Never counted as official evidence.",
+    state: "pending",
+  },
+  {
+    name: "Two-task canary",
+    gate: "16 trajectories verify provider identity, continuation, verifier isolation, and cost reconciliation before anything else runs.",
+    state: "pending",
+  },
+  {
+    name: "Permissive collection",
+    gate: "72 trajectories across all six tasks under generous undisclosed limits; supplies the data for cap and budget selection.",
+    state: "pending",
+  },
+  {
+    name: "Freeze policy and budgets",
+    gate: "Analysis only: propose the submission cap K, a pooled step guard, pressure bands, and per-task budgets Bt.",
+    state: "pending",
+  },
+  {
+    name: "Fresh anchor confirmation",
+    gate: "24 trajectories on three preregistered tasks under the exact frozen policy; estimates the replacement cost Rt.",
+    state: "pending",
+  },
+  {
+    name: "Conditional extensions",
+    gate: "Up to 30 reserve trajectories, only for cells that change a named decision; optional $25-capped external comparator after the core pilot.",
+    state: "pending",
+  },
+];
+
+export default function PilotPage() {
+  return (
+    <DocPage
+      eyebrow="Research · pilot"
+      title="Six-task protocol-validation pilot"
+      chips={[
+        { label: `Protocol ${manifest.pilot_protocol_version} · freeze candidate` },
+        { label: "Independent review in progress", tone: "warn" },
+        { label: "No official runs started" },
+      ]}
+      lede={
+        <p>
+          Before any report-grade leaderboard, the full calibration machinery runs once at small scope: six tasks, two
+          per category, in a preregistered cash-preserving sequence. The pilot proposes the protocol&apos;s remaining
+          constants and measures what a real snapshot costs — it makes no leaderboard claim.
+        </p>
+      }
+      toc={toc}
+      provenanceDoc="pilot_protocol"
+    >
+      <article className="doc-prose">
+        <section id="status" className="scroll-mt-24">
+          <h2>Current status</h2>
+          <p>
+            The pilot protocol and the <a href="/paper">v0.4.2 working paper</a> are freeze candidates under
+            independent review. <strong>No official metered runs have started</strong>; the numbers below are the
+            preregistered plan, not results. The <Link href="/#chart">preview leaderboard</Link>{" "}on the homepage comes from
+            earlier plumbing-validation runs and is unrelated to this pilot&apos;s evidence.
+          </p>
+        </section>
+
+        <section id="glance" className="scroll-mt-24">
+          <h2>The plan at a glance</h2>
+          <div className="my-5 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4">
+            {[
+              ["6", "tasks, two per category"],
+              ["112", "official trajectories"],
+              ["$43 / $63", "base / high estimate"],
+              ["$200 + $100", "core limit + reserve"],
+            ].map(([value, label]) => (
+              <div key={label} className="bg-surface p-4">
+                <div className="font-display text-xl text-ink tnum sm:text-2xl">{value}</div>
+                <div className="mt-1 font-mono text-[0.68rem] uppercase leading-snug text-muted">{label}</div>
+              </div>
+            ))}
+          </div>
+          <p>
+            The dollar limits are safety bounds, not expected spend. Official evidence is grant-funded (Kaggle), with
+            subscription compute for development only and a $25 cap on optional out-of-pocket extensions. Canonical
+            list-price-equivalent cost is reconstructed for every trajectory even when cash outlay is zero.
+          </p>
+        </section>
+
+        <section id="tasks" className="scroll-mt-24">
+          <h2>The six-task panel</h2>
+          <p>
+            Pressure labels are hypotheses until the pilot measures them; a task is never enlarged merely to force
+            failure. Each task needs an independent construct reviewer, executed quality evidence, and frozen hashes
+            before any official run.
+          </p>
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Lower-pressure hypothesis</th>
+                  <th>Elevated-pressure hypothesis</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Artifact</td>
+                  <td>
+                    <code>env-flags-to-json</code> †
+                  </td>
+                  <td>
+                    <code>access-log-to-incidents</code> ‡
+                  </td>
+                </tr>
+                <tr>
+                  <td>Code</td>
+                  <td>
+                    <code>invoice-cli-regression-test-fix</code>
+                  </td>
+                  <td>
+                    <code>invoice-multi-source-merge</code> †‡
+                  </td>
+                </tr>
+                <tr>
+                  <td>Workflow</td>
+                  <td>
+                    <code>config-flag-ignored</code>
+                  </td>
+                  <td>
+                    <code>merge-divergent-config-branches</code> ‡
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            † canary task — runs first to validate identity and accounting. ‡ preregistered confirmation task — one per
+            category completes the full fresh-confirmation phase.
+          </p>
+        </section>
+
+        <section id="trajectories" className="scroll-mt-24">
+          <h2>112 official trajectories</h2>
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Work</th>
+                  <th align="right">Trajectories</th>
+                  <th align="right">Base est.</th>
+                  <th align="right">High est.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Two-task canary</td>
+                  <td align="right">16</td>
+                  <td align="right">~$6</td>
+                  <td align="right">~$9</td>
+                </tr>
+                <tr>
+                  <td>Permissive six-task collection</td>
+                  <td align="right">72</td>
+                  <td align="right">~$22</td>
+                  <td align="right">~$32</td>
+                </tr>
+                <tr>
+                  <td>Fresh anchor confirmation (3 tasks × 8)</td>
+                  <td align="right">24</td>
+                  <td align="right">~$15</td>
+                  <td align="right">~$22</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Core official pilot</strong>
+                  </td>
+                  <td align="right">
+                    <strong>112</strong>
+                  </td>
+                  <td align="right">
+                    <strong>~$43</strong>
+                  </td>
+                  <td align="right">
+                    <strong>~$63</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Extension reserve (conditional)</td>
+                  <td align="right">≤ 30</td>
+                  <td align="right">~$8</td>
+                  <td align="right">~$15</td>
+                </tr>
+                <tr>
+                  <td>Optional external comparator</td>
+                  <td align="right">≤ 18</td>
+                  <td align="right">~$2</td>
+                  <td align="right">$25 cash cap</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            The frozen anchor is <code>gpt-5.5-2026-04-23</code> at high reasoning effort, with{" "}
+            <code>gpt-5.4-mini</code> and <code>gpt-5.4</code> at low effort as the floor panel. Requested
+            configurations, provider routes, and immutable identities freeze in the manifest before the canary; any
+            requested/resolved mismatch invalidates the affected rows.
+          </p>
+        </section>
+
+        <section id="stages" className="scroll-mt-24">
+          <h2>Stage gates</h2>
+          <p>Each stage must produce its required evidence before the next spends anything:</p>
+          <ol>
+            {stages.map((stage) => (
+              <li key={stage.name}>
+                <strong>{stage.name}</strong>
+                <span
+                  className={`ml-2 inline-block rounded-full border px-1.5 py-px align-middle font-mono text-[0.62rem] uppercase ${
+                    stage.state === "in review" ? "border-warn/50 text-warn" : "border-line text-muted"
+                  }`}
+                >
+                  {stage.state}
+                </span>
+                <br />
+                {stage.gate}
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section id="stop" className="scroll-mt-24">
+          <h2>Stop conditions</h2>
+          <p>The pilot halts immediately — before spending more — when any of these occurs:</p>
+          <ul>
+            <li>provider or resolved-model identity is missing, or configurations collapse to one aggregate identity;</li>
+            <li>canonical and metered costs disagree beyond the reconciliation tolerance;</li>
+            <li>continuation fails to preserve conversation and filesystem state, or the verifier leaks hidden assertions;</li>
+            <li>permissive trajectories support no stable hidden-feedback cap, or ordinary successes hit the step guard;</li>
+            <li>first-submit and repair-loop data show no meaningful task or model separation — more seeds cannot fix a task-signal failure;</li>
+            <li>core grant draw would exceed $200 before targeted confirmation, or the core claim would require personal API spend.</li>
+          </ul>
+          <p>
+            The full sequence, funding rules, and go/no-go criteria are preregistered in the{" "}
+            <a href={sourceFileUrl(manifest.documents.pilot_protocol.source_path)}>pilot protocol</a> in the benchmark
+            repository.
+          </p>
+        </section>
+      </article>
+    </DocPage>
+  );
+}

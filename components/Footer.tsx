@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="mt-8 border-t border-line bg-plane">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="waterline mb-10" aria-hidden />
-        <div className="grid gap-8 sm:grid-cols-[1.45fr_0.9fr_1fr_1fr]">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.35fr_0.85fr_0.95fr_1fr_0.85fr]">
           <div>
             <div className="flex items-center gap-2.5 text-ink">
               <Logo className="h-7 w-7" />
@@ -22,10 +22,28 @@ export default function Footer() {
             <div className="eyebrow mb-3">Explore</div>
             <ul className="space-y-2 text-sm">
               {[
-                ["#chart", "Measured leaderboard"],
-                ["#foil", "Deep end vs shallow end"],
-                ["#suite", "Task suite"],
-                ["#method", "Method"],
+                ["/#chart", "Measured leaderboard"],
+                ["/#foil", "Deep end vs shallow end"],
+                ["/#suite", "Task suite"],
+                ["/#method", "Method"],
+              ].map(([href, label]) => (
+                <li key={href}>
+                  <a href={href} className="text-ink-2 transition-colors hover:text-brand">
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Research">
+            <div className="eyebrow mb-3">Research</div>
+            <ul className="space-y-2 text-sm">
+              {[
+                ["/methodology", "Methodology"],
+                ["/paper", "Working paper"],
+                ["/pilot", "Pilot status"],
+                ["/data", "Data & downloads"],
               ].map(([href, label]) => (
                 <li key={href}>
                   <a href={href} className="text-ink-2 transition-colors hover:text-brand">

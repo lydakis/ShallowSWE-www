@@ -4,6 +4,7 @@ import ChartSection from "@/components/ChartSection";
 import FoilSection from "@/components/FoilSection";
 import Suite from "@/components/Suite";
 import Method from "@/components/Method";
+import ResearchBand from "@/components/ResearchBand";
 import Footer from "@/components/Footer";
 import StickyMixer from "@/components/StickyMixer";
 import { WeightsProvider } from "@/lib/weights";
@@ -116,6 +117,7 @@ export default function Home() {
             <FoilSection />
             <Suite />
             <Method />
+            <ResearchBand />
           </main>
           <Footer />
         </ModelSelectionProvider>

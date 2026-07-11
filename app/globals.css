@@ -242,3 +242,233 @@ body {
   overflow-x: auto;
   scrollbar-width: thin;
 }
+
+/* --- Document pages (/methodology, /paper, /pilot, /data) ------------------ */
+.doc-prose {
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+.doc-prose > :first-child {
+  margin-top: 0;
+}
+.doc-prose h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 1.55rem;
+  line-height: 1.25;
+  margin: 3rem 0 1rem;
+  scroll-margin-top: 5.5rem;
+}
+.doc-prose h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 1.15rem;
+  line-height: 1.35;
+  margin: 2.25rem 0 0.75rem;
+  scroll-margin-top: 5.5rem;
+}
+.doc-prose h4 {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 1rem;
+  margin: 1.75rem 0 0.5rem;
+  scroll-margin-top: 5.5rem;
+}
+.doc-prose p {
+  margin: 0.9rem 0;
+}
+.doc-prose strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+.doc-prose a {
+  color: var(--brand);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--brand) 35%, transparent);
+  text-underline-offset: 3px;
+}
+.doc-prose a:hover {
+  text-decoration-color: var(--brand);
+}
+.doc-prose ul,
+.doc-prose ol {
+  margin: 0.9rem 0;
+  padding-left: 1.4rem;
+}
+.doc-prose ul {
+  list-style: none;
+  padding-left: 1.1rem;
+}
+.doc-prose ul > li {
+  position: relative;
+  margin: 0.4rem 0;
+}
+.doc-prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: -1.1rem;
+  top: 0.72em;
+  height: 5px;
+  width: 5px;
+  border-radius: 9999px;
+  background: var(--waterline);
+}
+.doc-prose ol {
+  list-style: decimal;
+}
+.doc-prose ol > li {
+  margin: 0.4rem 0;
+  padding-left: 0.25rem;
+}
+.doc-prose ol > li::marker {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--muted);
+}
+.doc-prose blockquote {
+  margin: 1.25rem 0;
+  padding: 0.75rem 1.1rem;
+  border-left: 2px solid var(--waterline);
+  border-radius: 0 10px 10px 0;
+  background: var(--surface-2);
+}
+.doc-prose blockquote p {
+  margin: 0.35rem 0;
+}
+.doc-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.1em 0.35em;
+}
+.doc-prose pre {
+  margin: 1.25rem 0;
+  padding: 1rem 1.2rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+.doc-prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.82rem;
+  color: var(--ink-2);
+}
+.doc-prose hr {
+  margin: 2.5rem 0;
+  border: none;
+  border-top: 1px solid var(--line);
+}
+.table-scroll {
+  margin: 1.25rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.doc-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.doc-prose th {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  text-align: left;
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--line-strong);
+  white-space: nowrap;
+}
+.doc-prose td {
+  padding: 0.55rem 0.9rem;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+  min-width: 7rem;
+}
+.doc-prose tr > :first-child {
+  min-width: 9rem;
+}
+.doc-prose th[align="right"],
+.doc-prose td[align="right"] {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.doc-prose figure {
+  margin: 1.5rem 0;
+  padding: 0.9rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.doc-prose figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+.doc-prose figcaption {
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.55;
+  color: #74818a;
+}
+.doc-prose .katex-display {
+  margin: 1.4rem 0;
+  padding: 0.25rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.doc-prose .katex {
+  font-size: 1.06em;
+  color: var(--ink);
+}
+
+/* The depth-gauge table of contents: reading down = descending the pool */
+.depth-rail {
+  position: relative;
+  border-left: 1px solid var(--line);
+}
+.depth-rail a {
+  position: relative;
+  display: block;
+  padding: 0.3rem 0 0.3rem 1rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--muted);
+  transition: color 120ms ease;
+}
+.depth-rail a:hover {
+  color: var(--ink);
+}
+.depth-rail a::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 50%;
+  height: 1px;
+  width: 0.45rem;
+  background: var(--line-strong);
+  transition: width 120ms ease, background-color 120ms ease;
+}
+.depth-rail a[aria-current="true"] {
+  color: var(--ink);
+}
+.depth-rail a[aria-current="true"]::before {
+  width: 0.7rem;
+  background: var(--waterline);
+  box-shadow: 0 0 8px 0 var(--waterline-glow);
+}

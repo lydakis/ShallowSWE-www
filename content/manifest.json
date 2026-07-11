@@ -1,0 +1,44 @@
+{
+  "schema_version": "shallowswe.www_content_manifest.v1",
+  "synced_at": "2026-07-11T22:04:23.641Z",
+  "source_repo": "https://github.com/lydakis/ShallowSWE",
+  "source_commit": "65d7516f27af6de0438cd1fcd3c4ce1ffc4aca81",
+  "source_commit_date": "2026-07-11T17:51:32-04:00",
+  "source_worktree_dirty": false,
+  "methodology_version": "v0.4.2",
+  "methodology_status": "working paper — freeze candidate, under independent review",
+  "pilot_protocol_version": "v0.3",
+  "pilot_status": "independent review in progress; no official runs started",
+  "documents": {
+    "paper": {
+      "source_path": "docs/white-paper-v0.4.2.md",
+      "sha256": "5245372f5f99df6e72e40ea14b0d77cfc8f22580536009a9b5cb1a441d7cd22a",
+      "committed_in_source": true
+    },
+    "paper_pdf": {
+      "source_path": "paper/main.pdf",
+      "public_path": "/paper/shallowswe-working-paper-v0.4.2.pdf",
+      "sha256": "b59e5db2bf20a2471fabc9245830cf91f6ab8c49382c461cdb3695cb71fa3322",
+      "committed_in_source": true
+    },
+    "pilot_protocol": {
+      "source_path": "docs/six-task-pilot-protocol-v0.3.md",
+      "sha256": "9634f2c6d09a3f9696808e83a61715ed64e5b1f02d6befbcad0820d90b2efeb2",
+      "committed_in_source": true
+    },
+    "figures": [
+      {
+        "name": "figure1_suite.png",
+        "sha256": "4b8f7881136c7c19307a660782f84475c4719ccfb44dd1d8b9a5c34bfac4a736"
+      },
+      {
+        "name": "figure2_pipeline.png",
+        "sha256": "73c37365358f810c0883b36ef2ee1d560c714a42a69b9bbbaabb776a6f9f4ab7"
+      },
+      {
+        "name": "figure3_metrics.png",
+        "sha256": "e4c1b7bf9c3cf725280483b72a36d927771f82fcd905138d3214f1e03b07f74f"
+      }
+    ]
+  }
+}

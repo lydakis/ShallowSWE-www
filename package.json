@@ -7,11 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "sync-content": "node scripts/sync-content.mjs",
     "test": "node --no-warnings --test --experimental-strip-types tests/*.test.ts"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
     "geist": "^1.7.2",
+    "katex": "^0.17.0",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -24,6 +26,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "marked": "^18.0.6",
     "playwright": "^1.61.1",
     "tailwindcss": "^4",
     "typescript": "^5"

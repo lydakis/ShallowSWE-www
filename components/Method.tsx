@@ -27,14 +27,17 @@ export default function Method() {
         <p>
           A scored row is one model working one task from a fixed starting seed. Each time the agent declares done,
           the benchmark runs hidden programmatic tests. If they fail, the same agent keeps working until success or a
-          cap. CPSC measures model API spend, not developer time or total cost of ownership.
+          cap. CPSC measures model API spend, not developer time or total cost of ownership.{" "}
+          <a href="/methodology" className="font-medium text-brand transition-colors hover:text-brand-bright">
+            Read the full methodology →
+          </a>
         </p>
       </SectionHeader>
 
       <div className="mt-8 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
         {/* formula */}
         <div className="panel flex flex-col justify-center p-6 sm:p-8">
-          <div className="eyebrow mb-5">the metric</div>
+          <div className="eyebrow mb-5">the metric · realized CPSC</div>
           <div className="flex items-center gap-4 font-display">
             <span className="text-2xl text-ink sm:text-3xl">CPSC</span>
             <span className="text-2xl text-muted sm:text-3xl">=</span>
@@ -45,7 +48,12 @@ export default function Method() {
           </div>
           <p className="mt-6 border-t border-line pt-4 text-sm leading-relaxed text-ink-2">
             Weighted views use the same ratio form: weighted mean spend divided by weighted solve rate. The site does
-            not average per-task CPSC values directly.
+            not average per-task CPSC values directly. This preview charges failures their actual spend
+            (<b className="font-semibold text-ink">realized CPSC</b>); the v1 headline will be{" "}
+            <a href="/methodology#metric" className="text-brand transition-colors hover:text-brand-bright">
+              reference-budget CPSC
+            </a>
+            , which needs calibrated task budgets that don&apos;t exist yet.
           </p>
         </div>
 
@@ -67,7 +75,12 @@ export default function Method() {
         <p className="flex-1 text-sm leading-relaxed text-ink-2">
           <b className="font-semibold text-ink">Measured.</b>{" "}Every ShallowSWE number on this page comes from the
           bounded repair-loop rows, with dollar values derived from the dated{" "}
-          <span className="font-mono text-ink">openrouter {PRICE_SHEET_DATE}</span> price sheet.
+          <span className="font-mono text-ink">openrouter {PRICE_SHEET_DATE}</span> price sheet. All exports, price
+          sheets, and licenses live on the{" "}
+          <a href="/data" className="text-brand transition-colors hover:text-brand-bright">
+            data page
+          </a>
+          .
         </p>
         <a
           href="/data/rollouts.json"

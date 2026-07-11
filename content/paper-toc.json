@@ -1,0 +1,86 @@
+[
+  {
+    "id": "abstract",
+    "label": "Abstract"
+  },
+  {
+    "id": "1-introduction",
+    "label": "1. Introduction"
+  },
+  {
+    "id": "2-scope-and-design-principles",
+    "label": "2. Scope and Design Principles"
+  },
+  {
+    "id": "3-related-work",
+    "label": "3. Related Work"
+  },
+  {
+    "id": "4-benchmark-overview",
+    "label": "4. Benchmark Overview"
+  },
+  {
+    "id": "5-task-sampling-construction-and-quality-assurance",
+    "label": "5. Task Sampling, Construction, and Quality Assurance"
+  },
+  {
+    "id": "6-calibration",
+    "label": "6. Calibration"
+  },
+  {
+    "id": "7-bounded-repair-loop-protocol",
+    "label": "7. Bounded Repair-Loop Protocol"
+  },
+  {
+    "id": "8-metric-family",
+    "label": "8. Metric Family"
+  },
+  {
+    "id": "9-workload-index-and-global-ranking",
+    "label": "9. Workload Index and Global Ranking"
+  },
+  {
+    "id": "10-experimental-setup-claim-tiers-and-prototype-evidence",
+    "label": "10. Experimental Setup, Claim Tiers, and Prototype Evidence"
+  },
+  {
+    "id": "11-statistical-analysis-identifiability-and-reporting",
+    "label": "11. Statistical Analysis, Identifiability, and Reporting"
+  },
+  {
+    "id": "12-hypotheses-and-planned-analyses",
+    "label": "12. Hypotheses and Planned Analyses"
+  },
+  {
+    "id": "13-limitations",
+    "label": "13. Limitations"
+  },
+  {
+    "id": "14-reproducibility-and-release-policy",
+    "label": "14. Reproducibility and Release Policy"
+  },
+  {
+    "id": "15-discussion",
+    "label": "15. Discussion"
+  },
+  {
+    "id": "16-conclusion",
+    "label": "16. Conclusion"
+  },
+  {
+    "id": "appendix-a-v042-freeze-decision-log",
+    "label": "Appendix A. v0.4.2 Freeze Decision Log"
+  },
+  {
+    "id": "appendix-b-open-constants-before-report-grade-freeze",
+    "label": "Appendix B. Open Constants Before Report-Grade Freeze"
+  },
+  {
+    "id": "appendix-c-minimum-schema-migration",
+    "label": "Appendix C. Minimum Schema Migration"
+  },
+  {
+    "id": "references",
+    "label": "References"
+  }
+]

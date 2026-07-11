@@ -1,33 +1,38 @@
 import Link from "next/link";
 import Logo from "./Logo";
+import DocNavLinks from "./docs/DocNavLinks";
 import ThemeToggle from "./ThemeToggle";
 
 const links = [
-  { href: "#chart", label: "Leaderboard" },
-  { href: "#foil", label: "Deep vs shallow" },
-  { href: "#suite", label: "Suite" },
-  { href: "#method", label: "Method" },
+  { href: "/#chart", label: "Leaderboard" },
+  { href: "/#foil", label: "Deep vs shallow" },
+  { href: "/#suite", label: "Suite" },
+  { href: "/#method", label: "Method" },
 ];
 
-export default function Nav() {
+export default function Nav({ sectionLinks = true }: { sectionLinks?: boolean }) {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-plane/80 backdrop-blur-md">
       <nav className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6">
-        <Link href="#top" className="flex items-center gap-2.5 text-ink">
+        <Link href="/#top" className="flex items-center gap-2.5 text-ink">
           <Logo className="h-7 w-7 text-ink" />
           <span className="font-display text-[1.05rem]">ShallowSWE</span>
         </Link>
-        <div className="ml-4 hidden items-center gap-1 md:flex">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="rounded-full px-3 py-1.5 text-sm text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink"
-            >
-              {l.label}
-            </Link>
-          ))}
-        </div>
+        {sectionLinks ? (
+          <div className="ml-4 hidden items-center gap-1 md:flex">
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="rounded-full px-3 py-1.5 text-sm text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <DocNavLinks />
+        )}
         <div className="ml-auto flex items-center gap-2">
           <a
             href="/data/rollouts.json"
