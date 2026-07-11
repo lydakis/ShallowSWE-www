@@ -7,12 +7,14 @@ export default function Logo({ className = "" }: { className?: string }) {
       aria-hidden
       role="img"
     >
+      {/* pool wall */}
+      <rect x="1.5" y="1.5" width="25" height="25" rx="7" stroke="currentColor" strokeOpacity="0.3" strokeWidth="1.5" />
       {/* a model bobbing in the shallow end */}
-      <circle cx="14" cy="14.6" r="3.9" fill="currentColor" />
+      <circle cx="14" cy="14.8" r="3.3" fill="currentColor" />
       <path
-        d="M3 17.4c2.75 0 2.75 1.9 5.5 1.9s2.75-1.9 5.5-1.9 2.75 1.9 5.5 1.9 2.75-1.9 5.5-1.9"
+        d="M4.5 17.5c2.375 0 2.375 1.7 4.75 1.7s2.375-1.7 4.75-1.7 2.375 1.7 4.75 1.7 2.375-1.7 4.75-1.7"
         stroke="var(--waterline)"
-        strokeWidth="2.1"
+        strokeWidth="1.9"
         strokeLinecap="round"
       />
     </svg>
