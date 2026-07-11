@@ -90,7 +90,13 @@ export default function Footer() {
             ShallowSWE is independent and not affiliated with DeepSWE, Datacurve, Harbor, or Pier. Displayed values are
             from the bounded repair-loop preview snapshot shown in the data manifest.
           </p>
-          <p className="mt-2 font-mono">© {new Date().getFullYear()} ShallowSWE · the shallow end of the pool</p>
+          <p className="mt-2 font-mono">
+            © {new Date().getFullYear()}{" "}
+            <a href="https://github.com/lydakis" className="transition-colors hover:text-brand">
+              George Lydakis
+            </a>{" "}
+            · ShallowSWE · the shallow end of the pool
+          </p>
         </div>
       </div>
     </footer>

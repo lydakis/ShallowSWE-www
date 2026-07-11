@@ -1,0 +1,23 @@
+ShallowSWE Data License
+
+Copyright (c) 2026 George Lydakis
+
+The original ShallowSWE benchmark results in this directory are licensed under
+the Creative Commons Attribution 4.0 International License (CC BY 4.0):
+
+https://creativecommons.org/licenses/by/4.0/
+
+This license covers ShallowSWE-authored measurements, aggregates, manifests,
+and workload definitions. Attribution should identify "ShallowSWE" and
+"George Lydakis" and link to https://shallowswe.com/.
+
+Excluded material
+
+This license does not apply to third-party names, trademarks, or source data.
+In particular, DeepSWE-derived values in deepswe-comparison.json and provider
+pricing snapshots in prices-openrouter-*.json remain subject to their original
+sources and applicable terms. No affiliation with or endorsement by DeepSWE,
+Datacurve, OpenRouter, model providers, Harbor, or Pier is implied.
+
+The CC BY 4.0 license does not grant trademark, patent, privacy, publicity, or
+other rights beyond the rights expressly covered by that license.

@@ -35,6 +35,7 @@ export const SITE_DESCRIPTION =
   "ShallowSWE is an AI coding benchmark comparing GPT, Claude, Gemini, Grok, Kimi, and GLM model configs by cost per verified success.";
 export const SITE_OG_TITLE = "Choose coding models by cost of verified work | ShallowSWE";
 export const SITE_LAST_MODIFIED = runManifest.generated_at;
+export const SITE_DATA_LICENSE_URL = `${SITE_URL}/data/LICENSE.txt`;
 export const SITE_BENCHMARKED_MODEL_CONFIGS = [...new Set(aggregateByModel.map((row) => row.model_config))];
 export const SITE_BENCHMARKED_MODELS = [...new Set(SITE_BENCHMARKED_MODEL_CONFIGS.map(displayModelName))];
 export const SITE_MODEL_KEYWORDS = [
