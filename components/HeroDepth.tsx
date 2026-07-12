@@ -5,6 +5,7 @@ import { useHue } from "@/lib/hues";
 import { useModelSelection } from "@/lib/model-selection";
 import { useWeights } from "@/lib/weights";
 import { logScale, logTicks, niceLogBounds } from "@/lib/scale";
+import { selectDepthGaugeModels } from "@/lib/depth-gauge";
 
 const VB_W = 480;
 const VB_H = 456;
@@ -16,7 +17,11 @@ export default function HeroDepth() {
   const hue = useHue();
   const { weights } = useWeights();
   const { selectedModelIdSet } = useModelSelection();
-  const aggregates = weightedAggregates(weights).filter((a) => selectedModelIdSet.has(a.modelId) && a.cpsc != null);
+  const selectedAggregates = weightedAggregates(weights).filter(
+    (a) => selectedModelIdSet.has(a.modelId) && a.cpsc != null,
+  );
+  const gaugeModelIds = new Set(selectDepthGaugeModels(selectedAggregates.map((a) => a.modelId)));
+  const aggregates = selectedAggregates.filter((a) => gaugeModelIds.has(a.modelId));
   if (aggregates.length === 0) {
     return (
       <figure className="flex min-h-[18rem] items-center justify-center">
@@ -124,6 +129,9 @@ export default function HeroDepth() {
       </svg>
       <figcaption className="mt-3 px-1 font-mono text-[0.7rem] leading-relaxed text-muted">
         Cost per successful completion · log scale
+        {selectedAggregates.length > aggregates.length && (
+          <> · Representative models · {aggregates.length} of {selectedAggregates.length} shown</>
+        )}
       </figcaption>
       <style>{`
         .settle { animation: settle 0.9s cubic-bezier(0.22,1,0.36,1) both; }
