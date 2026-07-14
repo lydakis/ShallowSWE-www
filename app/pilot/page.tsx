@@ -7,7 +7,7 @@ import manifest from "@/content/manifest.json";
 export const metadata: Metadata = {
   title: "Pilot status",
   description:
-    "Status of the ShallowSWE six-task protocol-validation pilot: 112 official trajectories, stage gates, stop conditions, and the current review state. No official runs have started.",
+    "Status of the ShallowSWE six-task protocol-validation pilot: the candidate panel, independent review, 112-trajectory plan, and stage gates. No official runs have started.",
   alternates: { canonical: "/pilot" },
 };
 
@@ -28,8 +28,8 @@ const stages = [
   },
   {
     name: "Development triage",
-    gate: "About 66 subscription-funded trajectories to find packaging defects cheaply. Never counted as official evidence.",
-    state: "pending",
+    gate: "A valid N=3 Codex/Pier/Docker floor was audited for all six candidates. Outcomes remain quarantined development evidence and are withheld during independent review.",
+    state: "complete",
   },
   {
     name: "Two-task canary",
@@ -65,7 +65,8 @@ export default function PilotPage() {
       title="Six-task protocol-validation pilot"
       chips={[
         { label: `Protocol ${manifest.pilot_protocol_version} · freeze candidate` },
-        { label: "Independent review in progress", tone: "warn" },
+        { label: "Blind review packet ready", tone: "warn" },
+        { label: "Development floor complete" },
         { label: "No official runs started" },
       ]}
       lede={
@@ -83,9 +84,11 @@ export default function PilotPage() {
           <h2>Current status</h2>
           <p>
             The pilot protocol and the <a href="/paper">v0.4.2 working paper</a> are freeze candidates under
-            independent review. <strong>No official metered runs have started</strong>; the numbers below are the
-            preregistered plan, not results. The <Link href="/#chart">preview leaderboard</Link>{" "}on the homepage comes from
-            earlier plumbing-validation runs and is unrelated to this pilot&apos;s evidence.
+            independent review. Six candidate task versions are hash-frozen, and a valid <code>N=3</code> development
+            floor has been audited through Codex, Pier, and Docker. Those outcomes are quarantined and withheld until
+            blind construct review closes. <strong>No official metered runs have started</strong>; the numbers below
+            are the preregistered plan, not results. The <Link href="/#chart">preview leaderboard</Link>{" "}on the
+            homepage comes from earlier plumbing-validation runs and is unrelated to this pilot&apos;s evidence.
           </p>
         </section>
 
@@ -114,53 +117,42 @@ export default function PilotPage() {
         <section id="tasks" className="scroll-mt-24">
           <h2>The six-task panel</h2>
           <p>
-            Pressure labels are hypotheses until the pilot measures them; a task is never enlarged merely to force
-            failure. Each task needs an independent construct reviewer, executed quality evidence, and frozen hashes
-            before any official run.
+            Two candidates per work-product category are selected and hash-frozen for independent review. Task
+            identities, authored pressure hypotheses, and development outcomes remain off this public page until the
+            review closes, preventing calibration evidence from anchoring construct judgments.
           </p>
           <div className="table-scroll">
             <table>
               <thead>
                 <tr>
                   <th>Category</th>
-                  <th>Lower-pressure hypothesis</th>
-                  <th>Elevated-pressure hypothesis</th>
+                  <th align="right">Candidates</th>
+                  <th>Current gate</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>Artifact</td>
-                  <td>
-                    <code>env-flags-to-json</code> †
-                  </td>
-                  <td>
-                    <code>access-log-to-incidents</code> ‡
-                  </td>
+                  <td align="right">2</td>
+                  <td>Blind construct review pending</td>
                 </tr>
                 <tr>
                   <td>Code</td>
-                  <td>
-                    <code>invoice-cli-regression-test-fix</code>
-                  </td>
-                  <td>
-                    <code>invoice-multi-source-merge</code> †‡
-                  </td>
+                  <td align="right">2</td>
+                  <td>Blind construct review pending</td>
                 </tr>
                 <tr>
                   <td>Workflow</td>
-                  <td>
-                    <code>config-flag-ignored</code>
-                  </td>
-                  <td>
-                    <code>merge-divergent-config-branches</code> ‡
-                  </td>
+                  <td align="right">2</td>
+                  <td>Blind construct review pending</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p>
-            † canary task — runs first to validate identity and accounting. ‡ preregistered confirmation task — one per
-            category completes the full fresh-confirmation phase.
+            Reviewers receive the instruction, visible repository, redacted metadata, and hash-bound review form
+            before any verifier-quality evidence. Solutions, hidden tests, model trajectories, pass rates, and authored
+            pressure labels are excluded from the blind phase.
           </p>
         </section>
 
