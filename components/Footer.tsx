@@ -63,7 +63,7 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="/data/prices-openrouter-2026-07-17-site-plus-kimi-k3.json" download className="font-mono text-ink-2 transition-colors hover:text-brand">
+                <a href="/data/prices-openrouter-2026-07-18-site-plus-inkling-preview.json" download className="font-mono text-ink-2 transition-colors hover:text-brand">
                   price-sheet.json
                 </a>
               </li>

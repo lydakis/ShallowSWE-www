@@ -38,6 +38,7 @@ const downloads = [
 ] as const;
 
 const priceSheets = [
+  "prices-openrouter-2026-07-18-site-plus-inkling-preview.json",
   "prices-openrouter-2026-07-17-site-plus-kimi-k3.json",
   "prices-openrouter-2026-07-09.json",
   "prices-openrouter-2026-07-08.json",
@@ -73,7 +74,7 @@ export default function DataPage() {
             <a href="/methodology#metric">metric family</a>.
           </p>
           <p>
-            The preview is nearly saturated by design (753 successes in 756 loops): it validates the repair-loop
+            The preview is nearly saturated by design (852 successes in 862 scored loops): it validates the repair-loop
             machinery, accounting, and export path rather than discriminating model capability.
           </p>
         </section>

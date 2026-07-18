@@ -1,6 +1,6 @@
 import aggregateByModelJson from "@/public/data/aggregate-by-model.json";
 import aggregateByTaskModelJson from "@/public/data/aggregate-by-task-model.json";
-import priceSheetJson from "@/public/data/prices-openrouter-2026-07-17-site-plus-kimi-k3.json";
+import priceSheetJson from "@/public/data/prices-openrouter-2026-07-18-site-plus-inkling-preview.json";
 import runManifestJson from "@/public/data/run-manifest.json";
 import deepsweComparisonJson from "@/public/data/deepswe-comparison.json";
 import rolloutsJson from "@/public/data/rollouts.json";
@@ -474,6 +474,19 @@ export const models: ModelDef[] = [
     effort: "high",
     hueLight: "#0f9b8e",
     hueDark: "#20c7b7",
+  },
+  {
+    id: "inkling-high",
+    modelConfig: "openrouter/thinkingmachines/inkling[high]",
+    label: "Inkling",
+    short: "Inkling high",
+    familyShort: "Inkling",
+    vendor: "Thinking Machines",
+    size: "mid",
+    priceKey: "thinkingmachines/inkling",
+    effort: "high",
+    hueLight: "#5367d8",
+    hueDark: "#8796ff",
   },
 ];
 

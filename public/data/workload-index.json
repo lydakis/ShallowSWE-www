@@ -159,6 +159,17 @@
       "partial_basket_tokens_per_success": 33137.16393219878
     },
     {
+      "model_config": "openrouter/thinkingmachines/inkling[high]",
+      "model": "openrouter/thinkingmachines/inkling",
+      "reasoning_effort": "high",
+      "covered_weight": 1.0000000000000002,
+      "weighted_solve_rate": 0.8531500000000001,
+      "basket_cpsc": 0.21829748835531068,
+      "partial_basket_cpsc": 0.21829748835531068,
+      "basket_tokens_per_success": 673219.6921408894,
+      "partial_basket_tokens_per_success": 673219.6921408894
+    },
+    {
       "model_config": "openrouter/x-ai/grok-4.5[high]",
       "model": "openrouter/x-ai/grok-4.5",
       "reasoning_effort": "high",

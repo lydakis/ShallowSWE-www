@@ -15,6 +15,7 @@ const MODEL_NAME_OVERRIDES: Record<string, string> = {
   "gpt-5.6-terra": "GPT-5.6 Terra",
   "gpt-5.6-sol": "GPT-5.6 Sol",
   "grok-4.5": "Grok 4.5",
+  inkling: "Inkling",
   "glm-5.2": "GLM 5.2",
 };
 
