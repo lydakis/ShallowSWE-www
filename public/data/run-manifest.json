@@ -2,7 +2,7 @@
   "schema_version": "shallowswe.repair_loop_site_manifest.v0.1",
   "name": "shallowswe-repair-loop-preview-n3-18-v0.2-site-plus-inkling-high",
   "snapshot_id": "shallowswe-v0.2-website-preview-plus-inkling-high-2026-07-18",
-  "generated_at": "2026-07-18T14:10:17.745600Z",
+  "generated_at": "2026-07-18T14:53:14.199761Z",
   "status": "preview_mixed_snapshot",
   "price_sheet_file": "prices-openrouter-2026-07-18-site-plus-inkling-preview.json",
   "provenance": {

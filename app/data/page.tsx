@@ -74,7 +74,7 @@ export default function DataPage() {
             <a href="/methodology#metric">metric family</a>.
           </p>
           <p>
-            The preview is nearly saturated by design (852 successes in 862 scored loops): it validates the repair-loop
+            The preview is nearly saturated by design (853 successes in 864 scored loops): it validates the repair-loop
             machinery, accounting, and export path rather than discriminating model capability.
           </p>
         </section>
