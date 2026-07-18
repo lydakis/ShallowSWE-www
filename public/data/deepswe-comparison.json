@@ -1,7 +1,7 @@
 {
   "schema_version": "shallowswe.deepswe_comparison.v0.1",
   "deepswe_source": "deep-swe",
-  "deepswe_generated_at": "2026-07-09T20:23:14.264468+00:00",
+  "deepswe_generated_at": "2026-07-17T08:18:55.870582+00:00",
   "shallowswe_schema_version": "shallowswe.workload_index.repair_loop.v0.1",
   "rows": [
     {
@@ -139,6 +139,23 @@
       "deepswe_cpsc": 9.221901318550724,
       "deepswe_mean_input_tokens": 13008041.482300885,
       "deepswe_mean_output_tokens": 59297.24778761062
+    },
+    {
+      "model_config": "openrouter/x-ai/grok-4.5[high]",
+      "model": "openrouter/x-ai/grok-4.5",
+      "reasoning_effort": "high",
+      "shallowswe_basket_cpsc": 0.05110324656666665,
+      "shallowswe_partial_basket_cpsc": 0.05110324656666665,
+      "shallowswe_basket_tokens_per_success": 40260.746583333326,
+      "shallowswe_covered_weight": 1.0000000000000002,
+      "deepswe_config": "mini_swe_agent_grok_4_5_high",
+      "deepswe_model": "grok-4-5",
+      "deepswe_reasoning_effort": "high",
+      "deepswe_pass_rate": 0.5376106194690266,
+      "deepswe_mean_cost_usd": 2.4157481725663716,
+      "deepswe_cpsc": 4.493490427983539,
+      "deepswe_mean_input_tokens": 4059182.975663717,
+      "deepswe_mean_output_tokens": 35525.33185840708
     },
     {
       "model_config": "openrouter/anthropic/claude-sonnet-5[low]",
@@ -887,6 +904,23 @@
       "deepswe_cpsc": 19.636120955325442,
       "deepswe_mean_input_tokens": 17106307.721238937,
       "deepswe_mean_output_tokens": 275777.50884955755
+    },
+    {
+      "model_config": "openrouter/moonshotai/kimi-k3[max]",
+      "model": "openrouter/moonshotai/kimi-k3",
+      "reasoning_effort": "max",
+      "shallowswe_basket_cpsc": 0.37478358945,
+      "shallowswe_partial_basket_cpsc": 0.37478358945,
+      "shallowswe_basket_tokens_per_success": 353368.88728333334,
+      "shallowswe_covered_weight": 1.0000000000000002,
+      "deepswe_config": "mini_swe_agent_kimi_k3_max",
+      "deepswe_model": "kimi-k3",
+      "deepswe_reasoning_effort": "max",
+      "deepswe_pass_rate": 0.6851441241685144,
+      "deepswe_mean_cost_usd": 4.654682129933482,
+      "deepswe_cpsc": 6.793726992233011,
+      "deepswe_mean_input_tokens": 9695436.246119734,
+      "deepswe_mean_output_tokens": 81499.84257206209
     }
   ]
 }
