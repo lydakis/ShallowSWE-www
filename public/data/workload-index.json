@@ -93,6 +93,17 @@
       "partial_basket_tokens_per_success": 116587.77001666665
     },
     {
+      "model_config": "openrouter/moonshotai/kimi-k3[max]",
+      "model": "openrouter/moonshotai/kimi-k3",
+      "reasoning_effort": "max",
+      "covered_weight": 1.0000000000000002,
+      "weighted_solve_rate": 1.0,
+      "basket_cpsc": 0.37478358945,
+      "partial_basket_cpsc": 0.37478358945,
+      "basket_tokens_per_success": 353368.88728333334,
+      "partial_basket_tokens_per_success": 353368.88728333334
+    },
+    {
       "model_config": "openrouter/openai/gpt-5.5[low]",
       "model": "openrouter/openai/gpt-5.5",
       "reasoning_effort": "low",

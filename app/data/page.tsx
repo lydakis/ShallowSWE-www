@@ -37,7 +37,12 @@ const downloads = [
   ["run-manifest.json", "Run manifest", "Snapshot metadata: protocol caps, panel, seeds, and budget gate."],
 ] as const;
 
-const priceSheets = ["prices-openrouter-2026-07-09.json", "prices-openrouter-2026-07-08.json", "prices-openrouter-2026-07-03.json"] as const;
+const priceSheets = [
+  "prices-openrouter-2026-07-17-site-plus-kimi-k3.json",
+  "prices-openrouter-2026-07-09.json",
+  "prices-openrouter-2026-07-08.json",
+  "prices-openrouter-2026-07-03.json",
+] as const;
 
 export default function DataPage() {
   return (

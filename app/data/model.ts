@@ -1,6 +1,6 @@
 import aggregateByModelJson from "@/public/data/aggregate-by-model.json";
 import aggregateByTaskModelJson from "@/public/data/aggregate-by-task-model.json";
-import priceSheetJson from "@/public/data/prices-openrouter-2026-07-09.json";
+import priceSheetJson from "@/public/data/prices-openrouter-2026-07-17-site-plus-kimi-k3.json";
 import runManifestJson from "@/public/data/run-manifest.json";
 import deepsweComparisonJson from "@/public/data/deepswe-comparison.json";
 import rolloutsJson from "@/public/data/rollouts.json";
@@ -448,6 +448,19 @@ export const models: ModelDef[] = [
     effort: null,
     hueLight: "#008300",
     hueDark: "#2e9e6b",
+  },
+  {
+    id: "kimi-k3-max",
+    modelConfig: "openrouter/moonshotai/kimi-k3[max]",
+    label: "Kimi K3",
+    short: "Kimi K3 max",
+    familyShort: "Kimi K3",
+    vendor: "Moonshot",
+    size: "large",
+    priceKey: "moonshotai/kimi-k3",
+    effort: "max",
+    hueLight: "#7047c8",
+    hueDark: "#a98bea",
   },
   {
     id: "grok-4-5-high",

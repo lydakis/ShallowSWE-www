@@ -1,9 +1,66 @@
 {
   "schema_version": "shallowswe.repair_loop_site_manifest.v0.1",
-  "name": "shallowswe-repair-loop-preview-n3-18-v0.2-site-plus-gpt-5-6-low-clean",
-  "snapshot_id": "shallowswe-v0.2-large-replacement-candidate-2026-07-05",
-  "generated_at": "2026-07-09T19:57:27.225403Z",
-  "status": "preview_partial_clean",
+  "name": "shallowswe-repair-loop-preview-n3-18-v0.2-site-plus-kimi-k3-max",
+  "snapshot_id": "shallowswe-v0.2-website-preview-plus-kimi-k3-max-2026-07-17",
+  "generated_at": "2026-07-17T23:52:16.373498Z",
+  "status": "preview_mixed_snapshot",
+  "price_sheet_file": "prices-openrouter-2026-07-17-site-plus-kimi-k3.json",
+  "provenance": {
+    "state": "mixed",
+    "mixed_snapshot": true,
+    "row_count": 810,
+    "missing_field_counts": {
+      "provider_route": 810
+    },
+    "repo_commit_shas": [
+      "1ad573839eb0b98830642bdac42b37988bdccd80",
+      "7ac05edfa96ac8488311bfa0171f74d8f2540370",
+      "91b06ed80a57aef244691a54b3b5cdacd05c7041",
+      "9ec3c469bba52660d8145ac79f25f5aa56e33ccb",
+      "b43197e4e26b819e656be70d1663135a8e80c57a"
+    ],
+    "price_sheet_versions": [
+      "openrouter-2026-07-03",
+      "openrouter-2026-07-08",
+      "openrouter-2026-07-09",
+      "openrouter-2026-07-17-kimi-k3"
+    ],
+    "runners": [
+      "pier-private-repair-loop-pilot"
+    ],
+    "runner_versions": [
+      "1ad573839eb0b98830642bdac42b37988bdccd80",
+      "7ac05edfa96ac8488311bfa0171f74d8f2540370",
+      "91b06ed80a57aef244691a54b3b5cdacd05c7041",
+      "9ec3c469bba52660d8145ac79f25f5aa56e33ccb",
+      "b43197e4e26b819e656be70d1663135a8e80c57a"
+    ],
+    "inference_gateways": [
+      "openrouter"
+    ],
+    "provider_routes": [],
+    "tasks_with_multiple_verifier_hashes": [
+      "access-log-to-incidents",
+      "billing-revenue-rollup",
+      "cache-invalidates-on-settings-change",
+      "config-flag-ignored",
+      "config-key-rollover",
+      "env-flags-to-json",
+      "invoice-cli-regression-test-fix",
+      "invoice-multi-source-merge",
+      "merge-divergent-config-branches",
+      "support-sla-business-hours"
+    ],
+    "tasks_with_multiple_environment_digests": [
+      "access-log-to-incidents",
+      "billing-revenue-rollup",
+      "config-key-rollover",
+      "post-build-status",
+      "support-sla-business-hours",
+      "ticket-cut-from-bug-report",
+      "ticket-update-dont-duplicate"
+    ]
+  },
   "tasks": [
     "env-flags-to-json",
     "extract-error-fields",
@@ -26,9 +83,23 @@
   ],
   "repair_loop_seeds_per_task_model_config": 3,
   "repair_loop_policy": "N=3 bounded repair-loop preview; same model_config continues after sanitized verifier feedback until pass or cap",
-  "model_panel": "site merged baseline plus panels/shallowswe-gpt-5-6-low-preview.json",
+  "model_panel": "site merged baseline plus panels/shallowswe-kimi-k3-preview.json",
   "agent": "shallowswe-resumable-mini-swe-agent",
-  "runner": "Pier + ShallowSWE repair-loop controller",
+  "runner": "pier-private-repair-loop-pilot",
+  "runners": [
+    "pier-private-repair-loop-pilot"
+  ],
+  "runner_versions": [
+    "1ad573839eb0b98830642bdac42b37988bdccd80",
+    "7ac05edfa96ac8488311bfa0171f74d8f2540370",
+    "91b06ed80a57aef244691a54b3b5cdacd05c7041",
+    "9ec3c469bba52660d8145ac79f25f5aa56e33ccb",
+    "b43197e4e26b819e656be70d1663135a8e80c57a"
+  ],
+  "inference_gateways": [
+    "openrouter"
+  ],
+  "provider_routes": [],
   "protocol": {
     "single_model_run_invariant": true,
     "no_fallbacks": true,
@@ -46,20 +117,36 @@
     ]
   },
   "budget_gate": {
-    "max_budget_usd": 250.0,
-    "global_hard_stop_usd": 250.0,
-    "estimate_artifact": "results/shallowswe-repair-loop-preview-plan-v0.2-gpt-5-6-low-2026-07-09/budget-estimate.json",
+    "max_budget_usd": 30.0,
+    "global_hard_stop_usd": 30.0,
+    "estimate_artifact": "results/shallowswe-repair-loop-preview-n3-18-v0.2-kimi-k3-max-2026-07-17/budget-estimate.json",
     "requires_explicit_approval_if_over_budget": true
   },
   "run_report": {
-    "total_planned_rows": 756,
-    "completed_rows": 756,
-    "skipped_existing_rows": null,
+    "total_planned_rows": 810,
+    "completed_rows": 810,
+    "skipped_existing_rows": 756,
     "cumulative_spend_usd": null,
     "stopped": false,
     "stop_reason": null,
-    "parallelism": 3,
-    "source_output_dir": "results/shallowswe-repair-loop-preview-n3-18-v0.2-site-plus-gpt-5-6-low-2026-07-09"
+    "parallelism": 2,
+    "source_output_dir": "merged existing site snapshot plus results/shallowswe-repair-loop-preview-n3-18-v0.2-kimi-k3-2026-07-17"
   },
-  "partial_rows_exported": 756
+  "partial_rows_exported": 810,
+  "kimi_k3": {
+    "model_config": "openrouter/moonshotai/kimi-k3[max]",
+    "rows": 54,
+    "successes": 54,
+    "solve_rate": 1.0,
+    "list_price_spend_usd": 20.2654434,
+    "retry_history": {
+      "preserved_timeout_attempts": 2,
+      "retries_scored": 2
+    },
+    "reasoning_effort_provenance": {
+      "implicit_provider_default_rows": 18,
+      "explicit_max_rows": 36,
+      "provider_default_at_run_time": "max"
+    }
+  }
 }
