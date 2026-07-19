@@ -105,7 +105,8 @@ export default function Footer() {
 
         <div className="mt-10 border-t border-line pt-6 text-xs leading-relaxed text-muted">
           <p>
-            ShallowSWE is independent and not affiliated with DeepSWE, Datacurve, Harbor, or Pier. Displayed values are
+            ShallowSWE is independent and not affiliated with DeepSWE, Datacurve, Harbor, or Pier. Evaluation compute is
+            supported by Kaggle; sponsors have no role in task selection, scoring, or rankings. Displayed values are
             from the bounded repair-loop preview snapshot shown in the data manifest.
           </p>
           <p className="mt-2 font-mono">

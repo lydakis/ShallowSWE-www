@@ -12,11 +12,7 @@ export default function Hero() {
               Preview · {SUITE_TASKS} tasks · N={SEED_COVERAGE} seeds
             </p>
             <h1 className="font-display text-[2.65rem] leading-[1.03] text-ink sm:text-6xl">
-              Not every task needs a{" "}
-              <span className="relative inline-block">
-                frontier model.
-                <span className="waterline absolute -bottom-2 left-0 right-0" aria-hidden />
-              </span>
+              Not every task needs a frontier model.
             </h1>
 
             <p className="mt-6 max-w-xl text-[1.15rem] leading-relaxed text-ink-2">

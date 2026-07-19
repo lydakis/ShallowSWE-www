@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
+import Sponsors from "@/components/Sponsors";
 import ChartSection from "@/components/ChartSection";
 import FoilSection from "@/components/FoilSection";
 import Suite from "@/components/Suite";
@@ -19,6 +20,7 @@ import {
   SITE_KEYWORDS,
   SITE_LAST_MODIFIED,
   SITE_NAME,
+  SITE_SPONSORS,
   SITE_URL,
 } from "@/lib/site";
 
@@ -59,6 +61,11 @@ const jsonLd = {
         name: "ShallowSWE data license (CC BY 4.0)",
         url: SITE_DATA_LICENSE_URL,
       },
+      funder: SITE_SPONSORS.map((sponsor) => ({
+        "@type": "Organization",
+        name: sponsor.name,
+        url: sponsor.href,
+      })),
       isBasedOn: "https://github.com/lydakis/ShallowSWE",
       dateModified: SITE_LAST_MODIFIED,
       keywords: SITE_KEYWORDS,
@@ -113,6 +120,7 @@ export default function Home() {
           <StickyMixer />
           <main>
             <Hero />
+            <Sponsors />
             <ChartSection />
             <FoilSection />
             <Suite />

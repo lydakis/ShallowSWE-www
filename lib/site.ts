@@ -66,6 +66,24 @@ export const SITE_KEYWORDS = [
   ...SITE_BENCHMARKED_MODELS,
 ];
 
+export type SiteSponsor = {
+  name: string;
+  href: string;
+  /** Set once official brand assets arrive, e.g. "/sponsors/google.svg" in public/. */
+  logoSrc?: string;
+  logoAlt?: string;
+};
+
+export const SITE_SPONSORS: SiteSponsor[] = [
+  {
+    name: "Kaggle",
+    href: "https://www.kaggle.com/",
+    // Official wordmark as served by kaggle.com (static/images/site-logo.svg).
+    logoSrc: "/sponsors/kaggle.svg",
+    logoAlt: "Kaggle",
+  },
+];
+
 export const SITE_DATA_DOWNLOADS = [
   {
     name: "Repair-loop rows",

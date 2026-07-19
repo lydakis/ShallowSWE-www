@@ -197,8 +197,15 @@ body {
 }
 
 /* --- The waterline signature ----------------------------------------------- */
+/* Position is layered so the `absolute` utility (utilities layer, later) can
+   win when the waterline is used as an inline underline (hero, sponsors);
+   un-layered rules would beat every Tailwind utility. */
+@layer components {
+  .waterline {
+    position: relative;
+  }
+}
 .waterline {
-  position: relative;
   height: 1px;
   background: linear-gradient(
     90deg,
