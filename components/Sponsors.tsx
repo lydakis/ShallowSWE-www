@@ -1,7 +1,7 @@
 import { SITE_SPONSORS } from "@/lib/site";
 
 /* Until a sponsor's official mark arrives, its name is set in the site's own
-   display face on the waterline — never a recreated logo. */
+   display face — never a recreated logo. */
 export default function Sponsors() {
   if (SITE_SPONSORS.length === 0) return null;
 
@@ -15,18 +15,15 @@ export default function Sponsors() {
           </div>
           <div className="flex flex-wrap items-center gap-x-10 gap-y-6">
             {SITE_SPONSORS.map((sponsor) => (
-              <a key={sponsor.name} href={sponsor.href} className="group flex items-baseline gap-3 pb-2">
-                <span className="relative inline-block">
-                  {sponsor.logoSrc ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- static export, plain asset
-                    <img src={sponsor.logoSrc} alt={sponsor.logoAlt ?? sponsor.name} className="h-8 w-auto" />
-                  ) : (
+              <a key={sponsor.name} href={sponsor.href} className="group flex items-baseline gap-3">
+                {sponsor.logoSrc ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- static export, plain asset
+                  <img src={sponsor.logoSrc} alt={sponsor.logoAlt ?? sponsor.name} className="h-8 w-auto" />
+                ) : (
+                  <>
                     <span className="font-display text-[1.6rem] leading-none text-ink">{sponsor.name}</span>
-                  )}
-                  <span className="waterline absolute -bottom-2.5 left-0 right-0" aria-hidden />
-                </span>
-                {!sponsor.logoSrc && (
-                  <span className="font-mono text-[0.62rem] uppercase text-muted">official mark pending</span>
+                    <span className="font-mono text-[0.62rem] uppercase text-muted">official mark pending</span>
+                  </>
                 )}
               </a>
             ))}
