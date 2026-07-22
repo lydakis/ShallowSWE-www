@@ -7,7 +7,7 @@
 - [Homepage](https://shallowswe.com/): Interactive benchmark preview with leaderboard, task suite, method, and downloadable data.
 - [Methodology](https://shallowswe.com/methodology): Accessible explanation of the repair loop, the CPSC metric family, and calibration.
 - [Working paper](https://shallowswe.com/paper): Full methodology white paper (v0.4.2 freeze candidate), web version and PDF.
-- [Pilot status](https://shallowswe.com/pilot): Six-task protocol-validation pilot plan and current status (not yet run).
+- [Pilot status](https://shallowswe.com/pilot): Completed Kaggle development shakedown and the pending report-grade pilot plan.
 - [Data & downloads](https://shallowswe.com/data): Row-level exports, price sheets, licenses, and provenance.
 - [Sitemap](https://shallowswe.com/sitemap.xml): Canonical crawl entry point.
 - [Robots](https://shallowswe.com/robots.txt): Crawl policy.

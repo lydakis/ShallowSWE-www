@@ -18,9 +18,9 @@ const items = [
   {
     href: "/pilot",
     label: "pilot",
-    title: "Six-task pilot status",
-    description: "112 preregistered trajectories, stage gates, and stop conditions. Not yet run.",
-    status: "not yet run",
+    title: "Six-task pilot and shakedown",
+    description: "The Kaggle development shakedown is complete; report-grade execution remains pending.",
+    status: "shakedown complete",
   },
   {
     href: "/data",

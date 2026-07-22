@@ -166,7 +166,7 @@ const manifest = {
   methodology_version: "v0.4.2",
   methodology_status: "working paper — freeze candidate, under independent review",
   pilot_protocol_version: "v0.3",
-  pilot_status: "independent review in progress; no official runs started",
+  pilot_status: "Kaggle development shakedown complete; report-grade pilot pending",
   documents: {
     paper: {
       source_path: PAPER_MD,

@@ -7,7 +7,7 @@ import manifest from "@/content/manifest.json";
 export const metadata: Metadata = {
   title: "Pilot status",
   description:
-    "Status of the ShallowSWE six-task protocol-validation pilot: the candidate panel, independent review, 112-trajectory plan, and stage gates. No official runs have started.",
+    "Status of the ShallowSWE six-task protocol-validation pilot: the completed Kaggle development shakedown and pending report-grade plan.",
   alternates: { canonical: "/pilot" },
 };
 
@@ -65,15 +65,14 @@ export default function PilotPage() {
       title="Six-task protocol-validation pilot"
       chips={[
         { label: `Protocol ${manifest.pilot_protocol_version} · freeze candidate` },
-        { label: "Blind review packet ready", tone: "warn" },
-        { label: "Development floor complete" },
-        { label: "No official runs started" },
+        { label: "Kaggle shakedown complete" },
+        { label: "Report-grade pilot pending", tone: "warn" },
       ]}
       lede={
         <p>
-          Before any report-grade leaderboard, the full calibration machinery runs once at small scope: six tasks, two
-          per category, in a preregistered cash-preserving sequence. The pilot proposes the protocol&apos;s remaining
-          constants and measures what a real snapshot costs — it makes no leaderboard claim.
+          A six-task Kaggle development shakedown has exercised the full calibration and scoring machinery. The
+          report-grade pilot remains a separate, construct-reviewed study under the protocol below and makes no
+          leaderboard claim until those gates close.
         </p>
       }
       toc={toc}
@@ -83,12 +82,13 @@ export default function PilotPage() {
         <section id="status" className="scroll-mt-24">
           <h2>Current status</h2>
           <p>
-            The pilot protocol and the <a href="/paper">v0.4.2 working paper</a> are freeze candidates under
-            independent review. Six candidate task versions are hash-frozen, and a valid <code>N=3</code> development
-            floor has been audited through Codex, Pier, and Docker. Those outcomes are quarantined and withheld until
-            blind construct review closes. <strong>No official metered runs have started</strong>; the numbers below
-            are the preregistered plan, not results. The <Link href="/#chart">preview leaderboard</Link>{" "}on the
-            homepage comes from earlier plumbing-validation runs and is unrelated to this pilot&apos;s evidence.
+            A separate six-task development shakedown completed on Kaggle with 190 declared trajectories spanning
+            canary, permissive calibration, policy selection, fresh confirmation, and candidate scoring. It proved the
+            end-to-end machinery and exposed task-validity and runner issues, but it is not a benchmark release or the
+            report-grade execution of this protocol. The <a href="/paper">v0.4.2 working paper</a> and the plan below
+            remain freeze candidates pending independent construct review and corrected task versions. The{" "}
+            <Link href="/#chart">preview leaderboard</Link> on the homepage comes from earlier plumbing-validation
+            runs and is separate from the shakedown.
           </p>
         </section>
 

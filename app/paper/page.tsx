@@ -38,7 +38,7 @@ export default function PaperPage() {
       chips={[
         { label: `Working paper ${manifest.methodology_version}` },
         { label: "Freeze candidate · under independent review", tone: "warn" },
-        { label: "Pilot not yet executed" },
+        { label: "Kaggle shakedown complete" },
       ]}
       lede={
         <>
